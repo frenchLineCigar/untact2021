@@ -13,7 +13,7 @@ import com.tena.untact2021.util.Util;
 public class ArticleService {
 	private int articlesLastId;
 	private List<Article> articles;
-	
+
 	public ArticleService() {
 		// 멤버변수 초기화
 		articlesLastId = 0;
@@ -25,18 +25,30 @@ public class ArticleService {
 	}
 
 	/* 전체 게시물 조회 */
-	public List<Article> getArticles() {
-		return articles;
+	public List<Article> getArticles(String searchKeyword) {
+		if (searchKeyword == null) {
+			return articles;
+		}
+
+		List<Article> filtered = new ArrayList<>();
+
+		for (Article article : articles) {
+			if (article.getTitle().contains(searchKeyword) || article.getBody().contains(searchKeyword)) {
+				filtered.add(article);
+			}
+		}
+
+		return filtered;
 	}
-	
+
 	/* 게시물 조회 */
-	public Article getArticle(int id) {		
+	public Article getArticle(int id) {
 		for(Article article : articles) {
 			if(article.getId() == id) {
 				return article;
 			}
 		}
-		
+
 		return null;
 		// throw new IllegalStateException("존재하지 않는 게시물입니다.");
 	}
@@ -46,12 +58,12 @@ public class ArticleService {
 		int id = ++articlesLastId;
 		String regDate = Util.getNowDateStr();
 		String updateDate = regDate; //처음 생성시점에는 작성날짜와 수정날짜가 동일
-		
+
 		articles.add(new Article(id, regDate, updateDate, title, body));
-		
+
 		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}
-	
+
 	/* 게시물 삭제 */
 	public ResultData deleteArticle(int id) {
 		for (Article article : articles) {
@@ -66,12 +78,12 @@ public class ArticleService {
 	/* 게시물 수정 */
 	public ResultData modifyArticle(int id, String title, String body) {
 		Article article = getArticle(id);
-				
+
 		article.setTitle(title);
 		article.setBody(body);
 		article.setUpdateDate(Util.getNowDateStr());
-		
+
 		return new ResultData("S-1", "게시물을 수정하였습니다.", "id", id);
 	}
-	
+
 }

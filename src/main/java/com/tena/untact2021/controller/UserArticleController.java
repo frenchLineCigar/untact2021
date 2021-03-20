@@ -16,15 +16,15 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class UserArticleController {
-	
+
 	private final ArticleService articleService;
-	
+
 	@ExceptionHandler
 	@ResponseBody
-	public ResultData userArticleExceptionHandler(IllegalStateException e) {
+	public ResultData userArticleExceptionHandler(Exception e) {
 		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
 	}
-	
+
 	/* 게시물 조회 */
 	@RequestMapping("/user/article/detail")
 	@ResponseBody
@@ -32,14 +32,26 @@ public class UserArticleController {
 		Article article = articleService.getArticle(id);
 		return article;
 	}
-	
+
 	/* 전체 게시물 조회 */
 	@RequestMapping("/user/article/list")
 	@ResponseBody
-	public List<Article> showList() {
-		return articleService.getArticles();
+	public List<Article> showList(String searchKeyword) {
+
+		System.out.println("searchKeyword:" + searchKeyword);
+
+		// Empty String to Null
+		if (searchKeyword != null && searchKeyword.length() == 0) {
+			searchKeyword = null;
+		}
+		// Trim Whitespace
+		if (searchKeyword != null) {
+			searchKeyword = searchKeyword.trim();
+		}
+
+		return articleService.getArticles(searchKeyword);
 	}
-	
+
 	/* 게시물 추가 */
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
@@ -47,11 +59,11 @@ public class UserArticleController {
 		if (title == null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
-		
+
 		if (body == null) {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
-		
+
 		return articleService.addArticle(title, body);
 	}
 
@@ -62,16 +74,16 @@ public class UserArticleController {
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
-		
+
 		Article article = articleService.getArticle(id);
-		
+
 		if (article == null) {
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
-		
+
 		return articleService.deleteArticle(id);
 	}
-	
+
 	/* 게시물 수정 */
 	@RequestMapping("/user/article/doModify")
 	@ResponseBody
@@ -79,21 +91,21 @@ public class UserArticleController {
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
-		
+
 		if (title == null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
-		
+
 		if (body == null) {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
-		
+
 		Article article = articleService.getArticle(id);
-		
+
 		if (article == null) {
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
-		
+
 		return articleService.modifyArticle(id, title, body);
 	}
 
