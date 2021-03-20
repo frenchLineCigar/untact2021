@@ -36,20 +36,27 @@ public class UserArticleController {
 	/* 전체 게시물 조회 */
 	@RequestMapping("/user/article/list")
 	@ResponseBody
-	public List<Article> showList(String searchKeyword) {
+	public List<Article> showList(String searchKeywordType, String searchKeyword) {
 
-		System.out.println("searchKeyword:" + searchKeyword);
-
-		// Empty String to Null
-		if (searchKeyword != null && searchKeyword.length() == 0) {
-			searchKeyword = null;
+		// searchKeywordType 미입력 시 titleAndBody를 기본값으로 셋팅
+		if (searchKeywordType != null) {
+			searchKeywordType = searchKeywordType.trim();
 		}
+		if (searchKeywordType == null || searchKeywordType.length() == 0) {
+			searchKeywordType = "titleAndBody";
+		}
+
 		// Trim Whitespace
 		if (searchKeyword != null) {
 			searchKeyword = searchKeyword.trim();
 		}
 
-		return articleService.getArticles(searchKeyword);
+		// Empty String to Null
+		if (searchKeyword != null && searchKeyword.length() == 0) {
+			searchKeyword = null;
+		}
+
+		return articleService.getArticles(searchKeywordType, searchKeyword);
 	}
 
 	/* 게시물 추가 */
