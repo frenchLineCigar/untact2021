@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class UserHomeController {
 
-	@RequestMapping("/usr/home/main")
+	@RequestMapping("/user/home/main")
 	@ResponseBody
 	public String showMain() {
 		return "2021 Untact Project";
