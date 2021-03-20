@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,12 +28,24 @@ public class UserArticleController {
 		articles.add(new Article(++articlesLastId, "2020-12-12 12:12:12", "2020-12-12 12:12:12", "제목2", "내용2"));
 	}
 
+	@ExceptionHandler(IllegalStateException.class)
+	@ResponseBody
+	public Map<String, Object> userArticleExceptionHandler(IllegalStateException e) {
+		return Map.of("resultCode", e.getClass().getSimpleName(), "msg", e.getMessage());
+	}
+	
 	@RequestMapping("/user/article/detail")
 	@ResponseBody
 	public Article showDetail(int id) {
-		return articles.get(id - 1);
+		
+		for(Article article : articles) {
+			if(article.getId() == id) {
+				return article;
+			}
+		}
+		throw new IllegalStateException("존재하지 않는 게시물입니다.");
 	}
-
+	
 	@RequestMapping("/user/article/list")
 	@ResponseBody
 	public List<Article> showList() {
@@ -42,21 +55,12 @@ public class UserArticleController {
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
 	public Map<String, Object> doAdd(String title, String body) {
-		
 		String regDate = Util.getNowDateStr();
 		String updateDate = regDate; //처음 생성시점에는 작성날짜와 수정날짜가 동일
 		
 		articles.add(new Article(++articlesLastId, regDate, updateDate, title, body));
-//		int id = (articles.get(articles.size() - 1).getId()) + 1;
-//		articles.add(new Article(id, regDate, title, body));
 		
-		Map<String, Object> rs = new HashMap<>();
-		rs.put("resultCode", "S-1");
-		rs.put("msg", "성공하였습니다.");
-		rs.put("id", articlesLastId);
-//		rs.put("id", id);
-		
-		return rs;
+		return Util.mapOf("resultCode", "S-1", "msg", "성공하였습니다.", "id", articlesLastId);
 	}
 
 	@RequestMapping("/user/article/doDelete")
@@ -64,19 +68,11 @@ public class UserArticleController {
 	public Map<String, Object> doDelete(int id) {
 		boolean deleteArticleRs = deleteArticle(id);
 		
-		Map<String, Object> rs = new HashMap<>();
+		if (deleteArticleRs == false) {
+			return Util.mapOf("resultCode", "F-1", "msg", "해당 게시물은 이미 삭제되었거나 존재하지 않습니다.");
+		}		
 		
-		if (deleteArticleRs) {
-			rs.put("resultCode", "S-1");
-			rs.put("msg", "성공하였습니다.");
-		} else {
-			rs.put("resultCode", "F-1");
-			rs.put("msg", "해당 게시물은 이미 삭제되었거나 존재하지 않습니다.");
-		}
-		
-		rs.put("id", id);
-		
-		return rs;
+		return Util.mapOf("resultCode", "S-1", "msg", "성공하였습니다.", "id", id);
 	}
 
 	private boolean deleteArticle(int id) {
@@ -103,12 +99,8 @@ public class UserArticleController {
 			}
 		}
 		
-		Map<String, Object> rs = new HashMap<>();
-		
 		if (selectedArticle == null) {
-			rs.put("resultCode", "F-1");
-			rs.put("msg", String.format("%d번 게시물은 존재하지 않습니다.", id));
-			return rs;
+			return Util.mapOf("resultCode", "F-1", "msg", String.format("%d번 게시물은 존재하지 않습니다.", id));
 		}
 		
 		// 해당 게시물 수정
@@ -116,11 +108,7 @@ public class UserArticleController {
 		selectedArticle.setTitle(title);
 		selectedArticle.setBody(body);
 		
-		rs.put("resultCode", "S-1");
-		rs.put("msg", String.format("%d번 게시물은 수정되었습니다.", id));
-		rs.put("id", id);
-		
-		return rs;
+		return Util.mapOf("resultCode", "S-1", "msg", String.format("%d번 게시물은 수정되었습니다.", id), "id", id);
 	}
 
 }
