@@ -2,6 +2,8 @@ package com.tena.untact2021.dto;
 
 import java.util.Map;
 
+import org.springframework.lang.Nullable;
+
 import com.tena.untact2021.util.Util;
 
 import lombok.Data;
@@ -15,7 +17,7 @@ public class ResultData {
 	
 	private Map<String, Object> body;
 
-	public ResultData(String resultCode, String msg, Object... args) {
+	public ResultData(String resultCode, String msg, @Nullable Object... args) {
 		this.resultCode = resultCode;
 		this.msg = msg;
 		this.body = Util.mapOf(args);
