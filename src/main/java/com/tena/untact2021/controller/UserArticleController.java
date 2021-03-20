@@ -19,7 +19,7 @@ public class UserArticleController {
 	
 	private final ArticleService articleService;
 	
-	@ExceptionHandler(IllegalStateException.class)
+	@ExceptionHandler
 	@ResponseBody
 	public ResultData userArticleExceptionHandler(IllegalStateException e) {
 		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
@@ -58,7 +58,11 @@ public class UserArticleController {
 	/* 게시물 삭제 */
 	@RequestMapping("/user/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(int id) {
+	public ResultData doDelete(Integer id) {
+		if (id == null) {
+			return new ResultData("F-1", "id를 입력해주세요.");
+		}
+		
 		Article article = articleService.getArticle(id);
 		
 		if (article == null) {
@@ -71,7 +75,19 @@ public class UserArticleController {
 	/* 게시물 수정 */
 	@RequestMapping("/user/article/doModify")
 	@ResponseBody
-	public ResultData doModify(int id, String title, String body) {
+	public ResultData doModify(Integer id, String title, String body) {
+		if (id == null) {
+			return new ResultData("F-1", "id를 입력해주세요.");
+		}
+		
+		if (title == null) {
+			return new ResultData("F-1", "title을 입력해주세요.");
+		}
+		
+		if (body == null) {
+			return new ResultData("F-1", "body을 입력해주세요.");
+		}
+		
 		Article article = articleService.getArticle(id);
 		
 		if (article == null) {
