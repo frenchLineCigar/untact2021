@@ -1,7 +1,6 @@
 package com.tena.untact2021.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tena.untact2021.dto.Article;
+import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.util.Util;
 
 @Controller
@@ -30,8 +30,8 @@ public class UserArticleController {
 
 	@ExceptionHandler(IllegalStateException.class)
 	@ResponseBody
-	public Map<String, Object> userArticleExceptionHandler(IllegalStateException e) {
-		return Map.of("resultCode", e.getClass().getSimpleName(), "msg", e.getMessage());
+	public ResultData userArticleExceptionHandler(IllegalStateException e) {
+		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
 	}
 	
 	@RequestMapping("/user/article/detail")
@@ -54,25 +54,25 @@ public class UserArticleController {
 	
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
-	public Map<String, Object> doAdd(String title, String body) {
+	public ResultData doAdd(String title, String body) {
 		String regDate = Util.getNowDateStr();
 		String updateDate = regDate; //처음 생성시점에는 작성날짜와 수정날짜가 동일
 		
 		articles.add(new Article(++articlesLastId, regDate, updateDate, title, body));
 		
-		return Util.mapOf("resultCode", "S-1", "msg", "성공하였습니다.", "id", articlesLastId);
+		return new ResultData("S-1", "성공하였습니다.", "id", articlesLastId);
 	}
 
 	@RequestMapping("/user/article/doDelete")
 	@ResponseBody
-	public Map<String, Object> doDelete(int id) {
+	public ResultData doDelete(int id) {
 		boolean deleteArticleRs = deleteArticle(id);
 		
 		if (deleteArticleRs == false) {
-			return Util.mapOf("resultCode", "F-1", "msg", "해당 게시물은 이미 삭제되었거나 존재하지 않습니다.");
+			return new ResultData("F-1", "해당 게시물은 이미 삭제되었거나 존재하지 않습니다.");
 		}		
 		
-		return Util.mapOf("resultCode", "S-1", "msg", "성공하였습니다.", "id", id);
+		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}
 
 	private boolean deleteArticle(int id) {
@@ -88,7 +88,7 @@ public class UserArticleController {
 	
 	@RequestMapping("/user/article/doModify")
 	@ResponseBody
-	public Map<String, Object> doModify(int id, String title, String body) {
+	public ResultData doModify(int id, String title, String body) {
 		Article selectedArticle = null;
 		
 		// 해당 게시물 유무 조회
@@ -100,7 +100,7 @@ public class UserArticleController {
 		}
 		
 		if (selectedArticle == null) {
-			return Util.mapOf("resultCode", "F-1", "msg", String.format("%d번 게시물은 존재하지 않습니다.", id));
+			return new ResultData("F-1", String.format("%d번 게시물은 존재하지 않습니다.", id));
 		}
 		
 		// 해당 게시물 수정
@@ -108,7 +108,7 @@ public class UserArticleController {
 		selectedArticle.setTitle(title);
 		selectedArticle.setBody(body);
 		
-		return Util.mapOf("resultCode", "S-1", "msg", String.format("%d번 게시물은 수정되었습니다.", id), "id", id);
+		return new ResultData("S-1", String.format("%d번 게시물은 수정되었습니다.", id), "id", id);
 	}
 
 }
