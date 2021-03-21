@@ -26,7 +26,6 @@ public class ArticleService {
 		return articleDao.findById(id);
 	}
 
-
 	/* 게시물 추가 */
 	public ResultData addArticle(String title, String body) {
 		int savedId = articleDao.save(title, body);
