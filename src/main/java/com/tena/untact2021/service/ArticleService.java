@@ -1,16 +1,20 @@
 package com.tena.untact2021.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tena.untact2021.dao.ArticleDao;
 import com.tena.untact2021.dto.Article;
 import com.tena.untact2021.dto.ResultData;
+import com.tena.untact2021.util.Util;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ArticleService {
 
@@ -27,10 +31,12 @@ public class ArticleService {
 	}
 
 	/* 게시물 추가 */
-	public ResultData addArticle(String title, String body) {
-		int savedId = articleDao.save(title, body);
+	public ResultData addArticle(Map<String, Object> param) {
+		articleDao.save(param);
 
-		return new ResultData("S-1", "성공하였습니다.", "id", savedId);
+		int id = Util.getAsInt(param.get("id"));
+
+		return new ResultData("S-1", "성공하였습니다.", "id", id);
 	}
 
 	/* 게시물 삭제 */

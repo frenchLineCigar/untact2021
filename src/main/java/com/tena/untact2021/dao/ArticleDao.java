@@ -1,6 +1,7 @@
 package com.tena.untact2021.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,7 +18,7 @@ public interface ArticleDao {
 	List<Article> findAll(@Param("searchKeywordType") String searchKeywordType, @Param("searchKeyword") String searchKeyword);
 
 	/* 게시물 추가 */
-	int save(@Param("title") String title, @Param("body") String body);
+	int save(Map<String, Object> param);
 
 	/* 게시물 삭제 */
 	boolean deleteById(@Param("id") int id);
