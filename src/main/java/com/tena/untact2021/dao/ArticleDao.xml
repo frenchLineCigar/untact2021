@@ -22,18 +22,20 @@
 		SELECT *
 		FROM article
 		WHERE 1
-		<if test="searchKeywordType == 'title' and searchKeyword != null">
-			AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-		</if>
-		<if test="searchKeywordType == 'body' and searchKeyword != null">
-			AND `body` LIKE CONCAT('%', #{searchKeyword}, '%')
-		</if>
-		<if test="searchKeywordType == 'titleAndBody' and searchKeyword != null">
-			AND (
-					title LIKE CONCAT('%', #{searchKeyword}, '%') 
-				OR
-					`body` LIKE CONCAT('%', #{searchKeyword}, '%')
-				)
+		<if test="searchKeyword != null">
+			<if test="searchKeywordType == 'title'">
+				AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+			<if test="searchKeywordType == 'body'">
+				AND `body` LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+			<if test="searchKeywordType == 'titleAndBody'">
+				AND (
+						title LIKE CONCAT('%', #{searchKeyword}, '%') 
+					OR
+						`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+					)
+			</if>
 		</if>
 		ORDER BY id DESC
 	</select>
@@ -58,12 +60,18 @@
 	<!-- 게시물 수정 -->
 	<update id="update">
 		UPDATE article
-		SET
-			updateDate = NOW(),
-			title = #{title},
-			`body` = #{body}
-		WHERE
-			id = #{id}
+		<set>
+			<if test="title != null || body != null">
+				updateDate = NOW(),
+			</if>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="body != null">
+				`body` = #{body}
+			</if>
+		</set>
+		WHERE id = #{id}
 	</update>
 	
 </mapper>
