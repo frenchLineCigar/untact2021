@@ -22,6 +22,19 @@
 		SELECT *
 		FROM article
 		WHERE 1
+		<if test="searchKeywordType == 'title' and searchKeyword != null">
+			AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchKeywordType == 'body' and searchKeyword != null">
+			AND `body` LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchKeywordType == 'titleAndBody' and searchKeyword != null">
+			AND (
+					title LIKE CONCAT('%', #{searchKeyword}, '%') 
+				OR
+					`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+				)
+		</if>
 		ORDER BY id DESC
 	</select>
 	
