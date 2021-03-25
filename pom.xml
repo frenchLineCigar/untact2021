@@ -22,7 +22,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -54,6 +53,20 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- Log4j2 JDBC SQL Logger -->
+		<dependency>
+			<groupId>org.bgee.log4jdbc-log4j2</groupId>
+			<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+			<version>1.16</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.jooq/joox -->
+<!--		<dependency>-->
+<!--			<groupId>org.jooq</groupId>-->
+<!--			<artifactId>joox</artifactId>-->
+<!--			<version>1.6.2</version>-->
+<!--		</dependency>-->
 	</dependencies>
 
 	<build>

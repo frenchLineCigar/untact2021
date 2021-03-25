@@ -3,10 +3,11 @@ server:
 
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3308/untact2021?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull
-#    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-#    url: jdbc:log4jdbc:mysql://127.0.0.1:3308/untact2021?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3308/untact2021?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull
+#     Log4j2 JDBC SQL Logger 출력
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://127.0.0.1:3308/untact2021?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull
     username: untact2021
     password: 123456A@
 
@@ -16,7 +17,12 @@ mybatis:
 #  mapper-locations:
 #  - classpath:mybatis/mapper/*.xml
 
-# dao 이하 로깅
 logging:
-  level:
-    com.tena.untact2021.dao: DEBUG
+#  level:
+#    com.tena.untact2021.dao: DEBUG
+  config: classpath:logback-spring.xml
+
+custom:
+  logging:
+    dir: log
+    level: INFO
