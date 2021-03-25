@@ -70,6 +70,15 @@
 	</dependencies>
 
 	<build>
+		<!-- Mapper XML 이 Mapper Interface 와 동일한 곳에 위치시키는 경우 빌드시 포함시키기 위한 설정 -->
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
