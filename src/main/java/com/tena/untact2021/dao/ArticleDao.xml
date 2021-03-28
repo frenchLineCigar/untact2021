@@ -22,16 +22,16 @@
 		SELECT *
 		FROM article
 		WHERE 1
-		<if test="searchKeyword != null">
-			<if test="searchKeywordType == 'title'">
+		<if test='searchKeyword != null and !"".equals(searchKeyword)'>
+			<if test='searchKeywordType == "title"'>
 				AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 			</if>
-			<if test="searchKeywordType == 'body'">
+			<if test='searchKeywordType == "body"'>
 				AND `body` LIKE CONCAT('%', #{searchKeyword}, '%')
 			</if>
-			<if test="searchKeywordType == 'titleAndBody'">
+			<if test='searchKeywordType == "titleAndBody"'>
 				AND (
-						title LIKE CONCAT('%', #{searchKeyword}, '%') 
+						title LIKE CONCAT('%', #{searchKeyword}, '%')
 					OR
 						`body` LIKE CONCAT('%', #{searchKeyword}, '%')
 					)

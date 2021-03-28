@@ -6,7 +6,7 @@
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
 
-    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}){faint} %clr([%-5level]) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15thread]) %clr(%logger{36}){cyan} %clr(-){faint} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}){faint} %clr([%-5level]) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15thread]) %clr(%logger{36}){cyan} %n%clr(:){faint} %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="CONSOLE_LOG_CHARSET" value="${CONSOLE_LOG_CHARSET:-UTF-8}"/>
     <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}} ${LOG_LEVEL_PATTERN:-%5level} --- [%t] %logger{36} : %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="FILE_LOG_CHARSET" value="${FILE_LOG_CHARSET:-UTF8}"/>
@@ -82,6 +82,16 @@
         </rollingPolicy>
     </appender>
 
+    <!-- for TEST -->
+    <appender name="TEST" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %clr(%msg%n%wEx){blue}
+            </pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
     <!-- root 로거 레벨 설정 -->
     <root level="${LOG_LEVEL}">
         <appender-ref ref="CONSOLE" />
@@ -110,6 +120,15 @@
     <logger name="jdbc.resultset" level="OFF" />
     <logger name="jdbc.resultsettable" level="DEBUG" />
     <logger name="jdbc.connection" level="OFF" />
+
+    <!-- 간편 테스트용 -->
+    <logger name="com.tena.untact2021" level="DEBUG" additivity="false">
+        <appender-ref ref="TEST" />
+    </logger>
+
+    <logger name="com.tena.untact2021.dao" level="OFF" additivity="false">
+        <appender-ref ref="TEST" />
+    </logger>
 
 </configuration>
 

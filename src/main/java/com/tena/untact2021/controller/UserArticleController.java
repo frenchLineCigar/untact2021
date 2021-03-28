@@ -3,6 +3,8 @@ package com.tena.untact2021.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.tena.untact2021.dto.Search;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import com.tena.untact2021.service.ArticleService;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class UserArticleController {
@@ -24,7 +27,8 @@ public class UserArticleController {
 	@ExceptionHandler
 	@ResponseBody
 	public ResultData userArticleExceptionHandler(Exception e) {
-		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
+		return new ResultData("Exception occurred.", "Bad Request");
+//		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
 	}
 
 	/* 게시물 조회 */
@@ -38,27 +42,11 @@ public class UserArticleController {
 	/* 전체 게시물 조회 */
 	@RequestMapping("/user/article/list")
 	@ResponseBody
-	public List<Article> showList(String searchKeywordType, String searchKeyword) {
+	public List<Article> showList(Search search) {
+		log.info("UserArticleController.showList");
+		log.info("search: {}", search);
 
-		// searchKeywordType 미입력 시 titleAndBody를 기본값으로 셋팅
-		if (searchKeywordType != null) {
-			searchKeywordType = searchKeywordType.trim();
-		}
-		if (searchKeywordType == null || searchKeywordType.length() == 0) {
-			searchKeywordType = "titleAndBody";
-		}
-
-		// Trim Whitespace
-		if (searchKeyword != null) {
-			searchKeyword = searchKeyword.trim();
-		}
-
-		// Empty String to Null
-		if (searchKeyword != null && searchKeyword.length() == 0) {
-			searchKeyword = null;
-		}
-
-		return articleService.getArticles(searchKeywordType, searchKeyword);
+		return articleService.getArticles(search.getSearchKeywordType(), search.getSearchKeyword());
 	}
 
 	/* 게시물 추가 */

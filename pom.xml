@@ -61,6 +61,12 @@
 			<version>1.16</version>
 		</dependency>
 
+		<!-- Apache Commons Lang 3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.jooq/joox -->
 <!--		<dependency>-->
 <!--			<groupId>org.jooq</groupId>-->
