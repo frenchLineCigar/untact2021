@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.trimWhitespace;
 import static com.tena.untact2021.dto.Search.SearchKeywordType.*;
 
@@ -16,18 +15,15 @@ public class Search {
     private SearchKeywordType searchKeywordType = TITLEANDBODY;
     private String searchKeyword;
 
-    public void setSearchKeywordType(String searchKeywordType) {
+    public void setSearchKeywordType(SearchKeywordType searchKeywordType) {
         log.debug("Search.setSearchKeywordType");
         log.debug("searchKeywordType: {}", searchKeywordType);
 
-        if (!isBlank(searchKeywordType) && isDefined(searchKeywordType)) {
-            // 타입 컨버전 (String -> Enum)
-            this.searchKeywordType = valueOf(searchKeywordType.toUpperCase());
-        }
+        this.searchKeywordType = searchKeywordType;
     }
 
     public void setSearchKeyword(String searchKeyword) {
-            this.searchKeyword = trimWhitespace(searchKeyword);
+        this.searchKeyword = trimWhitespace(searchKeyword);
     }
 
     public enum SearchKeywordType {
