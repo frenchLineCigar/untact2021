@@ -13,6 +13,8 @@ import com.tena.untact2021.util.Util;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.tena.untact2021.dto.Search.*;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class ArticleService {
 	private final ArticleDao articleDao;
 
 	/* 전체 게시물 조회 */
-	public List<Article> getArticles(String searchKeywordType, String searchKeyword) {
+	public List<Article> getArticles(SearchKeywordType searchKeywordType, String searchKeyword) {
 		return articleDao.findAll(searchKeywordType, searchKeyword);
 	}
 

@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 
 import com.tena.untact2021.dto.Article;
 
+import static com.tena.untact2021.dto.Search.*;
+
 @Mapper
 public interface ArticleDao {
 
@@ -15,7 +17,7 @@ public interface ArticleDao {
 	Article findById(@Param("id") int id);
 
 	/* TODO 전체 게시물 조회 */
-	List<Article> findAll(@Param("searchKeywordType") String searchKeywordType, @Param("searchKeyword") String searchKeyword);
+	List<Article> findAll(@Param("searchKeywordType") SearchKeywordType searchKeywordType, @Param("searchKeyword") String searchKeyword);
 
 	/* 게시물 추가 */
 	int save(Map<String, Object> param);

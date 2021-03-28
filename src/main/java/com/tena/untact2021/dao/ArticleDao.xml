@@ -12,7 +12,7 @@
 		WHERE
 			id = #{id}
 	</select>
-	
+
 	<!-- 전체 게시물 조회 -->
 	<!--
 	List<Article> findAll(@Param("searchKeywordType") String searchKeywordType, 
@@ -23,23 +23,23 @@
 		FROM article
 		WHERE 1
 		<if test='searchKeyword != null and !"".equals(searchKeyword)'>
-			<if test='searchKeywordType == "title"'>
+			<if test="searchKeywordType == @com.tena.untact2021.dto.Search$SearchKeywordType@TITLE">
 				AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 			</if>
-			<if test='searchKeywordType == "body"'>
+			<if test="searchKeywordType == @com.tena.untact2021.dto.Search$SearchKeywordType@BODY">
 				AND `body` LIKE CONCAT('%', #{searchKeyword}, '%')
 			</if>
-			<if test='searchKeywordType == "titleAndBody"'>
+			<if test="searchKeywordType == @com.tena.untact2021.dto.Search$SearchKeywordType@TITLEANDBODY">
 				AND (
-						title LIKE CONCAT('%', #{searchKeyword}, '%')
-					OR
-						`body` LIKE CONCAT('%', #{searchKeyword}, '%')
-					)
+				title LIKE CONCAT('%', #{searchKeyword}, '%')
+				OR
+				`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+				)
 			</if>
 		</if>
 		ORDER BY id DESC
 	</select>
-	
+
 	<!-- 게시물 추가 -->
 	<insert id="save" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO article
@@ -49,14 +49,14 @@
 			title = #{title},
 			`body` = #{body}
 	</insert>
-	
+
 	<!-- 게시물 삭제 -->
 	<delete id="deleteById">
 		DELETE FROM article
 		WHERE
 			id = #{id}
 	</delete>
-	 
+
 	<!-- 게시물 수정 -->
 	<update id="update">
 		UPDATE article
@@ -73,5 +73,5 @@
 		</set>
 		WHERE id = #{id}
 	</update>
-	
+
 </mapper>
