@@ -5,8 +5,12 @@ import java.util.Map;
 
 import com.tena.untact2021.dto.Search;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,9 +46,18 @@ public class UserArticleController {
 	/* 전체 게시물 조회 */
 	@RequestMapping("/user/article/list")
 	@ResponseBody
-	public List<Article> showList(Search search) {
+	public List<Article> showList(@ModelAttribute Search search) {
 		log.info("UserArticleController.showList");
 		log.info("search: {}", search);
+
+		return articleService.getArticles(search.getSearchKeywordType(), search.getSearchKeyword());
+	}
+
+	@PostMapping(value = "/user/article/list", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<Article> showListJson(@RequestBody Search search) {
+		log.debug("UserArticleController.showListJson");
+		log.debug("search: {}", search);
 
 		return articleService.getArticles(search.getSearchKeywordType(), search.getSearchKeyword());
 	}
