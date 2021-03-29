@@ -7,7 +7,7 @@
 
 	<!-- 회원 가입 -->
 	<insert id="save" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO member
+		INSERT INTO `member`
 		SET
 			regDate = NOW(),
 			updateDate = NOW(),
@@ -18,5 +18,21 @@
             cellphoneNo = #{cellphoneNo},
             email = #{email}
 	</insert>
+
+    <!-- 회원 조회 (PK) -->
+    <select id="findById" resultType="Member">
+        SELECT *
+        FROM `member`
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 회원 조회 (로그인 ID) -->
+    <select id="findByLoginId" resultType="Member">
+        SELECT *
+        FROM `member`
+        WHERE
+            loginId = #{loginId}
+    </select>
 
 </mapper>

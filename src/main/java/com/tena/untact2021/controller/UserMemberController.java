@@ -1,5 +1,6 @@
 package com.tena.untact2021.controller;
 
+import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,12 @@ public class UserMemberController {
     public ResultData doJoin(@RequestParam Map<String, Object> param) {
         if (param.get("loginId") == null) {
             return new ResultData("F-1", "loginId를 입력해주세요.");
+        }
+
+        Member exsistingMember = memberService.getMemberByLoginId((String) param.get("loginId"));
+
+        if (exsistingMember != null) {
+            return new ResultData("F-2", String.format("%s (은)는 이미 사용 중인 로그인 아이디 입니다.", param.get("loginId")));
         }
 
         if (param.get("loginPw") == null) {
