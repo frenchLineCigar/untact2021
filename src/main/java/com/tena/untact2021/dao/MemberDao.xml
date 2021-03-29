@@ -35,4 +35,30 @@
             loginId = #{loginId}
     </select>
 
+    <!-- 회원 정보 수정 -->
+    <update id="update" >
+        UPDATE `member`
+        <set>
+            <if test="loginPw != null || loginPw != null || name != null || nickname != null || cellphoneNo != null || email != null">
+                updateDate = NOW(),
+            </if>
+            <if test="loginPw != null">
+                loginPw = #{loginPw},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="cellphoneNo != null">
+                cellphoneNo = #{cellphoneNo},
+            </if>
+            <if test="email != null">
+                email = #{email}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
 </mapper>

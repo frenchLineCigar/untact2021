@@ -18,4 +18,6 @@ public interface MemberDao {
     /* 회원 조회 (로그인 ID) */
     Member findByLoginId(@Param("loginId") String loginId);
 
+    /* 회원 정보 수정 */
+    void update(Map<String, Object> param);
 }

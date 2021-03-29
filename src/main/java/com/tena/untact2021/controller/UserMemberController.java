@@ -4,6 +4,7 @@ import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.security.acl.Group;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class UserMemberController {
@@ -109,6 +111,25 @@ public class UserMemberController {
         session.invalidate();
 
         return new ResultData("S-1", "로그아웃 되었습니다.");
+    }
+
+    /* 회원 정보 수정 */
+    @RequestMapping("/user/member/doModify")
+    @ResponseBody
+    public ResultData doModify(@RequestParam Map<String, Object> param, HttpSession session) {
+        
+        // 로그인 검증
+        if (session.getAttribute("loggedInMemberId") == null) {
+            return new ResultData("F-1", "로그인 후 이용해주세요.");
+        }
+
+        if (param.isEmpty()) {
+            return new ResultData("F-2", "수정할 정보를 입력해주세요.");
+        }
+
+        param.put("id", session.getAttribute("loggedInMemberId"));
+
+        return memberService.modifyMember(param);
     }
 
 }

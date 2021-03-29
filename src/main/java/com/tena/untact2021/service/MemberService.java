@@ -35,4 +35,11 @@ public class MemberService {
     public Member getMemberByLoginId(String loginId) {
         return memberDao.findByLoginId(loginId);
     }
+
+    /* 회원 정보 수정 */
+    public ResultData modifyMember(Map<String, Object> param) {
+        memberDao.update(param);
+        return new ResultData("S-1", "회원정보가 수정되었습니다.");
+    }
+
 }
