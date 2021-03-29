@@ -44,4 +44,8 @@ build/
 /src/main/java/com/tena/untact2021/util/Util2.java
 /src/main/java/com/tena/untact2021/util/XmlPropertyParser.java
 /src/main/java/com/tena/untact2021/util/XmlPropertyParser2.java
+/src/main/java/com/tena/untact2021/util/StringToEnumMapping.java
+/src/main/java/com/tena/untact2021/demo
+/src/main/java/com/tena/untact2021/dto/convert/StringToSearchKeywordTypeConverter2.java
+/src/main/java/com/tena/untact2021/dto/Search2.java
 /pom_for_xml_parsing_tutorial.xml
