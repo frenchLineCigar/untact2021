@@ -49,7 +49,7 @@
 
         <!-- 10MB가 넘어가면 압축파일 생성 -->
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>1MB</MaxFileSize>
+            <MaxFileSize>10MB</MaxFileSize>
         </triggeringPolicy>
 
         <!-- 파일 덮어쓰기 정책 -->

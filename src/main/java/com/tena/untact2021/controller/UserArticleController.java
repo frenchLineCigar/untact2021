@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.tena.untact2021.dto.Search;
+import com.tena.untact2021.util.Util;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +24,8 @@ import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.service.ArticleService;
 
 import lombok.RequiredArgsConstructor;
+
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -65,7 +71,13 @@ public class UserArticleController {
 	/* 게시물 추가 */
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(@RequestParam Map<String, Object> param) {
+	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpSession session) {
+
+        // 로그인 검증
+        if (session.getAttribute("loggedInMemberId") == null) {
+            return new ResultData("F-2", "로그인 후 이용해주세요.");
+        }
+
 		if (param.get("title") == null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
@@ -73,6 +85,8 @@ public class UserArticleController {
 		if (param.get("body") == null) {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
+
+        param.put("memberId", session.getAttribute("loggedInMemberId"));
 
 		return articleService.addArticle(param);
 	}

@@ -47,7 +47,8 @@
 			regDate = NOW(),
 			updateDate = NOW(),
 			title = #{title},
-			`body` = #{body}
+			`body` = #{body},
+            memberId = #{memberId}
 	</insert>
 
 	<!-- 게시물 삭제 -->
