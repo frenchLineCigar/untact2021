@@ -6,9 +6,6 @@ import java.util.Map;
 import com.tena.untact2021.dto.Search;
 import com.tena.untact2021.util.Util;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +30,10 @@ import javax.servlet.http.HttpSession;
 public class UserArticleController {
 
 	private final ArticleService articleService;
+
+    // TODO : 리팩토링 해야할 것
+    //  -> Interceptor 처리 : 로그인 검증, 권한 체크
+    //  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
 
 	@ExceptionHandler
 	@ResponseBody
@@ -74,7 +75,8 @@ public class UserArticleController {
 	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpSession session) {
 
         // 로그인 검증
-        if (session.getAttribute("loggedInMemberId") == null) {
+        int loggedInMemberId = Util.getAsInt(session.getAttribute("loggedInMemberId"), 0);
+        if (loggedInMemberId == 0) {
             return new ResultData("F-2", "로그인 후 이용해주세요.");
         }
 
@@ -86,7 +88,7 @@ public class UserArticleController {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
 
-        param.put("memberId", session.getAttribute("loggedInMemberId"));
+        param.put("memberId", loggedInMemberId);
 
 		return articleService.addArticle(param);
 	}
@@ -94,7 +96,14 @@ public class UserArticleController {
 	/* 게시물 삭제 */
 	@RequestMapping("/user/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(Integer id) {
+	public ResultData doDelete(Integer id, HttpSession session) {
+
+        // 로그인 검증
+        int loggedInMemberId = Util.getAsInt(session.getAttribute("loggedInMemberId"), 0);
+        if (loggedInMemberId == 0) {
+            return new ResultData("F-2", "로그인 후 이용해주세요.");
+        }
+
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
@@ -105,13 +114,26 @@ public class UserArticleController {
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
 
+        //권한 체크
+        ResultData resultData = articleService.getMemberCanDelete(article, loggedInMemberId);
+        if (resultData.isFail()) {
+            return resultData;
+        }
+
 		return articleService.deleteArticle(id);
 	}
 
 	/* 게시물 수정 */
 	@RequestMapping("/user/article/doModify")
 	@ResponseBody
-	public ResultData doModify(Integer id, String title, String body) {
+	public ResultData doModify(Integer id, String title, String body, HttpSession session) {
+
+        // 로그인 검증
+        int loggedInMemberId = Util.getAsInt(session.getAttribute("loggedInMemberId"), 0);
+        if (loggedInMemberId == 0) {
+            return new ResultData("F-2", "로그인 후 이용해주세요.");
+        }
+        
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
@@ -130,7 +152,13 @@ public class UserArticleController {
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
 
-		return articleService.modifyArticle(id, title, body);
+        //권한 체크
+        ResultData resultData = articleService.getMemberCanModify(article, loggedInMemberId);
+        if (resultData.isFail()) {
+            return resultData;
+        }
+
+        return articleService.modifyArticle(id, title, body);
 	}
 
 }

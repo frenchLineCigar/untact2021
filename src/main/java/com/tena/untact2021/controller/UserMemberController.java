@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.security.acl.Group;
 import java.util.Map;
 
 @Slf4j
@@ -22,13 +20,14 @@ public class UserMemberController {
 
     private final MemberService memberService;
 
+    // TODO : 리팩토링 해야할 것
+    //  -> Interceptor 처리 : 로그인 검증, 권한 체크
+    //  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
+
     /* 회원 가입 */
     @RequestMapping("/user/member/doJoin")
     @ResponseBody
     public ResultData doJoin(@RequestParam Map<String, Object> param) {
-
-        // TODO : 리팩토링
-        //  HandlerMethodArgumentResolver + JSR-303 사용(DTO) 및 Validator 구현(@InitBinder)
 
         if (param.get("loginId") == null) {
             return new ResultData("F-1", "loginId를 입력해주세요.");
@@ -72,9 +71,6 @@ public class UserMemberController {
             return new ResultData("F-4", "이미 로그인 되었습니다.");
         }
 
-        // TODO : 리팩토링
-        //  HandlerMethodArgumentResolver + JSR-303 사용(DTO) 및 Validator 구현(@InitBinder)
-
         if (loginId == null) {
             return new ResultData("F-1", "loginId를 입력해주세요.");
         }
@@ -117,7 +113,7 @@ public class UserMemberController {
     @RequestMapping("/user/member/doModify")
     @ResponseBody
     public ResultData doModify(@RequestParam Map<String, Object> param, HttpSession session) {
-        
+
         // 로그인 검증
         if (session.getAttribute("loggedInMemberId") == null) {
             return new ResultData("F-1", "로그인 후 이용해주세요.");

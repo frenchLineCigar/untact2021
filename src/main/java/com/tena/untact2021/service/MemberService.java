@@ -42,4 +42,8 @@ public class MemberService {
         return new ResultData("S-1", "회원정보가 수정되었습니다.");
     }
 
+    // TODO : 리팩토링 해야할 것 -> Member 도메인에 권한 enum 값 추가해서 메서드 옮길 것
+    public boolean isAdmin(int memberId) {
+        return memberId == 1; // 1: 관리자
+    }
 }

@@ -21,6 +21,7 @@ import static com.tena.untact2021.dto.Search.*;
 public class ArticleService {
 
 	private final ArticleDao articleDao;
+    private final MemberService memberService;
 
 	/* 전체 게시물 조회 */
 	public List<Article> getArticles(SearchKeywordType searchKeywordType, String searchKeyword) {
@@ -59,4 +60,23 @@ public class ArticleService {
 		return new ResultData("S-1", "게시물을 수정하였습니다.", "id", id);
 	}
 
+    /* 게시물 수정 권한 */
+    public ResultData getMemberCanModify(Article article, int memberId) {
+	    // 작성자
+        if (article.getMemberId() == memberId) {
+            return new ResultData("S-1", " 가능합니다.");
+        }
+        // TODO : 리팩토링 해야할 것 -> Member 도메인에 권한 필드 만들어 리팩토링 할 것
+        // 슈퍼 관리자
+        if (memberService.isAdmin(memberId)) {
+            return new ResultData("S-2", " 가능합니다.");
+        }
+        // 그 외
+        return new ResultData("F-1", " 권한이 없습니다.");
+    }
+
+    /* 게시물 삭제 권한 */
+    public ResultData getMemberCanDelete(Article article, int memberId) {
+        return getMemberCanModify(article, memberId);
+    }
 }
