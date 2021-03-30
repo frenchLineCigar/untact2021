@@ -13,6 +13,16 @@
 			id = #{id}
 	</select>
 
+    <!-- 게시물 조회 (작성자 정보 포함) -->
+    <select id="findForPrintById" resultType="Article">
+        SELECT A.*,
+               IFNULL(M.nickname, "탈퇴회원") AS extra__writer
+        FROM article AS A
+        LEFT JOIN `member` AS M
+        ON A.memberId = M.id
+        WHERE A.id = 2;
+    </select>
+
 	<!-- 전체 게시물 조회 -->
 	<!--
 	List<Article> findAll(@Param("searchKeywordType") String searchKeywordType, 

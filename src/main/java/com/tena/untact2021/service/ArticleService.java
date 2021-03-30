@@ -79,4 +79,9 @@ public class ArticleService {
     public ResultData getMemberCanDelete(Article article, int memberId) {
         return getMemberCanModify(article, memberId);
     }
+
+    /* 게시물 조회 (작성자 정보 포함) */
+    public Article getForPrintArticle(int id) {
+        return articleDao.findForPrintById(id);
+    }
 }

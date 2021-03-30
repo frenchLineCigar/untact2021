@@ -28,4 +28,6 @@ public interface ArticleDao {
 	/* 게시물 수정 */
 	void update(@Param("id") int id, @Param("title") String title, @Param("body") String body);
 
+    /* 게시물 조회 (작성자 정보 포함) */
+    Article findForPrintById(@Param("id") int id);
 }

@@ -15,4 +15,6 @@ public class Article {
 	private String title;
 	private String body;
 
+	private String extra__writer; //작성자 (M.nickname)
+
 }
