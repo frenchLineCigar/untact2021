@@ -84,4 +84,9 @@ public class ArticleService {
     public Article getForPrintArticle(int id) {
         return articleDao.findForPrintById(id);
     }
+
+    /* 전체 게시물 조회 (작성자 정보 포함) */
+    public List<Article> getForPrintArticle(SearchKeywordType searchKeywordType, String searchKeyword) {
+        return articleDao.findAllForPrint(searchKeywordType, searchKeyword);
+    }
 }

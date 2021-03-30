@@ -62,20 +62,22 @@ public class UserArticleController {
 	/* 전체 게시물 조회 */
 	@RequestMapping("/user/article/list")
 	@ResponseBody
-	public List<Article> showList(@ModelAttribute Search search) {
+	public ResultData showList(@ModelAttribute Search search) {
 		log.info("UserArticleController.showList");
 		log.info("search: {}", search);
 
-		return articleService.getArticles(search.getSearchKeywordType(), search.getSearchKeyword());
+        List<Article> articles = articleService.getForPrintArticle(search.getSearchKeywordType(), search.getSearchKeyword());
+        return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 
 	@PostMapping(value = "/user/article/list", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<Article> showListJson(@RequestBody Search search) {
+	public ResultData showListJson(@RequestBody Search search) {
 		log.debug("UserArticleController.showListJson");
 		log.debug("search: {}", search);
 
-		return articleService.getArticles(search.getSearchKeywordType(), search.getSearchKeyword());
+        List<Article> articles = articleService.getForPrintArticle(search.getSearchKeywordType(), search.getSearchKeyword());
+        return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 
 	/* 게시물 추가 */

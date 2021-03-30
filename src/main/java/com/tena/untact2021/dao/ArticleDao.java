@@ -16,7 +16,7 @@ public interface ArticleDao {
 	/* 게시물 조회 */
 	Article findById(@Param("id") int id);
 
-	/* TODO 전체 게시물 조회 */
+	/* 전체 게시물 조회 */
 	List<Article> findAll(@Param("searchKeywordType") SearchKeywordType searchKeywordType, @Param("searchKeyword") String searchKeyword);
 
 	/* 게시물 추가 */
@@ -30,4 +30,9 @@ public interface ArticleDao {
 
     /* 게시물 조회 (작성자 정보 포함) */
     Article findForPrintById(@Param("id") int id);
+
+    /* 전체 게시물 조회 (작성자 정보 포함) */
+    List<Article> findAllForPrint(@Param("searchKeywordType") SearchKeywordType searchKeywordType,
+                                  @Param("searchKeyword") String searchKeyword);
+
 }
