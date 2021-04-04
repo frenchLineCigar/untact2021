@@ -20,13 +20,13 @@ public interface ArticleDao {
 	List<Article> findAll(@Param("searchKeywordType") SearchKeywordType searchKeywordType, @Param("searchKeyword") String searchKeyword);
 
 	/* 게시물 추가 */
-	int save(Map<String, Object> param);
+	void save(Article article);
 
 	/* 게시물 삭제 */
 	boolean deleteById(@Param("id") int id);
 
 	/* 게시물 수정 */
-	void update(@Param("id") int id, @Param("title") String title, @Param("body") String body);
+    boolean update(Article article);
 
     /* 게시물 조회 (작성자 정보 포함) */
     Article findForPrintById(@Param("id") int id);

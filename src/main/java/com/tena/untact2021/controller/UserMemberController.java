@@ -7,12 +7,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
+/**
+ * TODO : 리팩토링 해야할 것
+ *  -> Interceptor 처리 : 로그인 검증, 권한 체크
+ *  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -20,54 +24,55 @@ public class UserMemberController {
 
     private final MemberService memberService;
 
-    // TODO : 리팩토링 해야할 것
-    //  -> Interceptor 처리 : 로그인 검증, 권한 체크
-    //  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
+    @Resource(name = "loggedInMember")
+    private Member loggedInMember; //로그인 사용자 정보를 담을 세션 스코프 빈
 
     /* 회원 가입 */
     @RequestMapping("/user/member/doJoin")
     @ResponseBody
-    public ResultData doJoin(@RequestParam Map<String, Object> param) {
+    public ResultData doJoin(Member member) {
 
-        if (param.get("loginId") == null) {
+        if (member.getLoginId() == null) {
             return new ResultData("F-1", "loginId를 입력해주세요.");
         }
 
-        Member existingMember = memberService.getMemberByLoginId((String) param.get("loginId"));
+        // 아이디 중복 체크
+        Member existingMember = memberService.getMemberByLoginId(member.getLoginId());
 
         if (existingMember != null) {
-            return new ResultData("F-2", String.format("%s (은)는 이미 사용 중인 로그인 아이디 입니다.", param.get("loginId")));
+            return new ResultData("F-2", String.format("%s (은)는 이미 사용 중인 로그인 아이디 입니다.", member.getLoginId()));
         }
 
-        if (param.get("loginPw") == null) {
+        if (member.getLoginPw() == null) {
             return new ResultData("F-1", "loginPw을 입력해주세요.");
         }
 
-        if (param.get("name") == null) {
+        if (member.getName() == null) {
             return new ResultData("F-1", "name을 입력해주세요.");
         }
 
-        if (param.get("nickname") == null) {
+        if (member.getNickname() == null) {
             return new ResultData("F-1", "nickname을 입력해주세요.");
         }
 
-        if (param.get("cellphoneNo") == null) {
+        if (member.getCellphoneNo() == null) {
             return new ResultData("F-1", "cellphoneNo을 입력해주세요.");
         }
 
-        if (param.get("email") == null) {
+        if (member.getEmail() == null) {
             return new ResultData("F-1", "email을 입력해주세요.");
         }
 
-        return memberService.joinMember(param);
+        return memberService.joinMember(member);
     }
 
     /* 회원 로그인 */
     @RequestMapping("/user/member/doLogin")
     @ResponseBody
-    public ResultData doLogin(String loginId, String loginPw, HttpSession session) {
+    public ResultData doLogin(String loginId, String loginPw) {
 
-        if (session.getAttribute("loggedInMemberId") != null) {
+        // 로그인 여부 체크
+        if (loggedInMember.isLogin()) {
             return new ResultData("F-4", "이미 로그인 되었습니다.");
         }
 
@@ -75,21 +80,24 @@ public class UserMemberController {
             return new ResultData("F-1", "loginId를 입력해주세요.");
         }
 
-        Member existingMember = memberService.getMemberByLoginId((String) loginId);
+        if (loginPw == null) {
+            return new ResultData("F-1", "비밀번호를 입력해주세요.");
+        }
+
+        // 해당 회원 조회
+        Member existingMember = memberService.getMemberByLoginId(loginId);
 
         if (existingMember == null) {
             return new ResultData("F-2", "존재하지 않는 로그인 아이디 입니다.", "loginId", loginId);
         }
 
-        if (loginPw == null) {
-            return new ResultData("F-1", "비밀번호를 입력해주세요.");
-        }
-
-        if (existingMember.getLoginPw().equals(loginPw) == false) {
+        // 비밀번호 일치 여부 체크
+        if (!existingMember.getLoginPw().equals(loginPw)) {
             return new ResultData("F-3", "비밀번호가 일치하지 않습니다.");
         }
 
-        session.setAttribute("loggedInMemberId", existingMember.getId());
+        // 로그인 처리
+        memberService.login(existingMember);
 
         return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()));
     }
@@ -99,11 +107,12 @@ public class UserMemberController {
     @ResponseBody
     public ResultData doLogout(HttpSession session) {
 
-        if (session.getAttribute("loggedInMemberId") == null) {
+        // 로그인 여부 체크
+        if (!loggedInMember.isLogin()) {
             return new ResultData("S-2", "이미 로그아웃 되었습니다.");
         }
 
-        //session.removeAttribute("loggedInMemberId");
+        // 세션 무효화
         session.invalidate();
 
         return new ResultData("S-1", "로그아웃 되었습니다.");
@@ -112,20 +121,20 @@ public class UserMemberController {
     /* 회원 정보 수정 */
     @RequestMapping("/user/member/doModify")
     @ResponseBody
-    public ResultData doModify(@RequestParam Map<String, Object> param, HttpSession session) {
+    public ResultData doModify(Member member, HttpSession session) {
 
         // 로그인 검증
-        if (session.getAttribute("loggedInMemberId") == null) {
+        if (!loggedInMember.isLogin()) {
             return new ResultData("F-1", "로그인 후 이용해주세요.");
         }
 
-        if (param.isEmpty()) {
+        if (member.isValidInput()) {
             return new ResultData("F-2", "수정할 정보를 입력해주세요.");
         }
 
-        param.put("id", session.getAttribute("loggedInMemberId"));
+        member.setId(loggedInMember.getId());
 
-        return memberService.modifyMember(param);
+        return memberService.modifyMember(member);
     }
 
 }

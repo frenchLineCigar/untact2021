@@ -3,12 +3,11 @@ package com.tena.untact2021.service;
 import com.tena.untact2021.dao.MemberDao;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
-import com.tena.untact2021.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
+import javax.annotation.Resource;
 
 @Service
 @Transactional
@@ -17,17 +16,17 @@ public class MemberService {
 
     private final MemberDao memberDao;
 
+    @Resource(name = "loggedInMember")
+    private Member loggedInMember; //로그인 사용자 정보를 담을 세션 스코프 빈
+
     /* 회원 가입 */
-    public ResultData joinMember(Map<String, Object> param) {
-        memberDao.save(param);
-
-        int id = Util.getAsInt(param.get("id"));
-
-        return new ResultData("S-1", String.format("%s님 환영합니다.", param.get("nickname")), "id", id);
+    public ResultData joinMember(Member newMember) {
+        memberDao.save(newMember);
+        return new ResultData("S-1", String.format("%s님 환영합니다.", newMember.getNickname()), "id", newMember.getId());
     }
 
     /* 회원 조회 (PK) */
-    public Member getMember(int id) {
+    public Member getMemberById(int id) {
         return memberDao.findById(id);
     }
 
@@ -37,13 +36,17 @@ public class MemberService {
     }
 
     /* 회원 정보 수정 */
-    public ResultData modifyMember(Map<String, Object> param) {
-        memberDao.update(param);
+    public ResultData modifyMember(Member member) {
+        memberDao.update(member);
         return new ResultData("S-1", "회원정보가 수정되었습니다.");
     }
 
-    // TODO : 리팩토링 해야할 것 -> Member 도메인에 권한 enum 값 추가해서 메서드 옮길 것
-    public boolean isAdmin(int memberId) {
-        return memberId == 1; // 1: 관리자
+    /* 회원 로그인 */
+    public void login(Member existingMember) {
+
+        //세션 영역에서 사용할 빈(loggedInMember)에 사용자 정보 저장
+        loggedInMember.setId(existingMember.getId());
+        loggedInMember.setLoginId(existingMember.getLoginId());
+        loggedInMember.setLoginStatus(true);
     }
 }

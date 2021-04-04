@@ -1,17 +1,18 @@
 package com.tena.untact2021.service;
 
 import java.util.List;
-import java.util.Map;
 
+import com.tena.untact2021.dto.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tena.untact2021.dao.ArticleDao;
 import com.tena.untact2021.dto.Article;
 import com.tena.untact2021.dto.ResultData;
-import com.tena.untact2021.util.Util;
 
 import lombok.RequiredArgsConstructor;
+
+import javax.annotation.Resource;
 
 import static com.tena.untact2021.dto.Search.*;
 
@@ -21,7 +22,9 @@ import static com.tena.untact2021.dto.Search.*;
 public class ArticleService {
 
 	private final ArticleDao articleDao;
-    private final MemberService memberService;
+
+    @Resource(name = "loggedInMember")
+    private Member loggedInMember;
 
 	/* 전체 게시물 조회 */
 	public List<Article> getArticles(SearchKeywordType searchKeywordType, String searchKeyword) {
@@ -34,51 +37,61 @@ public class ArticleService {
 	}
 
 	/* 게시물 추가 */
-	public ResultData addArticle(Map<String, Object> param) {
-		articleDao.save(param);
+	public ResultData addArticle(Article article) {
 
-		int id = Util.getAsInt(param.get("id"));
+	    //작성자 정보는 현재 세션에 로그인한 사용자
+        article.setMemberId(loggedInMember.getId());
 
-		return new ResultData("S-1", "성공하였습니다.", "id", id);
+        articleDao.save(article);
+
+		return new ResultData("S-1", "성공하였습니다.", "id", article.getId());
 	}
 
 	/* 게시물 삭제 */
 	public ResultData deleteArticle(int id) {
-		boolean result = articleDao.deleteById(id);
+
+	    //게시물 유무 확인
+        Article existingArticle = articleDao.findById(id);
+        if (existingArticle == null) {
+            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
+        }
+        
+        //삭제 권한 체크
+        if (! loggedInMember.canDelete(existingArticle)) {
+            return new ResultData("F-1", " 권한이 없습니다.");
+        }
+
+		boolean result = articleDao.deleteById(existingArticle.getId());
 
 		if (result == false) {
-			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.", "id", id);
+			return new ResultData("F-2", "해당 게시물은 존재하지 않습니다.", "id", existingArticle.getId());
 		}
 
-		return new ResultData("S-1", "삭제하였습니다.", "id", id);
+		return new ResultData("S-1", "삭제하였습니다.", "id", existingArticle.getId());
 	}
 
 	/* 게시물 수정 */
-	public ResultData modifyArticle(int id, String title, String body) {
-		articleDao.update(id, title, body);
+	public ResultData modifyArticle(Article article) {
 
-		return new ResultData("S-1", "게시물을 수정하였습니다.", "id", id);
+	    //게시물 유무 확인
+        Article existingArticle = articleDao.findById(article.getId());
+        if (existingArticle == null) {
+            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
+        }
+
+        //수정 권한 체크
+        if (! loggedInMember.canModify(existingArticle)) {
+            return new ResultData("F-1", " 권한이 없습니다.");
+        }
+
+        boolean result = articleDao.update(article);
+
+        if (result == false) {
+            return new ResultData("F-2", "게시물 수정에 실패했습니다.", "id", article.getId());
+        }
+
+        return new ResultData("S-1", "게시물을 수정하였습니다.", "id", article.getId());
 	}
-
-    /* 게시물 수정 권한 */
-    public ResultData getMemberCanModify(Article article, int memberId) {
-	    // 작성자
-        if (article.getMemberId() == memberId) {
-            return new ResultData("S-1", " 가능합니다.");
-        }
-        // TODO : 리팩토링 해야할 것 -> Member 도메인에 권한 필드 만들어 리팩토링 할 것
-        // 슈퍼 관리자
-        if (memberService.isAdmin(memberId)) {
-            return new ResultData("S-2", " 가능합니다.");
-        }
-        // 그 외
-        return new ResultData("F-1", " 권한이 없습니다.");
-    }
-
-    /* 게시물 삭제 권한 */
-    public ResultData getMemberCanDelete(Article article, int memberId) {
-        return getMemberCanModify(article, memberId);
-    }
 
     /* 게시물 조회 (작성자 정보 포함) */
     public Article getForPrintArticle(int id) {

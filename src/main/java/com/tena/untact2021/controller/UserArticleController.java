@@ -1,10 +1,11 @@
 package com.tena.untact2021.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.tena.untact2021.dto.Article;
+import com.tena.untact2021.dto.Member;
+import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.dto.Search;
-import com.tena.untact2021.util.Util;
+import com.tena.untact2021.service.ArticleService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -13,17 +14,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tena.untact2021.dto.Article;
-import com.tena.untact2021.dto.ResultData;
-import com.tena.untact2021.service.ArticleService;
+import javax.annotation.Resource;
+import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
-import javax.servlet.http.HttpSession;
-
+/**
+ * TODO : 리팩토링 해야할 것
+ *  -> Interceptor 처리 : 로그인 검증, 권한 체크
+ *  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -31,9 +31,8 @@ public class UserArticleController {
 
 	private final ArticleService articleService;
 
-    // TODO : 리팩토링 해야할 것
-    //  -> Interceptor 처리 : 로그인 검증, 권한 체크
-    //  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
+    @Resource(name = "loggedInMember")
+    private Member loggedInMember;
 
 	@ExceptionHandler
 	@ResponseBody
@@ -83,53 +82,37 @@ public class UserArticleController {
 	/* 게시물 추가 */
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpSession session) {
+	public ResultData doAdd(Article article) {
 
         // 로그인 검증
-        int loggedInMemberId = Util.getAsInt(session.getAttribute("loggedInMemberId"), 0);
-        if (loggedInMemberId == 0) {
+        if (!loggedInMember.isLogin()) {
             return new ResultData("F-2", "로그인 후 이용해주세요.");
         }
 
-		if (param.get("title") == null) {
+		if (article.getTitle()== null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
 
-		if (param.get("body") == null) {
+		if (article.getBody() == null) {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
 
-        param.put("memberId", loggedInMemberId);
-
-		return articleService.addArticle(param);
+		return articleService.addArticle(article);
 	}
 
 	/* 게시물 삭제 */
 	@RequestMapping("/user/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(Integer id, HttpSession session) {
+	public ResultData doDelete(Integer id) {
 
         // 로그인 검증
-        int loggedInMemberId = Util.getAsInt(session.getAttribute("loggedInMemberId"), 0);
-        if (loggedInMemberId == 0) {
+        if (!loggedInMember.isLogin()) {
             return new ResultData("F-2", "로그인 후 이용해주세요.");
         }
 
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
-
-		Article article = articleService.getArticle(id);
-
-		if (article == null) {
-			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
-		}
-
-        //권한 체크
-        ResultData resultData = articleService.getMemberCanDelete(article, loggedInMemberId);
-        if (resultData.isFail()) {
-            return resultData;
-        }
 
 		return articleService.deleteArticle(id);
 	}
@@ -137,39 +120,26 @@ public class UserArticleController {
 	/* 게시물 수정 */
 	@RequestMapping("/user/article/doModify")
 	@ResponseBody
-	public ResultData doModify(Integer id, String title, String body, HttpSession session) {
+	public ResultData doModify(Article article) {
 
         // 로그인 검증
-        int loggedInMemberId = Util.getAsInt(session.getAttribute("loggedInMemberId"), 0);
-        if (loggedInMemberId == 0) {
+        if (!loggedInMember.isLogin()) {
             return new ResultData("F-2", "로그인 후 이용해주세요.");
         }
         
-		if (id == null) {
+		if (article.getId() == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
 
-		if (title == null) {
+		if (article.getTitle() == null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
 
-		if (body == null) {
+		if (article.getBody() == null) {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
 
-		Article article = articleService.getArticle(id);
-
-		if (article == null) {
-			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
-		}
-
-        //권한 체크
-        ResultData resultData = articleService.getMemberCanModify(article, loggedInMemberId);
-        if (resultData.isFail()) {
-            return resultData;
-        }
-
-        return articleService.modifyArticle(id, title, body);
+        return articleService.modifyArticle(article);
 	}
 
 }
