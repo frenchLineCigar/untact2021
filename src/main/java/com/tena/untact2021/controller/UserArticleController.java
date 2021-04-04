@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
+
+import static com.tena.untact2021.dto.Search.*;
 
 /**
  * TODO : 리팩토링 해야할 것
@@ -56,21 +59,37 @@ public class UserArticleController {
 	/* 전체 게시물 조회 */
 	@RequestMapping("/user/article/list")
 	@ResponseBody
-	public ResultData showList(@ModelAttribute Search search) {
+	public ResultData showList(@ModelAttribute Search search, @RequestParam(defaultValue = "1") int page) {
 		log.info("UserArticleController.showList");
 		log.info("search: {}", search);
 
-        List<Article> articles = articleService.getForPrintArticle(search.getSearchKeywordType(), search.getSearchKeyword());
+        SearchKeywordType searchKeywordType = search.getSearchKeywordType();
+        String searchKeyword = search.getSearchKeyword();
+
+        System.out.println("page = " + page);
+
+        // 한 페이지에 보여줄 게시물 개수
+        int itemsInAPage = 20;
+
+        List<Article> articles = articleService.getForPrintArticles(searchKeywordType, searchKeyword, page, itemsInAPage);
         return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 
 	@PostMapping(value = "/user/article/list", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResultData showListJson(@RequestBody Search search) {
+	public ResultData showListJson(@RequestBody Search search, @RequestParam(defaultValue = "1") int page){
 		log.debug("UserArticleController.showListJson");
 		log.debug("search: {}", search);
 
-        List<Article> articles = articleService.getForPrintArticle(search.getSearchKeywordType(), search.getSearchKeyword());
+        SearchKeywordType searchKeywordType = search.getSearchKeywordType();
+        String searchKeyword = search.getSearchKeyword();
+
+        System.out.println("page = " + page);
+
+        // 한 페이지에 보여줄 게시물 개수
+        int itemsInAPage = 20;
+
+        List<Article> articles = articleService.getForPrintArticles(searchKeywordType, searchKeyword, page, itemsInAPage);
         return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 

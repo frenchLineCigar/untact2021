@@ -74,6 +74,9 @@
             </if>
         </if>
         ORDER BY id DESC
+        <if test="limitFrom != null and limitTake != null">
+            LIMIT #{limitFrom}, #{limitTake}
+        </if>
     </select>
 
 	<!-- 게시물 추가 -->
@@ -98,7 +101,7 @@
 	<update id="update">
 		UPDATE article
 		<set>
-			<if test="title != null || body != null">
+			<if test="title != null or body != null">
 				updateDate = NOW(),
 			</if>
 			<if test="title != null">
