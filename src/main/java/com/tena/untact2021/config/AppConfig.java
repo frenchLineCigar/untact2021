@@ -9,10 +9,10 @@ import org.springframework.web.context.annotation.SessionScope;
 public class AppConfig {
 
     //로그인 성공 했을 경우 세션 영역에서 사용할 객체
-    //Creating bean with name 'scopedTarget.loggedInMember'
-    @Bean("loggedInMember")
+    //Creating bean with name 'scopedTarget.loginMemberBean'
     @SessionScope
-    public Member loggedInMember() {
+    @Bean("loginMemberBean")
+    public Member loginMemberBean() {
         Member member = new Member();
         return member;
     }

@@ -24,8 +24,8 @@ public class UserMemberController {
 
     private final MemberService memberService;
 
-    @Resource(name = "loggedInMember")
-    private Member loggedInMember; //로그인 사용자 정보를 담을 세션 스코프 빈
+    @Resource(name = "loginMemberBean")
+    private Member loginMemberBean; //로그인 사용자 정보를 담을 세션 스코프 빈
 
     /* 회원 가입 */
     @RequestMapping("/user/member/doJoin")
@@ -72,7 +72,7 @@ public class UserMemberController {
     public ResultData doLogin(String loginId, String loginPw) {
 
         // 로그인 여부 체크
-        if (loggedInMember.isLogin()) {
+        if (loginMemberBean.isLogin()) {
             return new ResultData("F-4", "이미 로그인 되었습니다.");
         }
 
@@ -108,7 +108,7 @@ public class UserMemberController {
     public ResultData doLogout(HttpSession session) {
 
         // 로그인 여부 체크
-        if (!loggedInMember.isLogin()) {
+        if (!loginMemberBean.isLogin()) {
             return new ResultData("S-2", "이미 로그아웃 되었습니다.");
         }
 
@@ -124,7 +124,7 @@ public class UserMemberController {
     public ResultData doModify(Member member, HttpSession session) {
 
         // 로그인 검증
-        if (!loggedInMember.isLogin()) {
+        if (!loginMemberBean.isLogin()) {
             return new ResultData("F-1", "로그인 후 이용해주세요.");
         }
 
@@ -132,7 +132,7 @@ public class UserMemberController {
             return new ResultData("F-2", "수정할 정보를 입력해주세요.");
         }
 
-        member.setId(loggedInMember.getId());
+        member.setId(loginMemberBean.getId());
 
         return memberService.modifyMember(member);
     }

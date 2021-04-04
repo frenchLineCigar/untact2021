@@ -31,8 +31,8 @@ public class UserArticleController {
 
 	private final ArticleService articleService;
 
-    @Resource(name = "loggedInMember")
-    private Member loggedInMember;
+    @Resource(name = "loginMemberBean")
+    private Member loginMemberBean;
 
 	@ExceptionHandler
 	@ResponseBody
@@ -85,7 +85,7 @@ public class UserArticleController {
 	public ResultData doAdd(Article article) {
 
         // 로그인 검증
-        if (!loggedInMember.isLogin()) {
+        if (!loginMemberBean.isLogin()) {
             return new ResultData("F-2", "로그인 후 이용해주세요.");
         }
 
@@ -106,7 +106,7 @@ public class UserArticleController {
 	public ResultData doDelete(Integer id) {
 
         // 로그인 검증
-        if (!loggedInMember.isLogin()) {
+        if (!loginMemberBean.isLogin()) {
             return new ResultData("F-2", "로그인 후 이용해주세요.");
         }
 
@@ -123,7 +123,7 @@ public class UserArticleController {
 	public ResultData doModify(Article article) {
 
         // 로그인 검증
-        if (!loggedInMember.isLogin()) {
+        if (!loginMemberBean.isLogin()) {
             return new ResultData("F-2", "로그인 후 이용해주세요.");
         }
         

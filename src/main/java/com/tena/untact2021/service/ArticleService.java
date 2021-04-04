@@ -23,8 +23,8 @@ public class ArticleService {
 
 	private final ArticleDao articleDao;
 
-    @Resource(name = "loggedInMember")
-    private Member loggedInMember;
+    @Resource(name = "loginMemberBean")
+    private Member loginMemberBean;
 
 	/* 전체 게시물 조회 */
 	public List<Article> getArticles(SearchKeywordType searchKeywordType, String searchKeyword) {
@@ -40,7 +40,7 @@ public class ArticleService {
 	public ResultData addArticle(Article article) {
 
 	    //작성자 정보는 현재 세션에 로그인한 사용자
-        article.setMemberId(loggedInMember.getId());
+        article.setMemberId(loginMemberBean.getId());
 
         articleDao.save(article);
 
@@ -57,7 +57,7 @@ public class ArticleService {
         }
         
         //삭제 권한 체크
-        if (! loggedInMember.canDelete(existingArticle)) {
+        if (! loginMemberBean.canDelete(existingArticle)) {
             return new ResultData("F-1", " 권한이 없습니다.");
         }
 
@@ -80,7 +80,7 @@ public class ArticleService {
         }
 
         //수정 권한 체크
-        if (! loggedInMember.canModify(existingArticle)) {
+        if (! loginMemberBean.canModify(existingArticle)) {
             return new ResultData("F-1", " 권한이 없습니다.");
         }
 

@@ -16,8 +16,8 @@ public class MemberService {
 
     private final MemberDao memberDao;
 
-    @Resource(name = "loggedInMember")
-    private Member loggedInMember; //로그인 사용자 정보를 담을 세션 스코프 빈
+    @Resource(name = "loginMemberBean")
+    private Member loginMemberBean; //로그인 사용자 정보를 담을 세션 스코프 빈
 
     /* 회원 가입 */
     public ResultData joinMember(Member newMember) {
@@ -44,9 +44,9 @@ public class MemberService {
     /* 회원 로그인 */
     public void login(Member existingMember) {
 
-        //세션 영역에서 사용할 빈(loggedInMember)에 사용자 정보 저장
-        loggedInMember.setId(existingMember.getId());
-        loggedInMember.setLoginId(existingMember.getLoginId());
-        loggedInMember.setLoginStatus(true);
+        //세션 영역에서 사용할 빈(loginMemberBean)에 사용자 정보 저장
+        loginMemberBean.setId(existingMember.getId());
+        loginMemberBean.setLoginId(existingMember.getLoginId());
+        loginMemberBean.setLoginStatus(true);
     }
 }
