@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * TODO : 리팩토링 해야할 것
- *  -> Interceptor 처리 : 로그인 검증, 권한 체크
  *  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
  */
 @Slf4j
@@ -45,16 +44,12 @@ public class UserArticleController {
 	@RequestMapping("/user/article/detail")
 	@ResponseBody
 	public ResultData showDetail(Integer id) {
-
-        if (id == null) {
-            return new ResultData("F-1", "id를 입력해주세요.");
-        }
+        if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 
 		Article article = articleService.getForPrintArticle(id);
 
-        if (article == null) {
-            return new ResultData("F-2", "존재하지 않는 게시물입니다.");
-        }
+        if (article == null) return new ResultData("F-2", "존재하지 않는 게시물입니다.");
+
 		return new ResultData("S-1", "조회 결과", "article", article);
 	}
 
@@ -83,19 +78,8 @@ public class UserArticleController {
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(Article article) {
-
-        // 로그인 검증
-        if (!loginMemberBean.isLogin()) {
-            return new ResultData("F-2", "로그인 후 이용해주세요.");
-        }
-
-		if (article.getTitle()== null) {
-			return new ResultData("F-1", "title을 입력해주세요.");
-		}
-
-		if (article.getBody() == null) {
-			return new ResultData("F-1", "body을 입력해주세요.");
-		}
+		if (article.getTitle()== null) return new ResultData("F-1", "title을 입력해주세요.");
+		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
 
 		return articleService.addArticle(article);
 	}
@@ -104,15 +88,7 @@ public class UserArticleController {
 	@RequestMapping("/user/article/doDelete")
 	@ResponseBody
 	public ResultData doDelete(Integer id) {
-
-        // 로그인 검증
-        if (!loginMemberBean.isLogin()) {
-            return new ResultData("F-2", "로그인 후 이용해주세요.");
-        }
-
-		if (id == null) {
-			return new ResultData("F-1", "id를 입력해주세요.");
-		}
+		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 
 		return articleService.deleteArticle(id);
 	}
@@ -121,23 +97,9 @@ public class UserArticleController {
 	@RequestMapping("/user/article/doModify")
 	@ResponseBody
 	public ResultData doModify(Article article) {
-
-        // 로그인 검증
-        if (!loginMemberBean.isLogin()) {
-            return new ResultData("F-2", "로그인 후 이용해주세요.");
-        }
-        
-		if (article.getId() == null) {
-			return new ResultData("F-1", "id를 입력해주세요.");
-		}
-
-		if (article.getTitle() == null) {
-			return new ResultData("F-1", "title을 입력해주세요.");
-		}
-
-		if (article.getBody() == null) {
-			return new ResultData("F-1", "body을 입력해주세요.");
-		}
+		if (article.getId() == null) return new ResultData("F-1", "id를 입력해주세요.");
+		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
+		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
 
         return articleService.modifyArticle(article);
 	}

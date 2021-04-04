@@ -14,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 /**
  * TODO : 리팩토링 해야할 것
- *  -> Interceptor 처리 : 로그인 검증, 권한 체크
  *  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
  */
 @Slf4j
@@ -31,10 +30,7 @@ public class UserMemberController {
     @RequestMapping("/user/member/doJoin")
     @ResponseBody
     public ResultData doJoin(Member member) {
-
-        if (member.getLoginId() == null) {
-            return new ResultData("F-1", "loginId를 입력해주세요.");
-        }
+        if (member.getLoginId() == null) return new ResultData("F-1", "loginId를 입력해주세요.");
 
         // 아이디 중복 체크
         Member existingMember = memberService.getMemberByLoginId(member.getLoginId());
@@ -43,25 +39,11 @@ public class UserMemberController {
             return new ResultData("F-2", String.format("%s (은)는 이미 사용 중인 로그인 아이디 입니다.", member.getLoginId()));
         }
 
-        if (member.getLoginPw() == null) {
-            return new ResultData("F-1", "loginPw을 입력해주세요.");
-        }
-
-        if (member.getName() == null) {
-            return new ResultData("F-1", "name을 입력해주세요.");
-        }
-
-        if (member.getNickname() == null) {
-            return new ResultData("F-1", "nickname을 입력해주세요.");
-        }
-
-        if (member.getCellphoneNo() == null) {
-            return new ResultData("F-1", "cellphoneNo을 입력해주세요.");
-        }
-
-        if (member.getEmail() == null) {
-            return new ResultData("F-1", "email을 입력해주세요.");
-        }
+        if (member.getLoginPw() == null) return new ResultData("F-1", "loginPw을 입력해주세요.");
+        if (member.getName() == null) return new ResultData("F-1", "name을 입력해주세요.");
+        if (member.getNickname() == null) return new ResultData("F-1", "nickname을 입력해주세요.");
+        if (member.getCellphoneNo() == null) return new ResultData("F-1", "cellphoneNo을 입력해주세요.");
+        if (member.getEmail() == null) return new ResultData("F-1", "email을 입력해주세요.");
 
         return memberService.joinMember(member);
     }
@@ -70,31 +52,15 @@ public class UserMemberController {
     @RequestMapping("/user/member/doLogin")
     @ResponseBody
     public ResultData doLogin(String loginId, String loginPw) {
-
-        // 로그인 여부 체크
-        if (loginMemberBean.isLogin()) {
-            return new ResultData("F-4", "이미 로그인 되었습니다.");
-        }
-
-        if (loginId == null) {
-            return new ResultData("F-1", "loginId를 입력해주세요.");
-        }
-
-        if (loginPw == null) {
-            return new ResultData("F-1", "비밀번호를 입력해주세요.");
-        }
+        if (loginId == null) return new ResultData("F-1", "loginId를 입력해주세요.");
+        if (loginPw == null) return new ResultData("F-1", "비밀번호를 입력해주세요.");
 
         // 해당 회원 조회
         Member existingMember = memberService.getMemberByLoginId(loginId);
-
-        if (existingMember == null) {
-            return new ResultData("F-2", "존재하지 않는 로그인 아이디 입니다.", "loginId", loginId);
-        }
+        if (existingMember == null) return new ResultData("F-2", "존재하지 않는 로그인 아이디 입니다.", "loginId", loginId);
 
         // 비밀번호 일치 여부 체크
-        if (!existingMember.getLoginPw().equals(loginPw)) {
-            return new ResultData("F-3", "비밀번호가 일치하지 않습니다.");
-        }
+        if (!existingMember.getLoginPw().equals(loginPw)) return new ResultData("F-3", "비밀번호가 일치하지 않습니다.");
 
         // 로그인 처리
         memberService.login(existingMember);
@@ -106,12 +72,6 @@ public class UserMemberController {
     @RequestMapping("/user/member/doLogout")
     @ResponseBody
     public ResultData doLogout(HttpSession session) {
-
-        // 로그인 여부 체크
-        if (!loginMemberBean.isLogin()) {
-            return new ResultData("S-2", "이미 로그아웃 되었습니다.");
-        }
-
         // 세션 무효화
         session.invalidate();
 
@@ -122,12 +82,6 @@ public class UserMemberController {
     @RequestMapping("/user/member/doModify")
     @ResponseBody
     public ResultData doModify(Member member, HttpSession session) {
-
-        // 로그인 검증
-        if (!loginMemberBean.isLogin()) {
-            return new ResultData("F-1", "로그인 후 이용해주세요.");
-        }
-
         if (member.isValidInput()) {
             return new ResultData("F-2", "수정할 정보를 입력해주세요.");
         }

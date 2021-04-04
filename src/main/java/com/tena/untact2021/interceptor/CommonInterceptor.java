@@ -28,12 +28,7 @@ public class CommonInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("CommonInterceptor.preHandle");
 
-        // 로그인 정보를 request에 담는다
-        request.setAttribute("loginMemberId", loginMemberBean.getId());
-        request.setAttribute("isLogin", loginMemberBean.isLogin());
-        request.setAttribute("isAdmin", loginMemberBean.isAdmin());
-
-        // 로그인 사용자 정보도 통으로 request에 담아버림
+        // 로그인 된 사용자 정보를 통으로 request에 담아버림
         Member loginMember = null;
         if (loginMemberBean.isLogin()) {
             loginMember = memberService.getMemberById(loginMemberBean.getId());
