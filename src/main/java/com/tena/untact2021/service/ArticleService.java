@@ -99,11 +99,11 @@ public class ArticleService {
     }
 
     /* 전체 게시물 조회 (작성자 정보 포함) */
-    public List<Article> getForPrintArticles(SearchKeywordType searchKeywordType, String searchKeyword,
+    public List<Article> getForPrintArticles(int boardId, SearchKeywordType searchKeywordType, String searchKeyword,
                                              int page, int itemsInAPage) {
         int limitFrom = (page - 1) * itemsInAPage;
         int limitTake = itemsInAPage;
 
-        return articleDao.findAllForPrint(searchKeywordType, searchKeyword, limitFrom, limitTake);
+        return articleDao.findAllForPrint(boardId, searchKeywordType, searchKeyword, limitFrom, limitTake);
     }
 }

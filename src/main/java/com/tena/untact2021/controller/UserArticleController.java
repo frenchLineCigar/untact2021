@@ -59,7 +59,8 @@ public class UserArticleController {
 	/* 전체 게시물 조회 */
 	@RequestMapping("/user/article/list")
 	@ResponseBody
-	public ResultData showList(@ModelAttribute Search search, @RequestParam(defaultValue = "1") int page) {
+	public ResultData showList(@RequestParam(defaultValue = "1") int boardId,
+                               @ModelAttribute Search search, @RequestParam(defaultValue = "1") int page) {
 		log.info("UserArticleController.showList");
 		log.info("search: {}", search);
 
@@ -71,13 +72,14 @@ public class UserArticleController {
         // 한 페이지에 보여줄 게시물 개수
         int itemsInAPage = 20;
 
-        List<Article> articles = articleService.getForPrintArticles(searchKeywordType, searchKeyword, page, itemsInAPage);
+        List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
         return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 
 	@PostMapping(value = "/user/article/list", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResultData showListJson(@RequestBody Search search, @RequestParam(defaultValue = "1") int page){
+	public ResultData showListJson(@RequestParam(defaultValue = "1") int boardId,
+                                   @RequestBody Search search, @RequestParam(defaultValue = "1") int page){
 		log.debug("UserArticleController.showListJson");
 		log.debug("search: {}", search);
 
@@ -89,7 +91,7 @@ public class UserArticleController {
         // 한 페이지에 보여줄 게시물 개수
         int itemsInAPage = 20;
 
-        List<Article> articles = articleService.getForPrintArticles(searchKeywordType, searchKeyword, page, itemsInAPage);
+        List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
         return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 

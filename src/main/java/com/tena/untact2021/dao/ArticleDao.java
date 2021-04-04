@@ -32,7 +32,8 @@ public interface ArticleDao {
     Article findForPrintById(@Param("id") int id);
 
     /* 전체 게시물 조회 (작성자 정보 포함) */
-    List<Article> findAllForPrint(@Param("searchKeywordType") SearchKeywordType searchKeywordType,
+    List<Article> findAllForPrint(@Param("boardId") int boardId,
+                                  @Param("searchKeywordType") SearchKeywordType searchKeywordType,
                                   @Param("searchKeyword") String searchKeyword,
                                   @Param("limitFrom") int limitFrom,
                                   @Param("limitTake") int limitTake);
