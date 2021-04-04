@@ -2,6 +2,7 @@ package com.tena.untact2021.service;
 
 import java.util.List;
 
+import com.tena.untact2021.dto.Board;
 import com.tena.untact2021.dto.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,5 +106,10 @@ public class ArticleService {
         int limitTake = itemsInAPage;
 
         return articleDao.findAllForPrint(boardId, searchKeywordType, searchKeyword, limitFrom, limitTake);
+    }
+
+    /* 게시판 정보 조회 */
+    public Board getBoard(int boardId) {
+        return articleDao.findBoard(boardId);
     }
 }

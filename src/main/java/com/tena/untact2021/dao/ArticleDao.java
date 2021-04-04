@@ -3,6 +3,7 @@ package com.tena.untact2021.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.tena.untact2021.dto.Board;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -38,4 +39,5 @@ public interface ArticleDao {
                                   @Param("limitFrom") int limitFrom,
                                   @Param("limitTake") int limitTake);
 
+    Board findBoard(@Param("boardId") int boardId);
 }

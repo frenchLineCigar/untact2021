@@ -1,6 +1,7 @@
 package com.tena.untact2021.controller;
 
 import com.tena.untact2021.dto.Article;
+import com.tena.untact2021.dto.Board;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.dto.Search;
@@ -64,10 +65,13 @@ public class UserArticleController {
 		log.info("UserArticleController.showList");
 		log.info("search: {}", search);
 
+        Board board = articleService.getBoard(boardId);
+        if (board == null) {
+            return new ResultData("F-1", "존재하지 않는 게시판 입니다.");
+        }
+
         SearchKeywordType searchKeywordType = search.getSearchKeywordType();
         String searchKeyword = search.getSearchKeyword();
-
-        System.out.println("page = " + page);
 
         // 한 페이지에 보여줄 게시물 개수
         int itemsInAPage = 20;
@@ -83,10 +87,13 @@ public class UserArticleController {
 		log.debug("UserArticleController.showListJson");
 		log.debug("search: {}", search);
 
+        Board board = articleService.getBoard(boardId);
+        if (board == null) {
+            return new ResultData("F-1", "존재하지 않는 게시판 입니다.");
+        }
+
         SearchKeywordType searchKeywordType = search.getSearchKeywordType();
         String searchKeyword = search.getSearchKeyword();
-
-        System.out.println("page = " + page);
 
         // 한 페이지에 보여줄 게시물 개수
         int itemsInAPage = 20;
