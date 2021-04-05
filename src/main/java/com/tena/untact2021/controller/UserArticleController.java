@@ -103,19 +103,6 @@ public class UserArticleController {
         return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 
-    /* 댓글 추가 */
-    @RequestMapping("/user/article/doAddReply")
-    @ResponseBody
-    public ResultData doAddReply(Reply reply) {
-        if (reply.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
-        if (reply.getArticleId() == null) return new ResultData("F-1", "articleId를 입력해주세요.");
-
-        //작성자 정보는 현재 세션에 로그인한 사용자
-        reply.setMemberId(loginMemberBean.getId());
-
-        return articleService.addReply(reply);
-    }
-
 	/* 게시물 추가 */
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody

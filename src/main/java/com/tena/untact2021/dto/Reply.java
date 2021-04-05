@@ -11,7 +11,8 @@ public class Reply {
 	private Integer id;
 	private String regDate;
 	private String updateDate;
-    private Integer articleId;
+    private String relTypeCode;
+    private Integer relId;
     private Integer memberId;
 	private String body;
 

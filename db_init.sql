@@ -202,3 +202,36 @@ SET regDate = NOW(),
     `body` = "내용3 입니다.";
 
 SELECT * FROM reply;
+
+# 댓글 리스팅 - 범용 댓글 처리
+#1 댓글 테이블 구조 수정 : 댓글은 꼭 특정 글에만 종속되는 것이 아니라 어디에도 붙을 수 있어야 한다 (페북 스타일)
+#2 특정 글에 관련된 댓글 검색 시, where 절의 relTypeCode 와 relId와 관련된 고속 검색을 위한 INDEX 생성 (일반 KEY로 인덱스 생성)
+
+# 게시물 전용 댓글에서 범용 댓글로 바꾸기 위해 relTypeCode 추가
+ALTER TABLE reply ADD COLUMN `relTypeCode` CHAR(20) NOT NULL AFTER updateDate;
+
+# 현재는 게시물 댓글 밖에 없기 때문에 모든 행의 relTypeCode 칼럼의 값을 article 로 지정
+UPDATE reply
+SET relTypeCode = 'article'
+WHERE relTypeCode = '';
+
+# articleId 칼럼명을 relId로 수정
+ALTER TABLE reply CHANGE `articleId` `relId` INT(10) UNSIGNED NOT NULL;
+
+# 고속 검색을 위한 인덱스 생성
+ALTER TABLE reply ADD KEY (relTypeCode, relId);
+# SELECT * FROM reply WHERE relTypeCode = 'article' AND relId = 5; # 적용 O
+# SELECT * FROM reply WHERE relTypeCode = 'article'; # 적용 O
+# SELECT * FROM reply WHERE relId = 5 AND relTypeCode = 'article'; # 적용 X
+# MySQL 최신 엔진에서는 쿼리 옵티마이저가 인덱스가 적용되지 않는 순서로 적어놔도 검색이 많이 답답하면 알아서 바꿔치기 해서 검색해주겠지만
+# WHERE 절 이하의 칼럼 순서에 유의
+
+SELECT R.*,
+       IFNULL(M.nickname, "탈퇴회원") AS extra__writer
+FROM reply AS R
+         LEFT JOIN `member` AS M
+                   ON R.memberId = M.id
+WHERE 1
+  AND R.relTypeCode = 'article'
+  AND R.relId = 2
+ORDER BY id DESC;

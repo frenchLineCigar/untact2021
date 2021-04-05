@@ -1,16 +1,13 @@
 package com.tena.untact2021.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import com.tena.untact2021.dto.Article;
 import com.tena.untact2021.dto.Board;
-import com.tena.untact2021.dto.Reply;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.tena.untact2021.dto.Article;
+import java.util.List;
 
-import static com.tena.untact2021.dto.Search.*;
+import static com.tena.untact2021.dto.Search.SearchKeywordType;
 
 @Mapper
 public interface ArticleDao {
@@ -42,5 +39,4 @@ public interface ArticleDao {
 
     Board findBoard(@Param("boardId") int boardId);
 
-    void saveReply(Reply reply);
 }

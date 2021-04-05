@@ -111,11 +111,4 @@ public class ArticleService {
         return articleDao.findBoard(boardId);
     }
 
-    /* 댓글 추가 */
-    public ResultData addReply(Reply reply) {
-
-        articleDao.saveReply(reply);
-
-        return new ResultData("S-1", "성공하였습니다.", "id", reply.getId());
-    }
 }
