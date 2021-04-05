@@ -77,4 +77,14 @@ public class UserReplyController {
         return replyService.deleteReply(id);
     }
 
+    /* 댓글 수정 */
+    @RequestMapping("/user/reply/doModify")
+    @ResponseBody
+    public ResultData doModify(Reply reply) {
+        if (reply.getId() == null) return new ResultData("F-1", "id를 입력해주세요.");
+        if (reply.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
+
+        return replyService.modifyReply(reply);
+    }
+
 }

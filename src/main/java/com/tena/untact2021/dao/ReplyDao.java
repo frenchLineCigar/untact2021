@@ -20,4 +20,6 @@ public interface ReplyDao {
     /* 댓글 삭제 */
     boolean deleteById(@Param("id") int id);
 
+    /* 댓글 수정 */
+    boolean update(@Param("id") int id, @Param("body") String body);
 }

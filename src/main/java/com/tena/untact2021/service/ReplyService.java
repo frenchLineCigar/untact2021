@@ -61,4 +61,25 @@ public class ReplyService {
         return new ResultData("S-1", "삭제하였습니다.", "id", existingReply.getId());
     }
 
+    public ResultData modifyReply(Reply reply) {
+
+        //게시물 유무 확인
+        Reply existingReply = getReply(reply.getId());
+        if (existingReply == null) {
+            return new ResultData("F-1", "해당 댓글은 존재하지 않습니다.");
+        }
+
+        //수정 권한 체크
+        if (! loginMemberBean.canModify(existingReply)) {
+            return new ResultData("F-1", "권한이 없습니다.");
+        }
+
+        boolean result = replyDao.update(reply.getId(), reply.getBody());
+
+        if (result == false) {
+            return new ResultData("F-2", "수정에 실패했습니다.", "id", reply.getId());
+        }
+
+        return new ResultData("S-1", "수정하였습니다.", "id", reply.getId());
+    }
 }

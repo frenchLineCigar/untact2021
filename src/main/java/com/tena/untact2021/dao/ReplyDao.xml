@@ -43,4 +43,16 @@
         WHERE id = #{id}
     </delete>
 
+    <!-- 댓글 수정 -->
+    <update id="update">
+        UPDATE reply
+        <set>
+            <if test="body != null">
+                updateDate = NOW(),
+                `body` = #{body}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
 </mapper>

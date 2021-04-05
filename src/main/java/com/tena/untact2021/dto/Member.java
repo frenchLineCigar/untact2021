@@ -44,7 +44,7 @@ public class Member {
     // TODO 인터셉터 처리
     /* 게시물 or 댓글 수정 가능 여부 */
     public <T> boolean canModify(T content) {
-        // 컨텐트 타입별 작성자 id 뽑기
+        // 타입 캐스팅 후 작성자 id를 담는다
         Integer contentMemberId = null;
         if (content instanceof Article) contentMemberId = ((Article) content).getMemberId();
         if (content instanceof Reply) contentMemberId = ((Reply) content).getMemberId();
