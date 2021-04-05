@@ -3,7 +3,6 @@ package com.tena.untact2021.controller;
 import com.tena.untact2021.dto.Article;
 import com.tena.untact2021.dto.Board;
 import com.tena.untact2021.dto.Member;
-import com.tena.untact2021.dto.Reply;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.dto.Search;
 import com.tena.untact2021.service.ArticleService;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.tena.untact2021.dto.Search.*;
+import static com.tena.untact2021.dto.Search.SearchKeywordType;
 
 /**
  * TODO : 리팩토링 해야할 것
@@ -123,6 +122,12 @@ public class UserArticleController {
 	public ResultData doDelete(Integer id) {
 		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 
+        //게시물 유무 확인
+        Article existingArticle = articleService.getArticle(id);
+        if (existingArticle == null) {
+            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
+        }
+
 		return articleService.deleteArticle(id);
 	}
 
@@ -133,6 +138,12 @@ public class UserArticleController {
 		if (article.getId() == null) return new ResultData("F-1", "id를 입력해주세요.");
 		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
 		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
+
+        //게시물 유무 확인
+        Article existingArticle = articleService.getArticle(article.getId());
+        if (existingArticle == null) {
+            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
+        }
 
         return articleService.modifyArticle(article);
 	}

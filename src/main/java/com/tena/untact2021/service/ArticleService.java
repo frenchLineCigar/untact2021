@@ -1,22 +1,16 @@
 package com.tena.untact2021.service;
 
-import java.util.List;
-
+import com.tena.untact2021.dao.ArticleDao;
+import com.tena.untact2021.dto.Article;
 import com.tena.untact2021.dto.Board;
-import com.tena.untact2021.dto.Member;
-import com.tena.untact2021.dto.Reply;
+import com.tena.untact2021.dto.ResultData;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tena.untact2021.dao.ArticleDao;
-import com.tena.untact2021.dto.Article;
-import com.tena.untact2021.dto.ResultData;
+import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
-import javax.annotation.Resource;
-
-import static com.tena.untact2021.dto.Search.*;
+import static com.tena.untact2021.dto.Search.SearchKeywordType;
 
 @Service
 @Transactional
@@ -24,9 +18,6 @@ import static com.tena.untact2021.dto.Search.*;
 public class ArticleService {
 
 	private final ArticleDao articleDao;
-
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean;
 
 	/* 전체 게시물 조회 */
 	public List<Article> getArticles(SearchKeywordType searchKeywordType, String searchKeyword) {
@@ -40,7 +31,6 @@ public class ArticleService {
 
 	/* 게시물 추가 */
 	public ResultData addArticle(Article article) {
-
         articleDao.save(article);
 
 		return new ResultData("S-1", "성공하였습니다.", "id", article.getId());
@@ -48,41 +38,17 @@ public class ArticleService {
 
 	/* 게시물 삭제 */
 	public ResultData deleteArticle(int id) {
-
-	    //게시물 유무 확인
-        Article existingArticle = articleDao.findById(id);
-        if (existingArticle == null) {
-            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
-        }
-        
-        //삭제 권한 체크
-        if (! loginMemberBean.canDelete(existingArticle)) {
-            return new ResultData("F-1", " 권한이 없습니다.");
-        }
-
-		boolean result = articleDao.deleteById(existingArticle.getId());
+		boolean result = articleDao.deleteById(id);
 
 		if (result == false) {
-			return new ResultData("F-2", "해당 게시물은 존재하지 않습니다.", "id", existingArticle.getId());
+			return new ResultData("F-2", "게시물 삭제에 실패했습니다.", "id", id);
 		}
 
-		return new ResultData("S-1", "삭제하였습니다.", "id", existingArticle.getId());
+		return new ResultData("S-1", "게시물을 삭제하였습니다.", "id", id);
 	}
 
 	/* 게시물 수정 */
 	public ResultData modifyArticle(Article article) {
-
-	    //게시물 유무 확인
-        Article existingArticle = articleDao.findById(article.getId());
-        if (existingArticle == null) {
-            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
-        }
-
-        //수정 권한 체크
-        if (! loginMemberBean.canModify(existingArticle)) {
-            return new ResultData("F-1", " 권한이 없습니다.");
-        }
-
         boolean result = articleDao.update(article);
 
         if (result == false) {

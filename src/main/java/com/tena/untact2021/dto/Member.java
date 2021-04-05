@@ -41,24 +41,20 @@ public class Member {
         //return this.loginId.equals("admin") || this.loginId.equals("user1"); //null 객체일 경우, equals 메소드 호출이 불가하므로 예외 발생
     }
 
-    // TODO 인터셉터 처리
-    /* 게시물 or 댓글 수정 가능 여부 */
-    public <T> boolean canModify(T content) {
-        // 타입 캐스팅 후 작성자 id를 담는다
-        Integer contentMemberId = null;
-        if (content instanceof Article) contentMemberId = ((Article) content).getMemberId();
-        if (content instanceof Reply) contentMemberId = ((Reply) content).getMemberId();
-
-        // 작성자 본인이면 가능
-        if (this.getId().equals(contentMemberId)) return true;
-        // 슈퍼 관리자도 가능
-        if (this.isAdmin()) return true;
-        // 그외 불가
+    @JsonIgnore
+    public boolean isSameMember(int writerId) {
+        if (this.getId().equals(writerId)) return true;
         return false;
     }
 
-    /* 게시물 or 댓글 삭제 가능 여부 */
-    public <T> boolean canDelete(T content) {
-        return canModify(content);
+    @JsonIgnore
+    public boolean canModify(int writerId) {
+        return this.isAdmin() || this.isSameMember(writerId);
     }
+
+    @JsonIgnore
+    public boolean canDelete(int writerId) {
+        return canModify(writerId);
+    }
+
 }

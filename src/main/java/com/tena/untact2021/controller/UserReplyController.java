@@ -74,6 +74,12 @@ public class UserReplyController {
     public ResultData doDelete(Integer id) {
         if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 
+        //댓글 유무 체크
+        Reply existingReply = replyService.getReply(id);
+        if (existingReply == null) {
+            return new ResultData("F-1", "해당 댓글은 존재하지 않습니다.");
+        }
+
         return replyService.deleteReply(id);
     }
 
@@ -83,6 +89,12 @@ public class UserReplyController {
     public ResultData doModify(Reply reply) {
         if (reply.getId() == null) return new ResultData("F-1", "id를 입력해주세요.");
         if (reply.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
+
+        //댓글 유무 체크
+        Reply existingReply = replyService.getReply(reply.getId());
+        if (existingReply == null) {
+            return new ResultData("F-1", "해당 댓글은 존재하지 않습니다.");
+        }
 
         return replyService.modifyReply(reply);
     }

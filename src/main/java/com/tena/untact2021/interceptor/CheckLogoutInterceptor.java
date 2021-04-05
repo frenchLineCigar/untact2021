@@ -13,18 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 로그인 필요 요청에 대해 먼저 로그인 여부 체크
- *
- * 로그인 필요 요청
- * - /user/member/doLogout
- * - /user/member/doModify
- * - /user/article/doAdd
- * - /user/article/doModify
- * - /user/article/doDelete
+ * 로그아웃이 필요한 요청에 대해 로그아웃 여부 체크
+ * 
+ * 로그아웃이 먼저 필요한 요청
+ * - /user/member/doLogin
+ * - /user/member/doJoin
  */
 @Slf4j
-@Component("loginInterceptor")
-public class LoginInterceptor implements HandlerInterceptor {
+@Component("logoutInterceptor")
+public class CheckLogoutInterceptor implements HandlerInterceptor {
 
     @Resource(name = "loginMemberBean")
     private Member loginMemberBean;
@@ -34,11 +31,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("LoginInterceptor.preHandle");
+        log.info("CheckLogoutInterceptor.preHandle");
 
-        if (loginMemberBean.isLogin() == false) {
+        if (loginMemberBean.isLogin()) {
             response.setContentType("application/json; charset=UTF-8");
-            ResultData resultData = new ResultData("F-A", "로그인 후 이용해주세요.");
+            ResultData resultData = new ResultData("F-A", "로그아웃 상태에서 이용해주세요.");
             String resultJson = objectMapper.writeValueAsString(resultData);
             response.getWriter().append(resultJson);
 

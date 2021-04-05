@@ -22,8 +22,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Qualifier("logoutInterceptor")
     HandlerInterceptor logoutInterceptor;
 
+    @Autowired
+    @Qualifier("writerInterceptor")
+    HandlerInterceptor writerInterceptor;
+
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) { // 인터셉터는 등록된 순서대로 적용
         // commonInterceptor 인터셉터가 모든 요청 전에 실행되도록 처리
         registry.addInterceptor(commonInterceptor)
             .addPathPatterns("/**")
@@ -48,6 +52,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(logoutInterceptor)
             .addPathPatterns("/user/member/doLogin")
             .addPathPatterns("/user/member/doJoin");
+
+        // 컨텐츠 수정, 삭제 권한 검증
+        registry.addInterceptor(writerInterceptor)
+            .addPathPatterns("/user/article/doModify")
+            .addPathPatterns("/user/article/doDelete")
+            .addPathPatterns("/user/reply/doModify")
+            .addPathPatterns("/user/reply/doDelete");
     }
 
 }
