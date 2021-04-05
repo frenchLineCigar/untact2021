@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tena.untact2021.dto.Board;
+import com.tena.untact2021.dto.Reply;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -40,4 +41,6 @@ public interface ArticleDao {
                                   @Param("limitTake") int limitTake);
 
     Board findBoard(@Param("boardId") int boardId);
+
+    void saveReply(Reply reply);
 }

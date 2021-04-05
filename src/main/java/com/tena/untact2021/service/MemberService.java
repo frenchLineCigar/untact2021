@@ -43,7 +43,6 @@ public class MemberService {
 
     /* 회원 로그인 */
     public void login(Member existingMember) {
-
         //세션 영역에서 사용할 빈(loginMemberBean)에 사용자 정보 저장
         loginMemberBean.setId(existingMember.getId());
         loginMemberBean.setLoginId(existingMember.getLoginId());

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.tena.untact2021.dto.Board;
 import com.tena.untact2021.dto.Member;
+import com.tena.untact2021.dto.Reply;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +40,6 @@ public class ArticleService {
 
 	/* 게시물 추가 */
 	public ResultData addArticle(Article article) {
-
-	    //작성자 정보는 현재 세션에 로그인한 사용자
-        article.setMemberId(loginMemberBean.getId());
 
         articleDao.save(article);
 
@@ -111,5 +109,13 @@ public class ArticleService {
     /* 게시판 정보 조회 */
     public Board getBoard(int boardId) {
         return articleDao.findBoard(boardId);
+    }
+
+    /* 댓글 추가 */
+    public ResultData addReply(Reply reply) {
+
+        articleDao.saveReply(reply);
+
+        return new ResultData("S-1", "성공하였습니다.", "id", reply.getId());
     }
 }

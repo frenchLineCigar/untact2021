@@ -124,4 +124,15 @@
 		WHERE id = #{id}
 	</update>
 
+    <!-- 댓글 추가 -->
+    <insert id="saveReply" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO reply
+        SET
+            regDate = NOW(),
+            updateDate = NOW(),
+            articleId = #{articleId},
+            `body` = #{body},
+            memberId = #{memberId}
+    </insert>
+
 </mapper>

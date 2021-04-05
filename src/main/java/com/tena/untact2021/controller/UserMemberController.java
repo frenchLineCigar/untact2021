@@ -81,11 +81,12 @@ public class UserMemberController {
     /* 회원 정보 수정 */
     @RequestMapping("/user/member/doModify")
     @ResponseBody
-    public ResultData doModify(Member member, HttpSession session) {
+    public ResultData doModify(Member member) {
         if (member.isValidInput()) {
             return new ResultData("F-2", "수정할 정보를 입력해주세요.");
         }
 
+        //수정자는 현재 세션에 로그인한 사용자
         member.setId(loginMemberBean.getId());
 
         return memberService.modifyMember(member);
