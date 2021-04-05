@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * - /user/member/doJoin
  */
 @Slf4j
-@Component("logoutInterceptor")
+@Component("checkLogoutInterceptor")
 public class CheckLogoutInterceptor implements HandlerInterceptor {
 
     @Resource(name = "loginMemberBean")

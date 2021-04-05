@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * - /user/article/doDelete
  */
 @Slf4j
-@Component("loginInterceptor")
+@Component("checkLoginInterceptor")
 public class CheckLoginInterceptor implements HandlerInterceptor {
 
     @Resource(name = "loginMemberBean")

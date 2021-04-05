@@ -15,16 +15,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     HandlerInterceptor commonInterceptor;
 
     @Autowired
-    @Qualifier("loginInterceptor")
-    HandlerInterceptor loginInterceptor;
+    @Qualifier("checkLoginInterceptor")
+    HandlerInterceptor checkLoginInterceptor;
 
     @Autowired
-    @Qualifier("logoutInterceptor")
-    HandlerInterceptor logoutInterceptor;
+    @Qualifier("checkLogoutInterceptor")
+    HandlerInterceptor checkLogoutInterceptor;
 
     @Autowired
-    @Qualifier("writerInterceptor")
-    HandlerInterceptor writerInterceptor;
+    @Qualifier("checkWriterInterceptor")
+    HandlerInterceptor checkWriterInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) { // 인터셉터는 등록된 순서대로 적용
@@ -35,7 +35,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         // 로그인 필요
         // 일단 모든 요청에 적용 후, 로그인 필요없이 접속할 수 있는 URI를 excludePathPatterns 로 추가
-        registry.addInterceptor(loginInterceptor)
+        registry.addInterceptor(checkLoginInterceptor)
             .addPathPatterns("/**")
             .excludePathPatterns("/")
             .excludePathPatterns("/resource/**")
@@ -49,12 +49,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .excludePathPatterns("/error");
 
         // 로그인 상태에서 접속할 수 없는 URI를 추가
-        registry.addInterceptor(logoutInterceptor)
+        registry.addInterceptor(checkLogoutInterceptor)
             .addPathPatterns("/user/member/doLogin")
             .addPathPatterns("/user/member/doJoin");
 
         // 컨텐츠 수정, 삭제 권한 검증
-        registry.addInterceptor(writerInterceptor)
+        registry.addInterceptor(checkWriterInterceptor)
             .addPathPatterns("/user/article/doModify")
             .addPathPatterns("/user/article/doDelete")
             .addPathPatterns("/user/reply/doModify")

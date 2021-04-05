@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
-@Component("writerInterceptor")
+@Component("checkWriterInterceptor")
 @RequiredArgsConstructor
 public class CheckWriterInterceptor implements HandlerInterceptor {
 
