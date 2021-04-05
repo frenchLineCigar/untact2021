@@ -36,7 +36,7 @@ public class Member {
     // TODO Role 정의 되면 Enum 처리
     /* 관리자 여부 */
     @JsonIgnore
-    public Boolean isAdmin() {
+    public boolean isAdmin() {
         return "admin".equals(this.loginId) || "user1".equals(this.loginId);
         //return this.loginId.equals("admin") || this.loginId.equals("user1"); //null 객체일 경우, equals 메소드 호출이 불가하므로 예외 발생
     }

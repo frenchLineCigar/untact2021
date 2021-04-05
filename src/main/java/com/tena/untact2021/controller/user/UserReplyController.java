@@ -1,4 +1,4 @@
-package com.tena.untact2021.controller;
+package com.tena.untact2021.controller.user;
 
 import com.tena.untact2021.dto.Article;
 import com.tena.untact2021.dto.Member;
