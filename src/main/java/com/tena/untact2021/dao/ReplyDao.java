@@ -13,4 +13,11 @@ public interface ReplyDao {
 
     /* 댓글 조회 */
     List<Reply> findAllForPrint(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId);
+
+    /* 특정 댓글 1개 */
+    Reply findById(@Param("id") int id);
+
+    /* 댓글 삭제 */
+    boolean deleteById(@Param("id") int id);
+
 }

@@ -56,7 +56,7 @@ public class UserReplyController {
 	@RequestMapping("/user/reply/list")
 	@ResponseBody
 	public ResultData showList(String relTypeCode, Integer relId) {
-
+        if (relTypeCode == null) return new ResultData("F-1", "게시판을 지정해주세요.");
         if (relId == null) return new ResultData("F-1", "게시물 번호를 입력해주세요.");
 
         if (relTypeCode.equals("article")) {
@@ -67,5 +67,14 @@ public class UserReplyController {
         List<Reply> replies = replyService.getForPrintReplies(relTypeCode, relId);
         return new ResultData("S-1", "조회 결과", "replies", replies);
 	}
+
+    /* 댓글 삭제 */
+    @RequestMapping("/user/reply/doDelete")
+    @ResponseBody
+    public ResultData doDelete(Integer id) {
+        if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
+
+        return replyService.deleteReply(id);
+    }
 
 }

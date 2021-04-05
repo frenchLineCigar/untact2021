@@ -42,18 +42,23 @@ public class Member {
     }
 
     // TODO 인터셉터 처리
-    /* 게시물 수정 가능 */
-    public boolean canModify(Article article) {
-        // 작성자
-        if (this.getId().equals(article.getMemberId())) return true;
-        // 슈퍼 관리자
+    /* 게시물 or 댓글 수정 가능 여부 */
+    public <T> boolean canModify(T content) {
+        // 컨텐트 타입별 작성자 id 뽑기
+        Integer contentMemberId = null;
+        if (content instanceof Article) contentMemberId = ((Article) content).getMemberId();
+        if (content instanceof Reply) contentMemberId = ((Reply) content).getMemberId();
+
+        // 작성자 본인이면 가능
+        if (this.getId().equals(contentMemberId)) return true;
+        // 슈퍼 관리자도 가능
         if (this.isAdmin()) return true;
         // 그외 불가
         return false;
     }
 
-    /* 게시물 삭제 가능 */
-    public boolean canDelete(Article article) {
-        return canModify(article);
+    /* 게시물 or 댓글 삭제 가능 여부 */
+    public <T> boolean canDelete(T content) {
+        return canModify(content);
     }
 }

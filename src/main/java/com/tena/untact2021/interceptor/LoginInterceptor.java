@@ -3,6 +3,7 @@ package com.tena.untact2021.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * - /user/article/doModify
  * - /user/article/doDelete
  */
+@Slf4j
 @Component("loginInterceptor")
 public class LoginInterceptor implements HandlerInterceptor {
 
@@ -32,6 +34,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.info("LoginInterceptor.preHandle");
 
         if (loginMemberBean.isLogin() == false) {
             response.setContentType("application/json; charset=UTF-8");
