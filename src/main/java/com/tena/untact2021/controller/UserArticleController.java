@@ -107,6 +107,7 @@ public class UserArticleController {
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(Article article) {
+		if (article.getBoardId()== null) return new ResultData("F-1", "boardId를 입력해주세요.");
 		if (article.getTitle()== null) return new ResultData("F-1", "title을 입력해주세요.");
 		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
 

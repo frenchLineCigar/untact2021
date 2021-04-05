@@ -95,9 +95,10 @@
 		SET
 			regDate = NOW(),
 			updateDate = NOW(),
-			title = #{title},
-			`body` = #{body},
-            memberId = #{memberId}
+			boardId = #{boardId},
+            memberId = #{memberId},
+            title = #{title},
+			`body` = #{body}
 	</insert>
 
 	<!-- 게시물 삭제 -->
