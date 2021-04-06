@@ -37,6 +37,9 @@ build/
 /src/main/resources/logback-spring2.xml.old
 /log/
 
+### NodeJS ###
+/node_modules/
+
 ### ETC ###
 /src/main/java/com/tena/untact2021/AppRunner.java
 /src/main/java/com/tena/untact2021/AppRunnerOLD.java
@@ -49,3 +52,11 @@ build/
 /src/main/java/com/tena/untact2021/dto/convert/StringToSearchKeywordTypeConverter2.java
 /src/main/java/com/tena/untact2021/dto/Search2.java
 /pom_for_xml_parsing_tutorial.xml
+/src/main/java/com/tena/untact2021/config/WebMvcConfig2.java
+/src/main/java/com/tena/untact2021/controller/user/UserMemberController2.java
+/src/main/java/com/tena/untact2021/interceptor/CommonInterceptor2.java
+/src/main/java/com/tena/untact2021/interceptor/LoginInterceptor2.java
+/src/main/java/com/tena/untact2021/interceptor/LogoutInterceptor2.java
+/src/main/java/com/tena/untact2021/dto/NewResultData.java
+/src/main/java/com/tena/untact2021/interceptor/CheckWriterInterceptor2.java
+/src/main/java/com/tena/untact2021/interceptor/CheckAdminInterceptor2.java

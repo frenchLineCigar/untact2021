@@ -13,14 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 로그인 필요 요청에 대해 먼저 로그인 여부 체크
- *
- * 로그인 필요 요청
- * - /user/member/doLogout
- * - /user/member/doModify
- * - /user/article/doAdd
- * - /user/article/doModify
- * - /user/article/doDelete
+ * CheckLoginInterceptor
+ * - 로그인 필요 요청에 대해 먼저 로그인 여부 체크
  */
 @Slf4j
 @Component("checkLoginInterceptor")

@@ -13,11 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 로그아웃이 필요한 요청에 대해 로그아웃 여부 체크
- * 
- * 로그아웃이 먼저 필요한 요청
- * - /user/member/doLogin
- * - /user/member/doJoin
+ * CheckLogoutInterceptor
+ *  - 로그아웃이 우선 선행되어야 할 요청에 대해 로그아웃 여부 체크
  */
 @Slf4j
 @Component("checkLogoutInterceptor")

@@ -55,28 +55,4 @@ public class AdminMemberController {
         return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()));
     }
 
-    /* 관리자 로그아웃 */
-    @RequestMapping("/admin/member/doLogout")
-    @ResponseBody
-    public ResultData doLogout(HttpSession session) {
-        // 세션 무효화
-        session.invalidate();
-
-        return new ResultData("S-1", "로그아웃 되었습니다.");
-    }
-
-    /* 관리자 정보 수정 */
-    @RequestMapping("/admin/member/doModify")
-    @ResponseBody
-    public ResultData doModify(Member member) {
-        if (member.isValidInput()) {
-            return new ResultData("F-2", "수정할 정보를 입력해주세요.");
-        }
-
-        //수정자는 현재 세션에 로그인한 사용자
-        member.setId(loginMemberBean.getId());
-
-        return memberService.modifyMember(member);
-    }
-
 }

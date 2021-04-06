@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 모든 요청에 대해 공통적으로 필요한 전처리 수행
+ * CommonInterceptor : 모든 요청에 대해 공통적으로 필요한 전처리 수행
+ *  - 필터링 역할 x
+ *  - 요청 정보 강화 및 표준화 역할 o
  */
 @Slf4j
 @Component("commonInterceptor")

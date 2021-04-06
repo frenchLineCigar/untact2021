@@ -12,6 +12,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * CheckAdminInterceptor
+ * - 어드민 여부 필터링
+ * - 관리자 권한이 필요한 요청에 대해 먼저 자격 여부 체크
+ */
 @Slf4j
 @Component("checkAdminInterceptor")
 public class CheckAdminInterceptor implements HandlerInterceptor {
