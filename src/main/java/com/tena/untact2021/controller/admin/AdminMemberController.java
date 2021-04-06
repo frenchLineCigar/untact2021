@@ -25,7 +25,13 @@ public class AdminMemberController {
 
     @Resource(name = "loginMemberBean")
     private Member loginMemberBean; //로그인 사용자 정보를 담을 세션 스코프 빈
-    
+
+    @RequestMapping("/admin/member/login")
+    public String login() {
+
+        return "admin/member/login";
+    }
+
     /* 관리자 로그인 */
     @RequestMapping("/admin/member/doLogin")
     @ResponseBody

@@ -53,7 +53,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<!-- Log4j2 JDBC SQL Logger -->
 		<dependency>
 			<groupId>org.bgee.log4jdbc-log4j2</groupId>
@@ -67,13 +67,20 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.jooq/joox -->
-<!--		<dependency>-->
-<!--			<groupId>org.jooq</groupId>-->
-<!--			<artifactId>joox</artifactId>-->
-<!--			<version>1.6.2</version>-->
-<!--		</dependency>-->
-	</dependencies>
+        <!-- JASPER -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSTL -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<!-- Mapper XML 이 Mapper Interface 와 동일한 곳에 위치시키는 경우 빌드시 포함시키기 위한 설정 -->
