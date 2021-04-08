@@ -16,7 +16,8 @@
             `name` = #{name},
             nickname = #{nickname},
             cellphoneNo = #{cellphoneNo},
-            email = #{email}
+            email = #{email},
+            authKey = CONCAT("authKey1__", UUID(), "__", RAND())
 	</insert>
 
     <!-- 회원 조회 (PK) -->
