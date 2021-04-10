@@ -6,7 +6,7 @@ import com.tena.untact2021.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -78,7 +78,7 @@ public class UserMemberController {
     /* 회원 정보 수정 */
     @RequestMapping("/user/member/doModify")
     @ResponseBody
-    public ResultData doModify(Member member, @ModelAttribute("currentMember") Member currentMember) {
+    public ResultData doModify(Member member, @RequestAttribute("currentMember") Member currentMember) {
         if (member.isValidInput()) {
             return new ResultData("F-2", "수정할 정보를 입력해주세요.");
         }

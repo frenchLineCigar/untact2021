@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -93,7 +94,7 @@ public class UserArticleController {
 	/* 게시물 추가 */
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(Article article, @ModelAttribute("currentMember") Member currentMember) {
+	public ResultData doAdd(Article article, @RequestAttribute("currentMember") Member currentMember) {
 		if (article.getBoardId() == null) return new ResultData("F-1", "boardId를 입력해주세요.");
 		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
 		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");

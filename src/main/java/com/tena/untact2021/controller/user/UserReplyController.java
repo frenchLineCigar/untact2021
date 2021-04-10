@@ -9,7 +9,7 @@ import com.tena.untact2021.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,7 +31,7 @@ public class UserReplyController {
     /* 댓글 추가 */
     @RequestMapping("/user/reply/doAdd")
     @ResponseBody
-    public ResultData doAdd(Reply reply, @ModelAttribute("currentMember") Member currentMember) {
+    public ResultData doAdd(Reply reply, @RequestAttribute("currentMember") Member currentMember) {
         if (reply.getBody() == null) return new ResultData("F-1", "내용을 입력해주세요.");
         if (reply.getRelTypeCode() == null) return new ResultData("F-1", "게시판을 지정해주세요.");
         if (reply.getRelId() == null) return new ResultData("F-1", "게시물 번호가 누락되었습니다.");
