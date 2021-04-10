@@ -1,5 +1,6 @@
 package com.tena.untact2021.config;
 
+import com.tena.untact2021.custom.CurrentMemberResolver;
 import com.tena.untact2021.interceptor.CheckAdminInterceptor;
 import com.tena.untact2021.interceptor.CheckLoginInterceptor;
 import com.tena.untact2021.interceptor.CheckLogoutInterceptor;
@@ -7,8 +8,11 @@ import com.tena.untact2021.interceptor.CheckWriterInterceptor;
 import com.tena.untact2021.interceptor.CommonInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -18,6 +22,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired private CheckLogoutInterceptor checkLogoutInterceptor;
     @Autowired private CheckWriterInterceptor checkWriterInterceptor;
     @Autowired private CheckAdminInterceptor checkAdminInterceptor;
+    @Autowired private CurrentMemberResolver currentMemberResolver;
+
+    /* @CurrentMember 애노테이션 사용 시, 현재 인증된 사용자 정보 바인딩 */
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(currentMemberResolver);
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) { // 인터셉터는 등록된 순서대로 적용
