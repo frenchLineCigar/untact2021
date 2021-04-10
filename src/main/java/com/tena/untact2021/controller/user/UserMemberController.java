@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * TODO : 리팩토링 해야할 것
@@ -45,6 +47,20 @@ public class UserMemberController {
         return memberService.joinMember(member);
     }
 
+    /* 인증키(authKey)로 회원 조회  */
+    @RequestMapping("/user/member/memberByAuthKey")
+    @ResponseBody
+    public ResultData showMemberByAuthKey(String authKey) {
+        if (authKey == null) return new ResultData("F-1", "authKey를 입력해주세요.");
+
+        // 해당 회원 조회
+        Member existingMember = memberService.getMemberByAuthKey(authKey);
+        if (existingMember == null) return new ResultData("F-2", "유효하지 않은 authKey 입니다.", "authKey", authKey);
+
+        return new ResultData("S-1", "유효한 회원입니다.", "member", existingMember);
+
+    }
+
     /* 인증키(authKey) 조회 */
     @RequestMapping("/user/member/authKey")
     @ResponseBody
@@ -59,7 +75,13 @@ public class UserMemberController {
         // 비밀번호 일치 여부 체크
         if (!existingMember.getLoginPw().equals(loginPw)) return new ResultData("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
 
-        return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()), "authKey", existingMember.getAuthKey());
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("authKey", existingMember.getAuthKey());
+        body.put("id", existingMember.getId());
+        body.put("name", existingMember.getName());
+        body.put("nickname", existingMember.getNickname());
+
+        return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()), body);
     }
 
 

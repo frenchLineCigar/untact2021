@@ -9,17 +9,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
+
     private Integer id;
+
     private String regDate;
+
     private String updateDate;
+
     private String loginId;
+
+    @JsonIgnore
     private String loginPw;
+
+    @JsonIgnore
     private String authKey;
+
+    @JsonIgnore
     private AuthKeyStatus authKeyStatus;
+
     private String name;
+
     private String nickname;
+
     private String cellphoneNo;
+
     private String email;
+
+    @JsonIgnore
     private boolean loginStatus;
 
     public enum AuthKeyStatus {
