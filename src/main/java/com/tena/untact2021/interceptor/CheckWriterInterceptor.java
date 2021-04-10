@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,9 +21,6 @@ public class CheckWriterInterceptor implements HandlerInterceptor {
 
     private final ArticleService articleService;
     private final ReplyService replyService;
-
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -37,6 +33,8 @@ public class CheckWriterInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("CheckWriterInterceptor.preHandle");
+
+        Member currentMember = (Member) request.getAttribute("currentMember");
 
         //게시물 or 댓글 번호
         String idStr = request.getParameter("id");
@@ -62,7 +60,7 @@ public class CheckWriterInterceptor implements HandlerInterceptor {
 
 
         //수정, 삭제 가능 여부 체크
-        if (! (loginMemberBean.isSameMember(writerId) || loginMemberBean.isAdmin()) ){
+        if (! (currentMember.isSameMember(writerId) || currentMember.isAdmin()) ){
             response.setContentType("application/json; charset=UTF-8");
             ResultData resultData = new ResultData("F-1", "권한이 없습니다.!!!!!!!");
             String resultJson = objectMapper.writeValueAsString(resultData);

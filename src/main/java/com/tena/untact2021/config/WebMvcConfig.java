@@ -1,34 +1,23 @@
 package com.tena.untact2021.config;
 
+import com.tena.untact2021.interceptor.CheckAdminInterceptor;
+import com.tena.untact2021.interceptor.CheckLoginInterceptor;
+import com.tena.untact2021.interceptor.CheckLogoutInterceptor;
+import com.tena.untact2021.interceptor.CheckWriterInterceptor;
+import com.tena.untact2021.interceptor.CommonInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Autowired
-    @Qualifier("commonInterceptor")
-    HandlerInterceptor commonInterceptor;
-
-    @Autowired
-    @Qualifier("checkLoginInterceptor")
-    HandlerInterceptor checkLoginInterceptor;
-
-    @Autowired
-    @Qualifier("checkLogoutInterceptor")
-    HandlerInterceptor checkLogoutInterceptor;
-
-    @Autowired
-    @Qualifier("checkWriterInterceptor")
-    HandlerInterceptor checkWriterInterceptor;
-
-    @Autowired
-    @Qualifier("checkAdminInterceptor")
-    HandlerInterceptor checkAdminInterceptor;
+    @Autowired private CommonInterceptor commonInterceptor;
+    @Autowired private CheckLoginInterceptor checkLoginInterceptor;
+    @Autowired private CheckLogoutInterceptor checkLogoutInterceptor;
+    @Autowired private CheckWriterInterceptor checkWriterInterceptor;
+    @Autowired private CheckAdminInterceptor checkAdminInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) { // 인터셉터는 등록된 순서대로 적용

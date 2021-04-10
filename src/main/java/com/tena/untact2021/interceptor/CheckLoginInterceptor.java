@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.tena.untact2021.dto.Member.AuthKeyStatus;
 
 /**
  * CheckLoginInterceptor
@@ -20,9 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 @Component("checkLoginInterceptor")
 public class CheckLoginInterceptor implements HandlerInterceptor {
 
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -30,9 +28,19 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("CheckLoginInterceptor.preHandle");
 
-        if (loginMemberBean.isLogin() == false) {
+        Member currentMember = (Member) request.getAttribute("currentMember");
+
+        if (currentMember.isLogin() == false) {
+            String resultCode = "F-A";
+            String msg = "로그인 후 이용해주세요.";
+
+            if (currentMember.getAuthKeyStatus() == AuthKeyStatus.INVALID) {
+                resultCode = "F-B";
+                msg = "인증키가 올바르지 않습니다.";
+            }
+
             response.setContentType("application/json; charset=UTF-8");
-            ResultData resultData = new ResultData("F-A", "로그인 후 이용해주세요.");
+            ResultData resultData = new ResultData(resultCode, msg);
             String resultJson = objectMapper.writeValueAsString(resultData);
             response.getWriter().append(resultJson);
 

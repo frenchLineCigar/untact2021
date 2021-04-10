@@ -48,4 +48,9 @@ public class MemberService {
         loginMemberBean.setLoginId(existingMember.getLoginId());
         loginMemberBean.setLoginStatus(true);
     }
+
+    /* 회원 조회 (인증키) */
+    public Member getMemberByAuthKey(String authKey) {
+        return memberDao.findByAuthKey(authKey);
+    }
 }

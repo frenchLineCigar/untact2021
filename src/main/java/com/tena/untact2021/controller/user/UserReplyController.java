@@ -9,11 +9,10 @@ import com.tena.untact2021.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -29,25 +28,16 @@ public class UserReplyController {
 	private final ReplyService replyService;
     private final ArticleService articleService;
 
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean;
-
-    @ExceptionHandler
-    @ResponseBody
-    public ResultData userReplyExceptionHandler(Exception e) {
-        return new ResultData("Exception occurred.", "Bad Request");
-    }
-
     /* 댓글 추가 */
     @RequestMapping("/user/reply/doAdd")
     @ResponseBody
-    public ResultData doAdd(Reply reply) {
+    public ResultData doAdd(Reply reply, @ModelAttribute("currentMember") Member currentMember) {
         if (reply.getBody() == null) return new ResultData("F-1", "내용을 입력해주세요.");
         if (reply.getRelTypeCode() == null) return new ResultData("F-1", "게시판을 지정해주세요.");
         if (reply.getRelId() == null) return new ResultData("F-1", "게시물 번호가 누락되었습니다.");
 
-        //작성자 정보는 현재 세션에 로그인한 사용자
-        reply.setMemberId(loginMemberBean.getId());
+        //작성자 정보는 현재 인증된 사용자
+        reply.setMemberId(currentMember.getId());
 
         return replyService.addReply(reply);
     }

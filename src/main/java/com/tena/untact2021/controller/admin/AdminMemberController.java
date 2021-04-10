@@ -9,9 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
 /**
  * TODO : 리팩토링 해야할 것
  *  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
@@ -22,9 +19,6 @@ import javax.servlet.http.HttpSession;
 public class AdminMemberController {
 
     private final MemberService memberService;
-
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean; //로그인 사용자 정보를 담을 세션 스코프 빈
 
     @RequestMapping("/admin/member/login")
     public String login() {

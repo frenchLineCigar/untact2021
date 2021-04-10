@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,9 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 @Component("checkLogoutInterceptor")
 public class CheckLogoutInterceptor implements HandlerInterceptor {
 
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -30,10 +26,12 @@ public class CheckLogoutInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("CheckLogoutInterceptor.preHandle");
 
-        if (loginMemberBean.isLogin()) {
-            response.setContentType("application/json; charset=UTF-8");
+        Member currentMember = (Member) request.getAttribute("currentMember");
+
+        if (currentMember.isLogin()) {
             ResultData resultData = new ResultData("F-A", "로그아웃 상태에서 이용해주세요.");
             String resultJson = objectMapper.writeValueAsString(resultData);
+            response.setContentType("application/json; charset=UTF-8");
             response.getWriter().append(resultJson);
 
             return false;

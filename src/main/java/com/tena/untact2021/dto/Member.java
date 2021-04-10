@@ -14,11 +14,17 @@ public class Member {
     private String updateDate;
     private String loginId;
     private String loginPw;
+    private String authKey;
+    private AuthKeyStatus authKeyStatus;
     private String name;
     private String nickname;
     private String cellphoneNo;
     private String email;
     private boolean loginStatus;
+
+    public enum AuthKeyStatus {
+        INVALID, VALID, NONE;
+    }
 
     @JsonIgnore
     public boolean isLogin() {

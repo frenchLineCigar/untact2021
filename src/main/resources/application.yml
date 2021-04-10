@@ -2,6 +2,9 @@ server:
   port: 8021
 
 spring:
+  output:
+    ansi:
+      enabled: always
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -11,7 +14,7 @@ spring:
 #    url: jdbc:mysql://127.0.0.1:3308/untact2021?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull
 #     Log4j2 JDBC SQL Logger 출력
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://127.0.0.1:3308/untact2021?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:log4jdbc:mysql://127.0.0.1:3308/untact2021?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
     username: untact2021
     password: 123456A@
 

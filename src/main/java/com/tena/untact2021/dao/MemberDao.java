@@ -21,4 +21,8 @@ public interface MemberDao {
 
     /* 회원 정보 수정 */
     void update(Member member);
+
+    /* 회원 조회 (authKey) */
+    Member findByAuthKey(@Param("authKey") String authKey);
+
 }

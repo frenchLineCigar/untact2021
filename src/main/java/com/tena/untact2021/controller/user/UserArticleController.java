@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 import static com.tena.untact2021.dto.Search.SearchKeywordType;
@@ -33,16 +31,6 @@ import static com.tena.untact2021.dto.Search.SearchKeywordType;
 public class UserArticleController {
 
 	private final ArticleService articleService;
-
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean;
-
-	@ExceptionHandler
-	@ResponseBody
-	public ResultData userArticleExceptionHandler(Exception e) {
-		return new ResultData("Exception occurred.", "Bad Request");
-//		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
-	}
 
     /* 게시물 조회 */
 	@RequestMapping("/user/article/detail")
@@ -105,13 +93,13 @@ public class UserArticleController {
 	/* 게시물 추가 */
 	@RequestMapping("/user/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(Article article) {
-		if (article.getBoardId()== null) return new ResultData("F-1", "boardId를 입력해주세요.");
-		if (article.getTitle()== null) return new ResultData("F-1", "title을 입력해주세요.");
+	public ResultData doAdd(Article article, @ModelAttribute("currentMember") Member currentMember) {
+		if (article.getBoardId() == null) return new ResultData("F-1", "boardId를 입력해주세요.");
+		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
 		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
 
-        //작성자 정보는 현재 세션에 로그인한 사용자
-        article.setMemberId(loginMemberBean.getId());
+        //작성자 정보는 현재 인증된 사용자
+        article.setMemberId(currentMember.getId());
 
 		return articleService.addArticle(article);
 	}

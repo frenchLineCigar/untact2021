@@ -6,10 +6,10 @@ import com.tena.untact2021.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -22,9 +22,6 @@ import javax.servlet.http.HttpSession;
 public class UserMemberController {
 
     private final MemberService memberService;
-
-    @Resource(name = "loginMemberBean")
-    private Member loginMemberBean; //로그인 사용자 정보를 담을 세션 스코프 빈
 
     /* 회원 가입 */
     @RequestMapping("/user/member/doJoin")
@@ -81,13 +78,13 @@ public class UserMemberController {
     /* 회원 정보 수정 */
     @RequestMapping("/user/member/doModify")
     @ResponseBody
-    public ResultData doModify(Member member) {
+    public ResultData doModify(Member member, @ModelAttribute("currentMember") Member currentMember) {
         if (member.isValidInput()) {
             return new ResultData("F-2", "수정할 정보를 입력해주세요.");
         }
 
-        //수정자는 현재 세션에 로그인한 사용자
-        member.setId(loginMemberBean.getId());
+        //수정자는 현재 인증된 사용자
+        member.setId(currentMember.getId());
 
         return memberService.modifyMember(member);
     }
