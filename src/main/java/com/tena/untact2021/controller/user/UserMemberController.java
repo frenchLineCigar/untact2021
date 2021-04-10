@@ -45,19 +45,37 @@ public class UserMemberController {
         return memberService.joinMember(member);
     }
 
-    /* 회원 로그인 */
-    @RequestMapping("/user/member/doLogin")
+    /* 인증키(authKey) 조회 */
+    @RequestMapping("/user/member/authKey")
     @ResponseBody
-    public ResultData doLogin(String loginId, String loginPw) {
+    public ResultData showAuthKey(String loginId, String loginPw) {
         if (loginId == null) return new ResultData("F-1", "loginId를 입력해주세요.");
-        if (loginPw == null) return new ResultData("F-1", "비밀번호를 입력해주세요.");
+        if (loginPw == null) return new ResultData("F-1", "loginPw를 입력해주세요.");
 
         // 해당 회원 조회
         Member existingMember = memberService.getMemberByLoginId(loginId);
         if (existingMember == null) return new ResultData("F-2", "존재하지 않는 로그인 아이디 입니다.", "loginId", loginId);
 
         // 비밀번호 일치 여부 체크
-        if (!existingMember.getLoginPw().equals(loginPw)) return new ResultData("F-3", "비밀번호가 일치하지 않습니다.");
+        if (!existingMember.getLoginPw().equals(loginPw)) return new ResultData("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
+
+        return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()), "authKey", existingMember.getAuthKey());
+    }
+
+
+    /* 회원 로그인 */
+    @RequestMapping("/user/member/doLogin")
+    @ResponseBody
+    public ResultData doLogin(String loginId, String loginPw) {
+        if (loginId == null) return new ResultData("F-1", "loginId를 입력해주세요.");
+        if (loginPw == null) return new ResultData("F-1", "loginPw를 입력해주세요.");
+
+        // 해당 회원 조회
+        Member existingMember = memberService.getMemberByLoginId(loginId);
+        if (existingMember == null) return new ResultData("F-2", "존재하지 않는 로그인 아이디 입니다.", "loginId", loginId);
+
+        // 비밀번호 일치 여부 체크
+        if (!existingMember.getLoginPw().equals(loginPw)) return new ResultData("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
 
         // 로그인 처리
         memberService.login(existingMember);
