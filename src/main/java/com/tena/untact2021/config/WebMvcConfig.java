@@ -9,6 +9,7 @@ import com.tena.untact2021.interceptor.CommonInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,6 +24,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired private CheckWriterInterceptor checkWriterInterceptor;
     @Autowired private CheckAdminInterceptor checkAdminInterceptor;
     @Autowired private CurrentMemberResolver currentMemberResolver;
+
+    /* 앱과 통신하기 위해 CORS 허용 */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
+    }
 
     /* @CurrentMember 애노테이션 사용 시, 현재 인증된 사용자 정보 바인딩 */
     @Override
