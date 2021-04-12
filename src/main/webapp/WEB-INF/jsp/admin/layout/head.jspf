@@ -4,11 +4,20 @@
 <head>
 	<meta charset="UTF-8">
 	<title>관리자 페이지</title>
+
     <!-- Responsive Web design for Mobile device screen -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- tailwindcss : A utility-first CSS framework for rapidly building custom user interfaces. -->
+
+	<%-- Load jQuery --%>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<!-- Load Tailwind CSS : A utility-first CSS framework for rapidly building custom user interfaces. -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.1/tailwind.min.css"
 	      integrity="sha512-BAK6UB671tmfzrkeH1CacTvgHQ3aLAFnT2KsigdATsc5X7+3u42tb5vjmAoDiqtxphP5dNZ3cDygivTsGEJhGw==" crossorigin="anonymous" />
+
+	<%-- Load Font Awesome --%>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
     <link rel="stylesheet" href="/resource/common.css">
     <link rel="stylesheet" href="/resource/admin/common.css">
 </head>
