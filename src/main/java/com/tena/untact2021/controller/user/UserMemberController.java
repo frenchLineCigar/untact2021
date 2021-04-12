@@ -119,7 +119,7 @@ public class UserMemberController {
     @RequestMapping("/user/member/doModify")
     @ResponseBody
     public ResultData doModify(Member member, @CurrentMember Member currentMember) {
-        if (member.isValidInput()) {
+        if (! member.isValidInput()) {
             return new ResultData("F-2", "수정할 정보를 입력해주세요.");
         }
 

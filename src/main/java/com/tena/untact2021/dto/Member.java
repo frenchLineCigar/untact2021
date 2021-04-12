@@ -52,7 +52,8 @@ public class Member {
         return (this.loginPw != null && !this.loginPw.isBlank())
             || (this.name != null && !this.name.isBlank())
             || (this.nickname != null && !this.nickname.isBlank())
-            || (this.cellphoneNo != null && !this.cellphoneNo.isBlank());
+            || (this.cellphoneNo != null && !this.cellphoneNo.isBlank())
+            || (this.email != null && !this.email.isBlank());
     }
 
     // TODO Role 정의 되면 Enum 처리

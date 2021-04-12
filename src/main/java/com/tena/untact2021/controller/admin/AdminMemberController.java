@@ -1,5 +1,6 @@
 package com.tena.untact2021.controller.admin;
 
+import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.service.MemberService;
@@ -47,6 +48,20 @@ public class AdminMemberController {
         memberService.login(existingMember);
 
         return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()));
+    }
+
+    /* 관리자 정보 수정 */
+    @RequestMapping("/admin/member/doModify")
+    @ResponseBody
+    public ResultData doModify(Member member, @CurrentMember Member currentMember) {
+        if (! member.isValidInput()) {
+            return new ResultData("F-2", "수정할 정보를 입력해주세요.");
+        }
+
+        //수정자는 현재 인증된 사용자
+        member.setId(currentMember.getId());
+
+        return memberService.modifyMember(member);
     }
 
 }
