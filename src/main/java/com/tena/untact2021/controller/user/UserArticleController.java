@@ -50,7 +50,8 @@ public class UserArticleController {
 	@RequestMapping("/user/article/list")
 	@ResponseBody
 	public ResultData showList(@RequestParam(defaultValue = "1") int boardId,
-                               @ModelAttribute Search search, @RequestParam(defaultValue = "1") int page) {
+                               @RequestParam(defaultValue = "1") int page,
+                               @ModelAttribute Search search) {
 		log.info("UserArticleController.showList");
 		log.info("search: {}", search);
 
@@ -69,10 +70,11 @@ public class UserArticleController {
         return new ResultData("S-1", "조회 결과", "articles", articles);
 	}
 
-	@PostMapping(value = "/user/article/list", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/user/article/list", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResultData showListJson(@RequestParam(defaultValue = "1") int boardId,
-                                   @RequestBody Search search, @RequestParam(defaultValue = "1") int page){
+                                   @RequestParam(defaultValue = "1") int page,
+                                   @RequestBody Search search){
 		log.debug("UserArticleController.showListJson");
 		log.debug("search: {}", search);
 

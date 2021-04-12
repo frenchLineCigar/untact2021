@@ -57,7 +57,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .excludePathPatterns("/")
             .excludePathPatterns("/admin/**") // 어드민 관련 요청은 위 checkAdminInterceptor에서 잡음
             .excludePathPatterns("/resource/**")
-            .excludePathPatterns("/user/home/main")
+            .excludePathPatterns("/user/home/**")
             .excludePathPatterns("/user/member/authKey")
             .excludePathPatterns("/user/member/login")
             .excludePathPatterns("/user/member/doLogin")

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Test</title>
+</head>
+<body>
+
+<!-- Open this html file in Browser -->
+<form action="http://localhost:8021/user/home/doFormTest?name=Paul" method="POST">
+    <!--<input type="hidden" name="name" value="Paul">-->
+    <input type="hidden" name="age" value="15">
+    <input type="submit" value="전송">
+</form>
+
+<!-- POST는 Query String Parameter 따로, Form Data 따로 모두 날라감 -->
+<!-- GET은 혼용 불가, Query String Parameter는 무시됨 -->
+
+<!-- 나머지 API specifications 은 POSTMAN에서 테스트 -->
+<!-- Import 링크 : https://www.postman.com/collections/48e7237e97c5135db9f6 -->
+<!-- POSTMAN 실행 -> IMPORT -> Link -> URL 입력 후 Continue -->
+<!-- 참고 : https://learning.postman.com/docs/getting-started/importing-and-exporting-data/ -->
+
+</body>
+</html>
