@@ -1,5 +1,6 @@
 package com.tena.untact2021.controller.admin;
 
+import com.tena.untact2021.controller.VCG;
 import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class AdminMemberController {
+public class AdminMemberController extends VCG {
 
     private final MemberService memberService;
 
@@ -30,24 +31,26 @@ public class AdminMemberController {
     /* 관리자 로그인 */
     @RequestMapping("/admin/member/doLogin")
     @ResponseBody
-    public ResultData doLogin(String loginId, String loginPw) {
-        if (loginId == null) return new ResultData("F-1", "loginId를 입력해주세요.");
-        if (loginPw == null) return new ResultData("F-1", "비밀번호를 입력해주세요.");
+    public String doLogin(String loginId, String loginPw) {
+        if (loginId == null) return msgAndBack("loginId를 입력해주세요.");
+        if (loginPw == null) return msgAndBack("비밀번호를 입력해주세요.");
 
         // 해당 회원 조회
         Member existingMember = memberService.getMemberByLoginId(loginId);
-        if (existingMember == null) return new ResultData("F-2", "존재하지 않는 로그인 아이디 입니다.", "loginId", loginId);
+        if (existingMember == null) return msgAndBack("존재하지 않는 로그인 아이디 입니다.");
 
         // 비밀번호 일치 여부 체크
-        if (!existingMember.getLoginPw().equals(loginPw)) return new ResultData("F-3", "비밀번호가 일치하지 않습니다.");
+        if (!existingMember.getLoginPw().equals(loginPw)) return msgAndBack("비밀번호가 일치하지 않습니다.");
 
         // 해당 회원이 관리자인지 체크
-        if (!existingMember.isAdmin()) return new ResultData("F-4", "관리자만 접근할 수 있습니다.");
+        if (!existingMember.isAdmin()) return msgAndBack("관리자만 접근할 수 있습니다.");
 
         // 로그인 처리
         memberService.login(existingMember);
 
-        return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()));
+        String msg = String.format("%s님 환영합니다.", existingMember.getNickname());
+
+        return msgAndReplace(msg, "../home/main");
     }
 
     /* 관리자 정보 수정 */
