@@ -1,7 +1,13 @@
 server:
   port: 8021
 
+
 spring:
+#  devtools:
+#    livereload:
+#      enabled: true
+#    restart:
+#      enabled: false
   output:
     ansi:
       enabled: always

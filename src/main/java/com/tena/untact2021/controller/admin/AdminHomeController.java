@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AdminHomeController {
 
 	@RequestMapping("/admin/home/main")
-	@ResponseBody
 	public String showMain() {
-		return "2021 Untact Project";
+		return "/admin/home/main";
 	}
 
 }
