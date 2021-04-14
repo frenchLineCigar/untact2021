@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * TODO : 리팩토링 해야할 것
  *  -> 바인딩 및 유효성 검증 : JSR-303 사용(DTO) 및 Validator 구현(@InitBinder) + HandlerMethodArgumentResolver
@@ -51,6 +53,16 @@ public class AdminMemberController extends VCG {
         String msg = String.format("%s님 환영합니다.", existingMember.getNickname());
 
         return msgAndReplace(msg, "../home/main");
+    }
+
+    /* 관리자 로그아웃 */
+    @RequestMapping("/admin/member/doLogout")
+    @ResponseBody
+    public String doLogout(HttpSession session) {
+        // 세션 무효화
+        session.invalidate();
+
+        return msgAndReplace("로그아웃 되었습니다.", "../member/login");
     }
 
     /* 관리자 정보 수정 */

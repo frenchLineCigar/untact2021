@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="root" value="${pageContext.request.contextPath}" />
 
 <header class="top-bar h-20 bg-white">
     <div class="container mx-auto h-full flex">
-        <a href="#" class="logo flex items-center ml-2">
+        <a href="${root}/admin/home/main" class="logo flex items-center ml-2">
             <span>
                 <i class="fas fa-people-arrows"></i>
             </span>
@@ -14,18 +16,23 @@
         <div class="menu-box-1">
             <ul class="flex h-full">
                 <li>
-                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="#">
+                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="/admin/home/main">
                         <span>관리자 홈</span>
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="#">
+                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="${root}/admin/board/list">
                         <span>게시판 관리</span>
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="#">
+                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="${root}/admin/article/list">
                         <span>게시물 관리</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="${root}/admin/member/doLogout">
+                        <span>관리자 로그아웃</span>
                     </a>
                 </li>
             </ul>
