@@ -37,13 +37,17 @@ public class CheckAdminInterceptor implements HandlerInterceptor {
 
             // Ajax 요청 아닐 경우
             if (isAjax == false) {
-                // replaceUrl 처리
-                String replaceUrl = request.getContextPath() + "/admin/member/login";
+                // 이동할 url 처리
+                StringBuilder sb = new StringBuilder();
+                sb.append(request.getContextPath());
+                sb.append("/admin/member/login?redirectUrl=");
+                sb.append(request.getAttribute("encodedRequestUri"));
+                String url = sb.toString();
 
                 response.setContentType("text/html; charset=UTF-8");
                 response.getWriter().append("<script>");
                 response.getWriter().append("alert('관리자만 이용할 수 있습니다.');");
-                response.getWriter().append("location.replace('" + replaceUrl + "')"); //관리자 로그인 페이지로 빠꾸~
+                response.getWriter().append("location.replace('" + url + "');"); //관리자 로그인 페이지로 빠꾸~
                 response.getWriter().append("</script>");
 
                 return false;

@@ -16,6 +16,12 @@ public class VCG {
 
 	/* 성공시 */
 	protected String msgAndReplace(String msg, String replaceUrl) {
+
+		// 이동할 url이 없을 경우
+		if (replaceUrl == null) {
+			replaceUrl = "../home/main"; //default page
+		}
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<script>");
 		sb.append("alert('" + msg + "');");

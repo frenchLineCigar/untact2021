@@ -1,10 +1,16 @@
 package com.tena.untact2021.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 //유틸리티성 공용 함수
 public class Util {
@@ -92,5 +98,76 @@ public class Util {
 		return getAsInt(object, DEFAULT_VALUE);
 	}
 
+//    // toMap : Object -> Map 으로 변환
+//    public static Map<String, Object> toMap(Object target) {
+//
+//        Field[] fields = target.getClass().getDeclaredFields();
+//        Map<String, Object> result = new HashMap<String, Object>();
+//
+//        for (Field field : fields) {
+//            try {
+//                // 현재 필드
+//                field.setAccessible(true); //private 필드에 접근 가능하게 한다
+//                result.put(field.getName(), field.get(target));
+//            } catch (IllegalArgumentException | IllegalAccessException e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//
+//
+//        return result;
+//    }
+
+    /**
+     * getParamMap : 요청 파라미터들을 모두 추출해 Map 형태로 파싱
+     */
+    public static Map<String, Object> getParamMap(HttpServletRequest request) {
+        Map<String, Object> param = new HashMap<>();
+
+        Enumeration<String> parameterNames = request.getParameterNames();
+
+        while (parameterNames.hasMoreElements()) {
+            String paramName = parameterNames.nextElement();
+            Object paramValue = request.getParameter(paramName);
+
+            param.put(paramName, paramValue);
+        }
+
+        return param;
+    }
+
+    /**
+     * toJsonStr : Map 객체를 JSON 형태로 파싱
+     */
+    public static String toJsonStr(Map<String, Object> param) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(param);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    /* 지정 포맷으로 문자열 인코딩 */
+	public static String getUriEncodedByCharset(String str, String charset) {
+		try {
+			return URLEncoder.encode(str, charset);
+		} catch (UnsupportedEncodingException e) {
+			return str;
+		}
+	}
+
+	/* 지정 포맷으로 문자열 인코딩 */
+    public static String getUriEncodedByCharset(String str, Charset charset) {
+        return URLEncoder.encode(str, charset);
+    }
+
+    /* UTF-8 문자열 인코딩 */
+	public static String getUriEncodedAsUTF8(String str) {
+		return getUriEncodedByCharset(str, StandardCharsets.UTF_8);
+	}
 
 }

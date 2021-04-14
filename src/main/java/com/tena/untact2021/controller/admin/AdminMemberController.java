@@ -33,7 +33,7 @@ public class AdminMemberController extends VCG {
     /* 관리자 로그인 */
     @RequestMapping("/admin/member/doLogin")
     @ResponseBody
-    public String doLogin(String loginId, String loginPw) {
+    public String doLogin(String loginId, String loginPw, String redirectUrl) {
         if (loginId == null) return msgAndBack("loginId를 입력해주세요.");
         if (loginPw == null) return msgAndBack("비밀번호를 입력해주세요.");
 
@@ -52,7 +52,7 @@ public class AdminMemberController extends VCG {
 
         String msg = String.format("%s님 환영합니다.", existingMember.getNickname());
 
-        return msgAndReplace(msg, "../home/main");
+        return msgAndReplace(msg, redirectUrl);
     }
 
     /* 관리자 로그아웃 */
