@@ -2,10 +2,12 @@ package com.tena.untact2021.controller;
 
 import com.tena.untact2021.util.Util;
 
+import javax.servlet.http.HttpServletRequest;
+
 /* In a nutshell, This class is VCG (View Code Generator) */
 public class BaseController {
 
-	/* 실패시 */
+	/* 실패시 (for REST, i.e. Handler method with @ResponseBody) */
 	protected String msgAndBack(String msg) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<script>");
@@ -14,6 +16,13 @@ public class BaseController {
 		sb.append("</script>");
 
 		return sb.toString();
+	}
+
+	/* 실패시 (for VIEW) */
+	protected String msgAndBack(HttpServletRequest req, String msg) {
+		req.setAttribute("historyBack", true);
+		req.setAttribute("msg", msg);
+		return "common/redirect";
 	}
 
 	/* 성공시 */

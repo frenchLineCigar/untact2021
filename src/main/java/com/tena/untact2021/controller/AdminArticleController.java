@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.tena.untact2021.dto.Search.SearchKeywordType;
@@ -18,7 +19,7 @@ import static com.tena.untact2021.dto.Search.SearchKeywordType;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class AdminArticleController {
+public class AdminArticleController extends BaseController {
 
 	private final ArticleService articleService;
 
@@ -37,13 +38,12 @@ public class AdminArticleController {
 
 	/* 전체 게시물 조회 */
 	@RequestMapping("/admin/article/list")
-	@ResponseBody
-	public ResultData showList(@RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
-							   @ModelAttribute Search search) {
+	public String showList(@RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
+	                       @ModelAttribute Search search, HttpServletRequest req) {
 
 		Board board = articleService.getBoard(boardId);
 		if (board == null) {
-			return new ResultData("F-1", "존재하지 않는 게시판 입니다.");
+			return msgAndBack(req, "존재하지 않는 게시판 입니다.");
 		}
 
 		SearchKeywordType searchKeywordType = search.getSearchKeywordType();
@@ -53,7 +53,9 @@ public class AdminArticleController {
 		int itemsInAPage = 20;
 
 		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
-		return new ResultData("S-1", "조회 결과", "articles", articles);
+		req.setAttribute("articles", articles);
+
+		return "admin/article/list";
 	}
 
 	/* 게시물 추가 */
