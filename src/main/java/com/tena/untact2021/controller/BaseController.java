@@ -2,14 +2,14 @@ package com.tena.untact2021.controller;
 
 import com.tena.untact2021.util.Util;
 
-/* View Code Generator */
-public class VCG {
+/* In a nutshell, This class is VCG (View Code Generator) */
+public class BaseController {
 
 	/* 실패시 */
 	protected String msgAndBack(String msg) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<script>");
-		sb.append("alert('" + msg + "');");
+		sb.append("alert('").append(msg).append("');");
 		sb.append("history.back();"); //history.go(-1)
 		sb.append("</script>");
 
@@ -24,8 +24,8 @@ public class VCG {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<script>");
-		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('"+ replaceUrl +"');"); //PRG 패턴, 뒤로가기 시 중복 서브밋 방지
+		sb.append("alert('").append(msg).append("');");
+		sb.append("location.replace('").append(replaceUrl).append("');"); //PRG 패턴, 뒤로가기 시 중복 서브밋 방지
 		sb.append("</script>");
 
 		return sb.toString();

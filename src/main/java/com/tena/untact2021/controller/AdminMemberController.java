@@ -1,6 +1,5 @@
 package com.tena.untact2021.controller;
 
-import com.tena.untact2021.controller.VCG;
 import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
@@ -20,7 +19,7 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class AdminMemberController extends VCG {
+public class AdminMemberController extends BaseController {
 
     private final MemberService memberService;
 
