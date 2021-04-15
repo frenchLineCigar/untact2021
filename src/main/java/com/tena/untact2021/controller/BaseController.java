@@ -1,6 +1,7 @@
 package com.tena.untact2021.controller;
 
 import com.tena.untact2021.util.Util;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,10 +19,17 @@ public class BaseController {
 		return sb.toString();
 	}
 
-	/* 실패시 (for VIEW) */
+	/* 실패시 (for VIEW) - Request 사용 */
 	protected String msgAndBack(HttpServletRequest req, String msg) {
 		req.setAttribute("historyBack", true);
 		req.setAttribute("msg", msg);
+		return "common/redirect";
+	}
+
+	/* 실패시 (for VIEW) - Model 사용 */
+	protected String msgAndBack(Model model, String msg) {
+		model.addAttribute("historyBack", true);
+		model.addAttribute("msg", msg);
 		return "common/redirect";
 	}
 

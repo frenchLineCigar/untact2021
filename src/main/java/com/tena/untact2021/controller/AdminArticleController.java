@@ -6,6 +6,7 @@ import com.tena.untact2021.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,11 +40,11 @@ public class AdminArticleController extends BaseController {
 	/* 전체 게시물 조회 */
 	@RequestMapping("/admin/article/list")
 	public String showList(@RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
-	                       @ModelAttribute Search search, HttpServletRequest req) {
+	                       @ModelAttribute Search search, Model model) {
 
 		Board board = articleService.getBoard(boardId);
 		if (board == null) {
-			return msgAndBack(req, "존재하지 않는 게시판 입니다.");
+			return msgAndBack(model, "존재하지 않는 게시판 입니다.");
 		}
 
 		SearchKeywordType searchKeywordType = search.getSearchKeywordType();
@@ -53,7 +54,7 @@ public class AdminArticleController extends BaseController {
 		int itemsInAPage = 20;
 
 		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
-		req.setAttribute("articles", articles);
+		model.addAttribute("articles", articles);
 
 		return "admin/article/list";
 	}
