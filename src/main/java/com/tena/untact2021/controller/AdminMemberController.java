@@ -1,4 +1,4 @@
-package com.tena.untact2021.controller.admin;
+package com.tena.untact2021.controller;
 
 import com.tena.untact2021.controller.VCG;
 import com.tena.untact2021.custom.CurrentMember;

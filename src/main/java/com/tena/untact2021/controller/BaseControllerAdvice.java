@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class BaseControllerAdvice {
 
-    @ExceptionHandler
-    @ResponseBody
-    public ResultData baseExceptionHandler(Exception e) {
-        return new ResultData("Exception occurred.", "Bad Request");
-//		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
-    }
+//    @ExceptionHandler
+//    @ResponseBody
+//    public ResultData baseExceptionHandler(Exception e) {
+//        return new ResultData("Exception occurred.", "Bad Request");
+////		return new ResultData(e.getClass().getSimpleName(), e.getMessage());
+//    }
 
 }

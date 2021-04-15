@@ -1,4 +1,4 @@
-package com.tena.untact2021.controller.admin;
+package com.tena.untact2021.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
