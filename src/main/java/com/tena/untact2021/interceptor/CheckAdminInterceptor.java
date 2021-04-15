@@ -3,6 +3,7 @@ package com.tena.untact2021.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
+import com.tena.untact2021.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,7 +42,7 @@ public class CheckAdminInterceptor implements HandlerInterceptor {
                 StringBuilder sb = new StringBuilder();
                 sb.append(request.getContextPath());
                 sb.append("/admin/member/login?redirectUrl=");
-                sb.append(request.getAttribute("encodedRequestUri"));
+                sb.append(Util.reqAttr(request,"encodedRequestUri", ""));
                 String url = sb.toString();
 
                 response.setContentType("text/html; charset=UTF-8");

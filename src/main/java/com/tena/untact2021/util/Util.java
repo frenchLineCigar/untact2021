@@ -170,4 +170,48 @@ public class Util {
 		return getUriEncodedByCharset(str, StandardCharsets.UTF_8);
 	}
 
+	public static <T> T ifNull(T data, T fallback) {
+		return data != null ? data : fallback;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T reqAttr(HttpServletRequest req, String attrName, T fallback) {
+		return (T) ifNull(req.getAttribute(attrName), fallback);
+	}
+
+	public static boolean isEmpty(Object data) {
+		if (data == null) {
+			return true;
+		}
+
+		if (data instanceof String) {
+			String strData = (String) data;
+
+			return strData.trim().length() == 0;
+		}
+
+		if (data instanceof Integer) {
+			Integer integerData = (Integer) data;
+
+			return integerData == 0;
+		}
+
+		if (data instanceof List) {
+			List<?> listData = (List<?>) data;
+
+			return listData.isEmpty();
+		}
+
+		if (data instanceof Map) {
+			Map<?, ?> mapData = (Map<?, ?>) data;
+
+			return mapData.isEmpty();
+		}
+
+		return false;
+	}
+
+	public static <T> T ifEmpty(T data, T fallback) {
+		return !isEmpty(data) ? data : fallback;
+	}
 }

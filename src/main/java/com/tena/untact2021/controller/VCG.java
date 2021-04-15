@@ -1,5 +1,7 @@
 package com.tena.untact2021.controller;
 
+import com.tena.untact2021.util.Util;
+
 /* View Code Generator */
 public class VCG {
 
@@ -17,10 +19,8 @@ public class VCG {
 	/* 성공시 */
 	protected String msgAndReplace(String msg, String replaceUrl) {
 
-		// 이동할 url이 없을 경우
-		if (replaceUrl == null) {
-			replaceUrl = "../home/main"; //default page
-		}
+		// 이동할 url이 없을 경우, 메인으로 이동
+		replaceUrl = Util.ifEmpty(replaceUrl, "../home/main");
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<script>");
