@@ -60,10 +60,13 @@
     <!-- 전체 게시물 조회 (작성자 정보 포함) -->
     <select id="findAllForPrint" resultType="Article">
         SELECT A.*,
-        IFNULL(M.nickname, "탈퇴회원") AS extra__writer
+        IFNULL(M.nickname, "탈퇴회원") AS extra__writer,
+		B.name AS extra__boardName
         FROM article AS A
         LEFT JOIN `member` AS M
         ON A.memberId = M.id
+		LEFT JOIN `board` AS B
+		ON A.boardId = B.id
         WHERE 1
         <if test="boardId != null">
             AND A.boardId = #{boardId}
