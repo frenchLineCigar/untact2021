@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="${root}/resource/common.css">
     <link rel="stylesheet" href="${root}/resource/admin/common.css">
 
+	<script src="${root}/resource/util.js"></script>
 	<script>
 		const param = ${paramJson};
 	</script>

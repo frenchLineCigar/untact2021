@@ -15,9 +15,10 @@
 				<option value="2">자유게시판</option>
 			</select>
 			<script>
-                $('.section-1 .select-board-id').val(param.boardId);
-                // $(`.section-1 .select-board-id option[value=\${param.boardId}]`).prop('selected', true); // JSP EL과 syntax 충돌없이 ES6의 Template Literal 사용하는 방법 : 자바에서 특수문자를 이스케이프 할 때 Backslash(\)를 사용하는 것처럼, EL이 아닌 것으로 간주하고 이스케이프 한다.
-                // $('.section-1 .select-board-id option[value=' + param.boardId + ']').prop('selected', true); // old school
+                const url = new URL(window.location.href);
+                const urlParams = url.searchParams;
+                const boardId = urlParams.has('boardId') && !util.isEmpty(urlParams.get('boardId')) ? urlParams.get('boardId') : 1; //1은 공지사항
+                $('.section-1 .select-board-id').val(boardId);
 
                 $('.section-1 .select-board-id').change(function () {
                     location.href = '?boardId=' + this.value;
