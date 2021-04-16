@@ -17,7 +17,7 @@
 			<script>
                 const url = new URL(window.location.href);
                 const urlParams = url.searchParams;
-                const boardId = urlParams.has('boardId') && !util.isEmpty(urlParams.get('boardId')) ? urlParams.get('boardId') : 1; //1은 공지사항
+                const boardId = util.ifEmpty(urlParams.get('boardId'), 1); //boardId 없을 시, 공지사항인 1로 fallback
                 $('.section-1 .select-board-id').val(boardId);
 
                 $('.section-1 .select-board-id').change(function () {
