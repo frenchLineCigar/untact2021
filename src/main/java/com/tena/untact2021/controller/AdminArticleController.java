@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 import static com.tena.untact2021.dto.Search.SearchKeywordType;
 
@@ -24,15 +26,15 @@ public class AdminArticleController extends BaseController {
 
 	private final ArticleService articleService;
 
-    /* 게시물 조회 */
+	/* 게시물 조회 */
 	@RequestMapping("/admin/article/detail")
 	@ResponseBody
 	public ResultData showDetail(Integer id) {
-        if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
+		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 
 		Article article = articleService.getForPrintArticle(id);
 
-        if (article == null) return new ResultData("F-2", "존재하지 않는 게시물입니다.");
+		if (article == null) return new ResultData("F-2", "존재하지 않는 게시물입니다.");
 
 		return new ResultData("S-1", "조회 결과", "article", article);
 	}
@@ -68,13 +70,19 @@ public class AdminArticleController extends BaseController {
 	/* 게시물 추가 */
 	@RequestMapping("/admin/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(Article article, @CurrentMember Member currentMember) {
-		if (article.getBoardId()== null) return new ResultData("F-1", "boardId를 입력해주세요.");
-		if (article.getTitle()== null) return new ResultData("F-1", "title을 입력해주세요.");
+	public ResultData doAdd(Article article, @CurrentMember Member currentMember, MultipartRequest multipartRequest) {
+		if (article.getBoardId() == null) return new ResultData("F-1", "boardId를 입력해주세요.");
+		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
 		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
 
-        //작성자 정보는 현재 인증된 사용자
-        article.setMemberId(currentMember.getId());
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		if (true) {
+			return new ResultData("S-1", "테스트", "fileMap.keySet", fileMap.keySet());
+		}
+
+		//작성자 정보는 현재 인증된 사용자
+		article.setMemberId(currentMember.getId());
 
 		return articleService.addArticle(article);
 	}
@@ -85,11 +93,11 @@ public class AdminArticleController extends BaseController {
 	public ResultData doDelete(Integer id) {
 		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 
-        //게시물 유무 확인
-        Article existingArticle = articleService.getArticle(id);
-        if (existingArticle == null) {
-            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
-        }
+		//게시물 유무 확인
+		Article existingArticle = articleService.getArticle(id);
+		if (existingArticle == null) {
+			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
+		}
 
 		return articleService.deleteArticle(id);
 	}
@@ -102,13 +110,13 @@ public class AdminArticleController extends BaseController {
 		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
 		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
 
-        //게시물 유무 확인
-        Article existingArticle = articleService.getArticle(article.getId());
-        if (existingArticle == null) {
-            return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
-        }
+		//게시물 유무 확인
+		Article existingArticle = articleService.getArticle(article.getId());
+		if (existingArticle == null) {
+			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
+		}
 
-        return articleService.modifyArticle(article);
+		return articleService.modifyArticle(article);
 	}
 
 }

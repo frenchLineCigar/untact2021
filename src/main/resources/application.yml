@@ -6,6 +6,10 @@ server:
 
 
 spring:
+  servlet:
+    multipart:
+      maxRequestSize: 10MB
+      maxFileSize: 10MB
   devtools:
     restart:
       enabled: false
