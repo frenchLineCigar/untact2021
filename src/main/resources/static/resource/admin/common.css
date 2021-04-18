@@ -31,3 +31,14 @@ html > body {
     margin-left:0.5rem;
     font-weight:bold;
 }
+
+.form-row + .form-row {
+    margin-top:0.5rem;
+}
+
+.form-row-input {
+    padding:1rem;
+}
+textarea.form-row-input {
+    min-height:6rem;
+}

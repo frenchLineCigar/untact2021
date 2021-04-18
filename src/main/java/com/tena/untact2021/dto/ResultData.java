@@ -17,7 +17,7 @@ public class ResultData {
 
 	private Map<String, Object> body;
 
-	public ResultData(String resultCode, String msg, @Nullable Object... args) {
+	public ResultData(String resultCode, String msg, Object... args) {
 		this.resultCode = resultCode;
 		this.msg = msg;
 		this.body = Util.mapOf(args);

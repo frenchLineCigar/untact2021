@@ -1,13 +1,16 @@
 server:
   port: 8021
+#  servlet:
+#  ContextPath must start with '/' and not end with '/'
+#    context-path: /untact
 
 
 spring:
-#  devtools:
+  devtools:
+    restart:
+      enabled: false
 #    livereload:
 #      enabled: true
-#    restart:
-#      enabled: false
   output:
     ansi:
       enabled: always

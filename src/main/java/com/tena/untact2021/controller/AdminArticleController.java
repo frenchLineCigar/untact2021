@@ -60,6 +60,12 @@ public class AdminArticleController extends BaseController {
 	}
 
 	/* 게시물 추가 */
+	@RequestMapping("/admin/article/add")
+	public String showAdd(Article article, @CurrentMember Member currentMember) {
+		return "admin/article/add";
+	}
+
+	/* 게시물 추가 */
 	@RequestMapping("/admin/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(Article article, @CurrentMember Member currentMember) {
