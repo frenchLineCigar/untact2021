@@ -1,6 +1,7 @@
 package com.tena.untact2021.config;
 
 import com.tena.untact2021.custom.CurrentMemberResolver;
+import com.tena.untact2021.custom.AttachFileResolver;
 import com.tena.untact2021.interceptor.CheckAdminInterceptor;
 import com.tena.untact2021.interceptor.CheckLoginInterceptor;
 import com.tena.untact2021.interceptor.CheckLogoutInterceptor;
@@ -24,6 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired private CheckWriterInterceptor checkWriterInterceptor;
     @Autowired private CheckAdminInterceptor checkAdminInterceptor;
     @Autowired private CurrentMemberResolver currentMemberResolver;
+    @Autowired private AttachFileResolver attachFileResolver;
 
     /* 앱과 통신하기 위해 CORS 허용 */
     @Override
@@ -35,6 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(currentMemberResolver);
+        resolvers.add(attachFileResolver);
     }
 
     @Override

@@ -1,11 +1,15 @@
 package com.tena.untact2021.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class File {
+public class AttachFile {
 	// Format : file__[relTypeCode]__[relId]__[typeCode]__[type2Code]__[fileNo]
 	// Ex) file__article__0__common__attachment__1
 	private int id;

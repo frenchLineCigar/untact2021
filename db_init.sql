@@ -258,7 +258,7 @@ SET authKey = 'authKey1__2'
 WHERE id = 2;
 
 # 파일 테이블 추가
-CREATE TABLE `files` (
+CREATE TABLE `attach_file` (
     id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, # 번호
     regDate DATETIME DEFAULT NULL, # 작성일
     updateDate DATETIME DEFAULT NULL, # 갱신일
@@ -280,7 +280,7 @@ CREATE TABLE `files` (
 );
 
 # EX) 게시물(article) 1번의 첫번째 첨부파일만 가져오기
-# SELECT * FROM `files`
+# SELECT * FROM `attach_file`
 # WHERE relTypeCode = 'article'
 #   AND relId = 1
 #   AND typeCode = 'common'
