@@ -61,7 +61,7 @@ public class AdminArticleController extends BaseController {
 		return "admin/article/list";
 	}
 
-	/* 게시물 추가 */
+	/* 게시물 추가 폼 */
 	@RequestMapping("/admin/article/add")
 	public String showAdd(Article article, @CurrentMember Member currentMember) {
 		return "admin/article/add";
@@ -75,16 +75,14 @@ public class AdminArticleController extends BaseController {
 		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
 		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
 
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-
-		if (true) {
-			return new ResultData("S-1", "테스트", "fileMap.keySet", fileMap.keySet());
-		}
-
 		//작성자 정보는 현재 인증된 사용자
 		article.setMemberId(currentMember.getId());
 
-		return articleService.addArticle(article);
+		//첨부파일 정보가 담긴 Map
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		//게시물 저장
+		return articleService.addArticle(article, fileMap);
 	}
 
 	/* 게시물 삭제 */

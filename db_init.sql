@@ -269,7 +269,7 @@ CREATE TABLE `files` (
     originFileName VARCHAR(100) NOT NULL, # 업로드 당시의 파일명
     fileExt CHAR(10) NOT NULL, # 확장자
     typeCode CHAR(20) NOT NULL, # 종류코드 (common)
-    type2Code CHAR(20) NOT NULL, # 종류2코드 (attatchment)
+    type2Code CHAR(20) NOT NULL, # 종류2코드 (attachment)
     fileSize INT(10) UNSIGNED NOT NULL, # 파일 사이즈
     fileExtTypeCode CHAR(10) NOT NULL, # 파일규격코드(img, video)
     fileExtType2Code CHAR(10) NOT NULL, # 파일규격2코드(jpg, mp4)

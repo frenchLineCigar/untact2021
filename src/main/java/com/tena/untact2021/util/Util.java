@@ -214,4 +214,68 @@ public class Util {
 	public static <T> T ifEmpty(T data, T fallback) {
 		return !isEmpty(data) ? data : fallback;
 	}
+
+	/* 파일 이름에서 확장자 추출 */
+	public static String getFileExtFromFileName(String fileName) {
+		// newFile.jpg
+		int pos = fileName.lastIndexOf(".");
+		String ext = fileName.substring(pos + 1).toLowerCase();
+
+		return ext;
+	}
+
+	/* 파일 규격 (상위 규격) */
+	public static String getFileExtTypeCodeFromFileName(String fileName) {
+		String ext = getFileExtFromFileName(fileName);
+
+		switch (ext) {
+			case "jpeg":
+			case "jpg":
+			case "gif":
+			case "png":
+				return "img";
+			case "mp4":
+			case "avi":
+			case "mov":
+				return "video";
+			case "mp3":
+				return "audio";
+		}
+
+		return "etc";
+	}
+
+	/* 파일 규격2 (하위 규격) */
+	public static String getFileExtType2CodeFromFileName(String fileName) {
+		String ext = getFileExtFromFileName(fileName);
+
+		switch (ext) {
+			case "jpeg":
+			case "jpg":
+				return "jpg";
+			case "gif":
+			case "png":
+			case "mp4":
+			case "mov":
+			case "avi":
+			case "mp3":
+				return ext;
+		}
+
+		return "etc";
+	}
+
+	/**
+	 * fileDir 생성용
+	 * - 리눅스에서 폴더 하나에 파일을 몇만개 이상 담을 수 없기 때문에 생성년월로 폴더 분리
+	 * - 현재 년월을 yyyy_MM 문자열 포맷으로 리턴
+	 */
+	public static String getNowYearMonthDateStr() {
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy_MM");
+
+		String dateStr = format1.format(System.currentTimeMillis());
+
+		return dateStr;
+	}
+
 }
