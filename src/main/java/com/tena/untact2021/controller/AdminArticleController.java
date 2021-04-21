@@ -3,6 +3,7 @@ package com.tena.untact2021.controller;
 import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.*;
 import com.tena.untact2021.service.ArticleService;
+import com.tena.untact2021.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,7 @@ public class AdminArticleController extends BaseController {
 		int itemsInAPage = 20;
 
 		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
+
 		model.addAttribute("articles", articles);
 
 		return "admin/article/list";

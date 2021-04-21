@@ -83,4 +83,9 @@ public class FileService {
 
 		return new ResultData("S-1", "파일이 저장되었습니다.", resultMap);
 	}
+
+	/* 썸네일 가져오기 */
+	public AttachFile getFileByThumbnailCondition(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+		return fileDao.findFileByThumbnailCondition(relTypeCode, relId, typeCode, type2Code, fileNo);
+	}
 }

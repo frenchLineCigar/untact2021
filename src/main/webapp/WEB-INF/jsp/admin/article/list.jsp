@@ -46,6 +46,12 @@
 					   class="text-2xl text-gray-700 font-bold hover:underline">${article.title}</a>
 					<p class="mt-2 text-gray-600">${article.body}</p>
 				</div>
+				<%-- 첨부파일 1이 이미지면 썸네일로 표시 --%>
+				<div>
+					<c:if test="${article.extra__thumbImg != null}">
+						<img src="${article.extra__thumbImg}" alt="" class="w-1/5">
+					</c:if>
+				</div>
 				<div class="flex justify-between items-center mt-4">
 					<a href="detail?id=${article.id}" class="text-blue-500 hover:underline">자세히 보기</a>
 					<div>

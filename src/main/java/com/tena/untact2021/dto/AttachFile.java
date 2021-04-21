@@ -1,5 +1,6 @@
 package com.tena.untact2021.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,10 @@ public class AttachFile {
 	// Format : file__[relTypeCode]__[relId]__[typeCode]__[type2Code]__[fileNo]
 	// Ex) file__article__0__common__attachment__1
 	private int id;
+	private String regDate;
+	private String updateDate;
+	private boolean delStatus;
+	private String delDate;
 	private String relTypeCode; //연관 데이터 타입 (Ex. article)
 	private int relId; //연관 데이터 번호
 	private String typeCode; //파일 종류 코드 (Ex. common)
@@ -29,5 +34,23 @@ public class AttachFile {
 
 	public boolean hasData() {
 		return !this.multipartFile.isEmpty();
+	}
+
+	@JsonIgnore
+	public String getFilePath(String fileDirPath) {
+		return fileDirPath + getBaseFileUri();
+	}
+
+	@JsonIgnore
+	private String getBaseFileUri() {
+		return "/" + relTypeCode + "/" + fileDir + "/" + getFileName();
+	}
+
+	private String getFileName() {
+		return id + "." + fileExt;
+	}
+
+	public String getForPrintUrl() {
+		return "/file" + getBaseFileUri() + "?updateDate=" + updateDate;
 	}
 }

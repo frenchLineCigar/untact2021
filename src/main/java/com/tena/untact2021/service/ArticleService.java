@@ -86,7 +86,18 @@ public class ArticleService {
         int limitFrom = (page - 1) * itemsInAPage;
         int limitTake = itemsInAPage;
 
-        return articleDao.findAllForPrint(boardId, searchKeywordType, searchKeyword, limitFrom, limitTake);
+	    List<Article> articles = articleDao.findAllForPrint(boardId, searchKeywordType, searchKeyword, limitFrom, limitTake);
+
+	    // 첨부파일 1이 이미지면 썸네일로 사용
+	    for (Article article : articles) {
+		    AttachFile file = fileService.getFileByThumbnailCondition("article", article.getId(), "common", "attachment", 1);
+		    if (file != null) {
+			    article.setExtra__thumbImg(file.getForPrintUrl());
+			    System.out.println("article.getExtra__thumbImg() = " + article.getExtra__thumbImg());
+		    }
+	    }
+
+	    return articles;
     }
 
     /* 게시판 정보 조회 */

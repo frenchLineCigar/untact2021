@@ -18,5 +18,6 @@ public class Article {
 
 	private String extra__writer; //작성자 (M.nickname)
 	private String extra__boardName; //게시판 이름 (B.name)
+	private String extra__thumbImg; //썸네일 링크
 
 }

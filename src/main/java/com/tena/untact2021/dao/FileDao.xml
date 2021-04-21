@@ -24,4 +24,16 @@
 		    fileDir = #{fileDir}
 	</insert>
 
+	<!-- 썸네일 가져오기 -->
+	<select id="findFileByThumbnailCondition" resultType="AttachFile">
+		SELECT *
+		FROM attach_file
+		WHERE 1
+		  AND relTypeCode = #{relTypeCode}
+		  AND relId = #{relId}
+		  AND typeCode = #{typeCode}
+		  AND type2Code = #{type2Code}
+		  AND fileNo = #{fileNo}
+	</select>
+
 </mapper>

@@ -4,10 +4,12 @@ import com.tena.untact2021.custom.AttachFileResolver;
 import com.tena.untact2021.custom.CurrentMemberResolver;
 import com.tena.untact2021.interceptor.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -22,6 +24,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired private CheckAdminInterceptor checkAdminInterceptor;
     @Autowired private CurrentMemberResolver currentMemberResolver;
     @Autowired private AttachFileResolver attachFileResolver;
+
+    @Value("${custom.fileDirPath}")
+    private String fileDirPath;
 
     /* 앱과 통신하기 위해 CORS 허용 */
     @Override
@@ -41,7 +46,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // commonInterceptor 인터셉터가 모든 요청 전에 실행되도록 처리
         registry.addInterceptor(commonInterceptor)
             .addPathPatterns("/**")
-            .excludePathPatterns("/resource/**");
+            .excludePathPatterns("/resource/**")
+            .excludePathPatterns("/file/**"); // 서버 리소스 접근 (앱 외부 디렉터리)
 
         // 관리자 권한 필요
         registry.addInterceptor(checkAdminInterceptor)
@@ -56,6 +62,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .excludePathPatterns("/")
             .excludePathPatterns("/admin/**") // 어드민 관련 요청은 위 checkAdminInterceptor에서 잡음
             .excludePathPatterns("/resource/**")
+            .excludePathPatterns("/file/**") // 서버 리소스 접근 (앱 외부 디렉터리)
             .excludePathPatterns("/user/home/**")
             .excludePathPatterns("/user/member/authKey")
             .excludePathPatterns("/user/member/login")
@@ -84,6 +91,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .addPathPatterns("/user/article/doDelete")
             .addPathPatterns("/user/reply/doModify")
             .addPathPatterns("/user/reply/doDelete");
+    }
+
+    /* 리소스 핸들러 설정 */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        /* 서버 리소스(앱 외부 디렉터리) 요청 처리 */
+        registry.addResourceHandler("/file/**")
+                .addResourceLocations("file:///" + fileDirPath + "/").setCachePeriod(20); //캐시 지속시간 20초
     }
 
 }
