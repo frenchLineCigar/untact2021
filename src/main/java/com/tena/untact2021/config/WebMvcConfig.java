@@ -1,12 +1,8 @@
 package com.tena.untact2021.config;
 
-import com.tena.untact2021.custom.CurrentMemberResolver;
 import com.tena.untact2021.custom.AttachFileResolver;
-import com.tena.untact2021.interceptor.CheckAdminInterceptor;
-import com.tena.untact2021.interceptor.CheckLoginInterceptor;
-import com.tena.untact2021.interceptor.CheckLogoutInterceptor;
-import com.tena.untact2021.interceptor.CheckWriterInterceptor;
-import com.tena.untact2021.interceptor.CommonInterceptor;
+import com.tena.untact2021.custom.CurrentMemberResolver;
+import com.tena.untact2021.interceptor.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

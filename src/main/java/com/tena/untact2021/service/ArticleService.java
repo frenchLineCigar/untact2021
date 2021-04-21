@@ -47,11 +47,8 @@ public class ArticleService {
 		//생성된 게시물 번호
 		int newArticleId = article.getId();
 
-		//첨부 파일에 게시물 번호 셋팅
-		attachFiles.forEach(attachFile -> attachFile.setRelId(newArticleId));
-
-		//첨부 파일 정보 저장
-		fileService.saveFiles(attachFiles);
+		//파일 저장 처리
+		fileService.save(attachFiles, newArticleId);
 
 		return new ResultData("S-1", "성공하였습니다.", "id", article.getId());
 	}

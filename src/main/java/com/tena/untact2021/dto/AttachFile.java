@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -24,4 +25,9 @@ public class AttachFile {
 	private String fileExtType2Code; //파일 규격2 코드 (Ex. jpg, mp4)
 	private String fileExt; //파일 확장자
 	private String fileDir; //파일 저장 폴더 : yyyy_MM (Ex. 2021_03)
+	private MultipartFile multipartFile;
+
+	public boolean hasData() {
+		return !this.multipartFile.isEmpty();
+	}
 }

@@ -219,7 +219,14 @@ public class Util {
 	public static String getFileExtFromFileName(String fileName) {
 		// newFile.jpg
 		int pos = fileName.lastIndexOf(".");
-		String ext = fileName.substring(pos + 1).toLowerCase();
+		String ext = fileName.substring(pos + 1).toLowerCase(); // 소문자로
+
+		switch (ext) {
+			case "jpeg":
+				return "jpg";
+			case "htm":
+				return "html";
+		}
 
 		return ext;
 	}
@@ -253,6 +260,9 @@ public class Util {
 			case "jpeg":
 			case "jpg":
 				return "jpg";
+			case "htm":
+			case "html":
+				return "html";
 			case "gif":
 			case "png":
 			case "mp4":

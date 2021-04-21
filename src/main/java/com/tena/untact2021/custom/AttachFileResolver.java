@@ -53,6 +53,9 @@ public class AttachFileResolver implements HandlerMethodArgumentResolver {
 		for (String fileInputName : fileMap.keySet()) {
 			MultipartFile multipartFile = fileMap.get(fileInputName);
 
+			// no file, no content면 skip
+			if (multipartFile.isEmpty()) continue;
+
 			String[] fileInputNameBits = fileInputName.split("__");
 			// Ex) file__article__0__common__attachment__1
 			// => ["file", "article", "0", "common", "attachment", "1"]
@@ -79,6 +82,7 @@ public class AttachFileResolver implements HandlerMethodArgumentResolver {
 					.fileExtType2Code(Util.getFileExtType2CodeFromFileName(multipartFile.getOriginalFilename()))
 					.fileExt(Util.getFileExtFromFileName(multipartFile.getOriginalFilename()))
 					.fileDir(Util.getNowYearMonthDateStr())
+					.multipartFile(multipartFile)
 					.build();
 
 			// 메타 정보 저장
