@@ -11,27 +11,19 @@
 				<option value="1">공지사항</option>
 				<option value="2">자유게시판</option>
 			</select>
+			<script>
+				let boardId = ${board.id};
+
+				$('.section-1 .select-board-id').val(boardId);
+
+				$('.section-1 .select-board-id').change(function () {
+					location.href = '?boardId=' + this.value;
+				});
+			</script>
 			<%-- 중앙 영역 점유 --%>
 			<div class="flex-grow"></div>
 			<%-- 글쓰기 버튼 --%>
-			<a href="#" class="btn-primary add-article bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded-full">글쓰기</a>
-			<script>
-          const url = new URL(window.location.href);
-          const urlParams = url.searchParams;
-          const boardId = util.ifEmpty(urlParams.get('boardId'), 1); //boardId 없을 시, 공지사항인 1로 fallback
-          $('.section-1 .select-board-id').val(boardId);
-
-          $('.section-1 .select-board-id').change(function () {
-              location.href = '?boardId=' + this.value;
-          });
-
-          $('.section-1 a.add-article').on('click', function (e) {
-              e.preventDefault();
-              location.href = 'add?boardId=' + boardId; // old school
-              //location.href = `add?boardId=\${boardId}`; // backtick(`)으로 문자열을 그룹핑해 es6의 template literal 방식으로 js변수에 접근하려면, 먼저 backslash(\)로 el syntax에서 이스케이프 처리 해야한다.
-              return false;
-          });
-			</script>
+			<a href="add?boardId=${board.id}" class="btn-primary add-article bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded-full">글쓰기</a>
 		</div>
 		<%-- 게시물 리스트 --%>
 		<c:forEach items="${articles}" var="article">

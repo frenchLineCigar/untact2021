@@ -56,6 +56,7 @@ public class AdminArticleController extends BaseController {
 		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
 
 		model.addAttribute("articles", articles);
+		model.addAttribute("board", board);
 
 		return "admin/article/list";
 	}
