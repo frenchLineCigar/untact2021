@@ -4,6 +4,53 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tena.untact2021.dao.ArticleDao">
+
+	<!-- Single Result Maps-->
+	<resultMap id="article" type="Article">
+		<id column="id" property="id" />
+		<result column="regDate" property="regDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="boardId" property="boardId" />
+		<result column="memberId" property="memberId" />
+		<result column="title" property="title" />
+		<result column="body" property="body" />
+		<result column="extra__writer" property="extra__writer" />
+		<result column="extra__boardName" property="extra__boardName" />
+		<!--<result column="extra__thumbImg" property="extra__thumbImg" />-->
+	</resultMap>
+
+	<resultMap id="thumbImgFile" type="AttachFile">
+		<id column="id" property="id" />
+		<result column="regDate" property="regDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="delStatus" property="delStatus" />
+		<result column="delDate" property="delDate" />
+		<result column="relTypeCode" property="relTypeCode" />
+		<result column="relId" property="relId" />
+		<result column="typeCode" property="typeCode" />
+		<result column="type2Code" property="type2Code" />
+		<result column="fileNo" property="fileNo" />
+		<result column="fileSize" property="fileSize" />
+		<result column="originFileName" property="originFileName" />
+		<result column="fileExtTypeCode" property="fileExtTypeCode" />
+		<result column="fileExtType2Code" property="fileExtType2Code" />
+		<result column="fileExt" property="fileExt" />
+		<result column="fileDir" property="fileDir" />
+		<!--<result column="multipartFile" property="multipartFile" />-->
+	</resultMap>
+	 <!--/ Single Result Maps-->
+
+	<!-- Composite Result Maps -->
+	<resultMap id="articleDetail" type="ArticleDetail">
+		<collection property="article" resultMap="article" />
+		<discriminator javaType="string" column="fileExtTypeCode">
+			<case value="img">
+				<collection property="thumbImgFile" resultMap="thumbImgFile" />
+			</case>
+		</discriminator>
+	</resultMap>
+	<!-- / Composite Result Maps -->
+
     <!-- 게시판 조회 -->
     <select id="findBoard" resultType="Board">
         SELECT *
@@ -20,7 +67,7 @@
 			id = #{id}
 	</select>
 
-    <!-- 게시물 조회 (작성자 정보 포함) -->
+    <!-- 게시물 조회 (작성자명 포함) -->
     <select id="findForPrintById" resultType="Article">
         SELECT A.*,
                IFNULL(M.nickname, "탈퇴회원") AS extra__writer
@@ -30,10 +77,25 @@
         WHERE A.id = #{id};
     </select>
 
+	<!-- 게시물 상세 조회 (작성자명, 게시판명, 썸네일 포함) -->
+	<select id="findForDetailPrintById" resultMap="articleDetail">
+		SELECT
+			A.*,
+			IFNULL(M.nickname, "탈퇴회원") AS extra__writer,
+			IFNULL(B.name, "No name") AS extra__boardName,
+			F.*
+		FROM article AS A
+			LEFT OUTER JOIN `member` AS M ON A.memberId = M.id
+			LEFT OUTER JOIN `board` AS B ON A.boardId = B.id
+			LEFT OUTER JOIN `attach_file` AS F ON A.id = F.relId
+		WHERE A.id = #{id}
+		ORDER BY F.fileNo ASC LIMIT 1
+    </select>
+
 	<!-- 전체 게시물 조회 -->
 	<!--
-	List<Article> findAll(@Param("searchKeywordType") String searchKeywordType, 
-						@Param("searchKeyword") String searchKeyword); 
+	List<Article> findAll(@Param("searchKeywordType") String searchKeywordType,
+						@Param("searchKeyword") String searchKeyword);
 	 -->
 	<select id="findAll" resultType="Article">
 		SELECT *

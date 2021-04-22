@@ -3,7 +3,6 @@ package com.tena.untact2021.controller;
 import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.*;
 import com.tena.untact2021.service.ArticleService;
-import com.tena.untact2021.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -24,13 +23,14 @@ public class AdminArticleController extends BaseController {
 
 	private final ArticleService articleService;
 
-	/* 게시물 조회 */
+	/* 게시물 상세 조회 */
 	@RequestMapping("/admin/article/detail")
 	@ResponseBody
 	public ResultData showDetail(Integer id) {
 		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 
-		Article article = articleService.getForPrintArticle(id);
+		//Article article = articleService.getForPrintArticle(id);
+		Article article = articleService.getForDetailPrintById(id);
 
 		if (article == null) return new ResultData("F-2", "존재하지 않는 게시물입니다.");
 
@@ -69,17 +69,19 @@ public class AdminArticleController extends BaseController {
 
 	/* 게시물 추가 */
 	@RequestMapping("/admin/article/doAdd")
-	@ResponseBody
-	public ResultData doAdd(Article article, @CurrentMember Member currentMember, List<AttachFile> attachFiles) {
-		if (article.getBoardId() == null) return new ResultData("F-1", "boardId를 입력해주세요.");
-		if (article.getTitle() == null) return new ResultData("F-1", "title을 입력해주세요.");
-		if (article.getBody() == null) return new ResultData("F-1", "body을 입력해주세요.");
+	public String doAdd(Article article, @CurrentMember Member currentMember, List<AttachFile> attachFiles, Model model) {
+		if (article.getBoardId() == null) return msgAndBack(model, "boardId를 입력해주세요.");
+		if (article.getTitle() == null) return msgAndBack(model, "title을 입력해주세요.");
+		if (article.getBody() == null) return msgAndBack(model, "body을 입력해주세요.");
 
 		//작성자 정보는 현재 인증된 사용자
 		article.setMemberId(currentMember.getId());
 
 		//게시물 저장
-		return articleService.addArticle(article, attachFiles);
+		ResultData addArticleRd = articleService.addArticle(article, attachFiles);
+		int newArticleId = (int) addArticleRd.getBody().get("id");
+
+		return msgAndReplace(model, String.format("%d번 게시물이 작성되었습니다.", newArticleId), "./detail?id=" + newArticleId);
 	}
 
 	/* 게시물 삭제 */

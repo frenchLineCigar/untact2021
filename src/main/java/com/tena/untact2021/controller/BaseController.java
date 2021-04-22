@@ -19,21 +19,7 @@ public class BaseController {
 		return sb.toString();
 	}
 
-	/* 실패시 (for VIEW) - Request 사용 */
-	protected String msgAndBack(HttpServletRequest req, String msg) {
-		req.setAttribute("historyBack", true);
-		req.setAttribute("msg", msg);
-		return "common/redirect";
-	}
-
-	/* 실패시 (for VIEW) - Model 사용 */
-	protected String msgAndBack(Model model, String msg) {
-		model.addAttribute("historyBack", true);
-		model.addAttribute("msg", msg);
-		return "common/redirect";
-	}
-
-	/* 성공시 */
+	/* 성공시 (for REST, i.e. Handler method with @ResponseBody) */
 	protected String msgAndReplace(String msg, String replaceUrl) {
 
 		// 이동할 url이 없을 경우, 메인으로 이동
@@ -46,6 +32,20 @@ public class BaseController {
 		sb.append("</script>");
 
 		return sb.toString();
+	}
+
+	/* 실패시 (for VIEW) - Model 사용 */
+	protected String msgAndBack(Model model, String msg) {
+		model.addAttribute("historyBack", true);
+		model.addAttribute("msg", msg);
+		return "common/redirect";
+	}
+
+	/* 성공시 (for VIEW) - Model 사용 */
+	protected String msgAndReplace(Model model, String msg, String redirectUri) {
+		model.addAttribute("redirectUri", redirectUri);
+		model.addAttribute("msg", msg);
+		return "common/redirect";
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.tena.untact2021.dao;
 
 import com.tena.untact2021.dto.Article;
+import com.tena.untact2021.dto.ArticleDetail;
 import com.tena.untact2021.dto.Board;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -27,8 +28,11 @@ public interface ArticleDao {
 	/* 게시물 수정 */
     boolean update(Article article);
 
-    /* 게시물 조회 (작성자 정보 포함) */
+    /* 게시물 조회 (작성자명 포함) */
     Article findForPrintById(@Param("id") int id);
+
+	/* 게시물 상세 조회 (작성자명, 게시판명, 썸네일 포함) */
+	ArticleDetail findForDetailPrintById(@Param("id") int id);
 
     /* 전체 게시물 조회 (작성자 정보 포함) */
     List<Article> findAllForPrint(@Param("boardId") int boardId,

@@ -1,10 +1,7 @@
 package com.tena.untact2021.service;
 
 import com.tena.untact2021.dao.ArticleDao;
-import com.tena.untact2021.dto.Article;
-import com.tena.untact2021.dto.AttachFile;
-import com.tena.untact2021.dto.Board;
-import com.tena.untact2021.dto.ResultData;
+import com.tena.untact2021.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,10 +72,24 @@ public class ArticleService {
         return new ResultData("S-1", "게시물을 수정하였습니다.", "id", article.getId());
 	}
 
-    /* 게시물 조회 (작성자 정보 포함) */
+    /* 게시물 조회 (작성자명 포함) */
     public Article getForPrintArticle(int id) {
         return articleDao.findForPrintById(id);
     }
+
+	/* 게시물 상세 조회 (작성자명, 게시판명, 썸네일 포함) */
+	public Article getForDetailPrintById(int id) {
+		ArticleDetail articleDetail = articleDao.findForDetailPrintById(id);
+		System.out.println("articleDetail = " + articleDetail);
+
+		Article article = articleDetail.getArticle();
+		AttachFile thumbImgFile = articleDetail.getThumbImgFile();
+		if (thumbImgFile != null) {
+			article.setExtra__thumbImg(thumbImgFile.getForPrintUrl());
+		}
+
+		return article;
+	}
 
     /* 전체 게시물 조회 (작성자 정보 포함) */
     public List<Article> getForPrintArticles(int boardId, SearchKeywordType searchKeywordType, String searchKeyword,
@@ -93,7 +104,6 @@ public class ArticleService {
 		    AttachFile file = fileService.getFileByThumbnailCondition("article", article.getId(), "common", "attachment", 1);
 		    if (file != null) {
 			    article.setExtra__thumbImg(file.getForPrintUrl());
-			    System.out.println("article.getExtra__thumbImg() = " + article.getExtra__thumbImg());
 		    }
 	    }
 

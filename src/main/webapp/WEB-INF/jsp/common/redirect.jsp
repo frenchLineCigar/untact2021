@@ -3,12 +3,20 @@
 
 <script>
   (function msgAndView() {
-    let historyBack = '${historyBack}' == 'true';
     let msg = '${msg}'.trim();
+    let historyBack = '${historyBack}' == 'true';
 	  let redirectUri = '${redirectUri}'.trim();
 
-    if (msg) alert(msg);
-	  if (historyBack) history.back();
-    if (redirectUri) location.replace(redirectUri);
+    if (msg) {
+        alert(msg);
+    }
+
+    if (historyBack) {
+        history.back();
+    }
+
+    if (redirectUri) {
+        location.replace(redirectUri);
+    }
   })();
 </script>
