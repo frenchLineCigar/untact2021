@@ -4,62 +4,110 @@
 <%@ include file="../layout/main_layout_head.jspf" %>
 
 <script>
-    ArticleAdd__isSubmitted = false; // 폼 전송 상태 (중복 전송 방지)
-    function ArticleAdd__checkAndSubmit(form) {
+ArticleAdd__isSubmitted = false; // 폼 전송 상태 (중복 전송 방지)
+function ArticleAdd__checkAndSubmit(form) {
 
-        if (ArticleAdd__isSubmitted) {
-            alert('처리 중입니다.'); // 이미 전송했으면
+    if (ArticleAdd__isSubmitted) {
+        alert('처리 중입니다.'); // 이미 전송했으면
+        return;
+    }
+
+    // 제목 유효성 체크
+    form.title.value = form.title.value.trim();
+
+    if (form.title.value.length == 0) {
+        alert('제목을 입력해주세요.');
+        form.title.focus();
+
+        return false;
+    }
+
+    // 내용 유효성 체크
+    form.body.value = form.body.value.trim();
+
+    if (form.body.value.length == 0) {
+        alert('내용을 입력해주세요.');
+        form.body.focus();
+
+        return false;
+    }
+
+    // 업로드 파일 사이즈 제한
+    let maxSizeMb = 10;
+    let maxSize = maxSizeMb * 1024 * 1024; //10MB
+
+    if (form.file__article__0__common__attachment__1.value) {
+        if (form.file__article__0__common__attachment__1.files[0].size > maxSize) {
+            alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요.");
+            form.file__article__0__common__attachment__1.focus();
+
             return;
         }
-        form.title.value = form.title.value.trim();
+    }
 
-        if (form.title.value.length == 0) {
-            alert('제목을 입력해주세요.');
-            form.title.focus();
+    if (form.file__article__0__common__attachment__2.value) {
+        if (form.file__article__0__common__attachment__2.files[0].size > maxSize) {
+            alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요.");
+            form.file__article__0__common__attachment__2.focus();
 
-            return false;
+            return;
+        }
+    }
+
+    // 파일 전송 함수
+    const startUploadFiles = function (onSuccess) {
+
+        // 첨부파일 1 체크
+        let needToUpload = form.file__article__0__common__attachment__1.value.length > 0;
+        // 첨부파일 2 체크
+        if (!needToUpload) needToUpload = form.file__article__0__common__attachment__2.value.length > 0;
+
+        // 첨부파일이 딱히 없다?
+        if (needToUpload == false) {
+            onSuccess(); // 바로 콜백 실행 -> 폼 전송
+            return;
         }
 
-        form.body.value = form.body.value.trim();
+        // 첨부파일이 있다? Ajax 로 파일 업로드 먼저 ㄱㄱ
+        // Ajax로 폼 전송을 하기 위한 FormData 객체 생성
+        // Ajax로 폼 전송 시, 기본 폼 동작은 e.preventDefault()로 멈추고, 페이지 전환 없이 폼 데이터를 전송
+        const fileUploadFormData = new FormData(form);
+        $.ajax({
+            url: '/common/file/doUpload',
+            data: fileUploadFormData,
+            processData: false, // important! -> multipart/form-data
+            contentType: false, // important! -> multipart/form-data
+            dataType: "json",
+            type: 'POST',
+            success: onSuccess // 업로드 성공시 콜백 -> 폼 전송
+        });
+    }
 
-        if (form.body.value.length == 0) {
-            alert('내용을 입력해주세요.');
-            form.body.focus();
+    // 폼 전송 함수
+    const startSubmitForm = function (data) {
+        let fileIdsStr = '';
 
-            return false;
+        if (data && data.body && data.body.fileIdsStr) {
+            fileIdsStr = data.body.fileIdsStr;
         }
 
-        // 업로드 시 파일 사이즈 제한
-        var maxSizeMb = 10;
-        var maxSize = maxSizeMb * 1024 * 1024; //10MB
+        form.fileIdsStr.value = fileIdsStr;
+        form.file__article__0__common__attachment__1.value = ''; // 이미 전송했으므로 file 타입 제외
+        form.file__article__0__common__attachment__2.value = ''; // 이미 전송했으므로 file 타입 제외
 
-        if (form.file__article__0__common__attachment__1.value) {
-            if (form.file__article__0__common__attachment__1.files[0].size > maxSize) {
-                alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요.");
-                form.file__article__0__common__attachment__1.focus();
-
-                return;
-            }
-        }
-
-        if (form.file__article__0__common__attachment__2.value) {
-            if (form.file__article__0__common__attachment__2.files[0].size > maxSize) {
-                alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요.");
-                form.file__article__0__common__attachment__2.focus();
-
-                return;
-            }
-        }
-
-        // 폼 전송
         form.submit();
-        ArticleAdd__isSubmitted = true;
+    };
+
+    ArticleAdd__isSubmitted = true;
+
+    startUploadFiles(startSubmitForm);
 }
 </script>
 
 <section class="section-1">
   <div class="bg-white shadow-md rounded container mx-auto p-8 mt-8">
     <form onsubmit="ArticleAdd__checkAndSubmit(this); return false;" action="doAdd" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="fileIdsStr" value=""/>
       <input type="hidden" name="boardId" value="${param.boardId}"/>
       <div class="form-row flex flex-col lg:flex-row">
         <div class="lg:flex lg:items-center lg:w-28">

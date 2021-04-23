@@ -19,6 +19,7 @@ for my good memory
 
 ### TIL
 - JS
+  - [[JS/jQuery] AJAX multipart/form-data 파일 전송 - data 파싱, processData, contentType, dataType](https://velog.io/@tenacity/JSjQuery-AJAX-multipartform-data-%ED%8C%8C%EC%9D%BC-%EC%A0%84%EC%86%A1-data-%ED%8C%8C%EC%8B%B1-processData-contentType-dataType)
   - [HTML Input 태그에 포커스(Focus)가 가도록 이벤트 처리하기 : 네이버 블로그](https://m.blog.naver.com/ndb796/221406934376)
   - [[자바스크립트] javascript로 파일 용량 체크하기](https://zzznara2.tistory.com/617)
   - [[ Javascript ] 자바스크립트 상에서 Byte를 보기 쉽게 자동 변환하기](https://aorica.tistory.com/153)
