@@ -80,7 +80,13 @@
             <artifactId>jstl</artifactId>
         </dependency>
 
-    </dependencies>
+		<!-- Google Guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>30.1.1-jre</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<!-- Mapper XML 이 Mapper Interface 와 동일한 곳에 위치시키는 경우 빌드시 포함시키기 위한 설정 -->

@@ -1,6 +1,5 @@
 package com.tena.untact2021.config;
 
-import com.tena.untact2021.custom.AttachFileResolver;
 import com.tena.untact2021.custom.CurrentMemberResolver;
 import com.tena.untact2021.interceptor.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired private CheckWriterInterceptor checkWriterInterceptor;
     @Autowired private CheckAdminInterceptor checkAdminInterceptor;
     @Autowired private CurrentMemberResolver currentMemberResolver;
-    @Autowired private AttachFileResolver attachFileResolver;
 
     @Value("${custom.fileDirPath}")
     private String fileDirPath;
@@ -38,7 +36,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(currentMemberResolver);
-        resolvers.add(attachFileResolver);
     }
 
     @Override

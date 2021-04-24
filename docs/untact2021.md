@@ -4,6 +4,61 @@ for my good memory
 
 ---
 
+[2021-04-24]
+
+### PLAN
+파일 업로드 -> 글 저장 -> 생선된 글 번호를 업로드 파일의 연관 게시물 번호로 갱신
+
+### TIL
+
+- HTTP
+  - [리다이렉션을 처리하는 여러가지 방식](https://sundries-in-myidea.tistory.com/58)
+  - [방문경로(referrer/refferer)가 검출되지 않는경우](https://jang8584.tistory.com/46)
+  - [Referer - HTTP](https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Referer)
+  - [Redirections in HTTP - HTTP](https://developer.mozilla.org/ko/docs/Web/HTTP/Redirections)
+- Postman file upload test
+  - [postman file upload - Google 검색](https://www.google.com/search?q=postman+file+upload&oq=postman+file+upload&aqs=chrome..69i57j0l9.3098j0j9&sourceid=chrome&ie=UTF-8)
+  - [Postman에서 파일 전송 처리하기](https://elfinlas.github.io/2019/01/16/postman-insert-img/)
+  - [Postman으로 파일전송 테스트 하기](https://velog.io/@k904808/Postman%EC%9C%BC%EB%A1%9C-%ED%8C%8C%EC%9D%BC%EC%A0%84%EC%86%A1-%ED%85%8C%EC%8A%A4%ED%8A%B8-%ED%95%98%EA%B8%B0)
+  - [MultipartFile Upload/Download. 현 프로젝트에서 모바일을 위한 멀티파트 업/다운로드를 따로 개발을…](https://medium.com/@kwangsoo/multipartfil-upload-download-a236bb71093e)
+  - [chrome network to postman](https://www.google.com/search?q=chrome+network+to+postman&oq=chrome+network+to+postman&aqs=chrome..69i57j0i8i19i30l2.5946j0j7&sourceid=chrome&ie=UTF-8)
+  - [How to replicate requests from the Chrome Network Tab into Postman?](https://medium.com/@tiboprea/how-to-replicate-requests-from-the-chrome-network-tab-into-postman-4ec6016ee18c)
+  
+- JS
+  
+### TODO
+
+> 천천히 가는 것을 걱정하지 말고 서있는 것을 걱정하라.
+>
+
+---
+
+[2021-04-23]
+
+### PLAN
+
+### TIL
+
+- JSP/JSTL
+  - [JSTL fn:length() Function - javatpoint](https://www.javatpoint.com/jstl-fn-length-function)
+  - [JSTL Core c:out Tag - javatpoint](https://www.javatpoint.com/jstl-core-out-tag)
+  - [[JSP] JSTL에서 <c:out> 태그를 쓰는 이유](https://velog.io/@tenacity/JSP-JSTL%EC%97%90%EC%84%9C-cout-%ED%83%9C%EA%B7%B8%EB%A5%BC-%EC%93%B0%EB%8A%94-%EC%9D%B4%EC%9C%A0)
+  - [jsp 페이지에서 jstl을 사용하여 HTML tag 제거하기](https://offbyone.tistory.com/263)
+  - [JSTL - <c:forEach>, <c:forTokens> 태그 사용법](https://offbyone.tistory.com/368)
+  
+- JS
+  - [클로저 - JavaScript](https://developer.mozilla.org/ko/docs/Web/JavaScript/Closures#%ED%81%B4%EB%A1%9C%EC%A0%80closure)
+  - [자바스크립트의 IIFE](https://velog.io/@doondoony/javascript-iife)
+  - [[JS] 함수선언문과 함수표현식의 차이](https://gmlwjd9405.github.io/2019/04/20/function-declaration-vs-function-expression.html)
+  - [[JS] 함수형 Array.fill()](https://velog.io/@tenacity/JS-%ED%95%A8%EC%88%98%ED%98%95-Array.fill)
+  
+### TODO
+
+>
+>
+
+---
+
 [2021-04-22]
 
 ### PLAN

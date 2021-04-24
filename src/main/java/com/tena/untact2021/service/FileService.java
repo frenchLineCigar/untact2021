@@ -1,5 +1,6 @@
 package com.tena.untact2021.service;
 
+import com.google.common.base.Joiner;
 import com.tena.untact2021.dao.FileDao;
 import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.ResultData;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,42 +27,45 @@ public class FileService {
 	@Value("${custom.fileDirPath}")
 	private String fileDirPath;
 
-	/* 파일 저장 */
-	public ResultData save(List<AttachFile> attachFiles, int relId) {
-		List<Integer> newFileIds = new ArrayList<>();
-		attachFiles.stream().filter(AttachFile::hasData).forEach(attachFile -> {
-			attachFile.setRelId(relId); // 첨부 파일에 게시물 번호 셋팅
-			saveFileMetaData(attachFile); // 파일 메타 데이터 DB에 저장
-			saveRealFileOnDisk(attachFile);// 실제 파일 저장
-			newFileIds.add(attachFile.getId()); //저장된 파일 번호 담기
-		});
-
-		return new ResultData("S-1", "저장된 파일 번호", "newFileIds", newFileIds);
+	/* 메타 데이터 저장 (DB)*/
+	public void saveFileMetaData(AttachFile attachFile) {
+		fileDao.save(attachFile);
 	}
 
-	/* 메타 데이터 저장 (DB)*/
-	public ResultData saveFileMetaData(AttachFile attachFile) {
-		fileDao.save(attachFile);
+	/* 파일 저장 */
+	public ResultData save(MultipartFile multipartFile, int relId) {
+		String fileInputName = multipartFile.getName();
+		String[] fileInputNameBits = fileInputName.split("__");
+		int fileSize = (int) multipartFile.getSize();
 
-		return new ResultData("S-1", "성공하였습니다.", "id", attachFile.getId());
+		// 파라미터명 prefix 체크 -> file 이 아니면 ㄴㄴ
+		if (fileInputNameBits[0].equals("file") == false) return new ResultData("F-1", "파라미터 명이 올바르지 않습니다.");
+
+		// 크기 체크 ->  0 이하면 ㄴㄴ
+		if (fileSize <= 0) return new ResultData("F-2", "파일이 업로드 되지 않았습니다.");
+
+		AttachFile attachFile = AttachFile.from(multipartFile, relId);
+
+		// 파일 메타 데이터 DB에 저장
+		saveFileMetaData(attachFile);
+
+		// 실제 파일 저장
+		return saveRealFileOnDisk(multipartFile, attachFile);
 	}
 
 	/* 실제 파일 저장 (서버 경로) */
-	public ResultData saveRealFileOnDisk(AttachFile attachFile) {
+	public ResultData saveRealFileOnDisk(MultipartFile multipartFile, AttachFile attachFile) {
 		int newFileId = attachFile.getId();
 		String relTypeCode = attachFile.getRelTypeCode();
 		String fileDir = attachFile.getFileDir();
 		String fileExt = attachFile.getFileExt();
-		MultipartFile multipartFile = attachFile.getMultipartFile();
 
 		// 새 파일이 저장될 폴더 객체(java.io.File) 생성
 		String targetDirPath = fileDirPath + "/" + relTypeCode + "/" + fileDir;
 		File targetDir = new File(targetDirPath);
 
 		// 새 파일이 저장될 폴더가 존재하지 않는다면 생성
-		if (targetDir.exists() == false) {
-			targetDir.mkdirs();
-		}
+		if (!targetDir.exists()) targetDir.mkdirs();
 
 		// Ex. ${fileDirPath}/article/2021_03/1.jpg
 		// 새 파일 이름 지정
@@ -88,4 +93,36 @@ public class FileService {
 	public AttachFile getFileByThumbnailCondition(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
 		return fileDao.findFileByThumbnailCondition(relTypeCode, relId, typeCode, type2Code, fileNo);
 	}
+
+	/* Ajax 업로드 파일 저장 처리 */
+	public ResultData saveFiles(MultipartRequest multipartRequest) {
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		Map<String, ResultData> filesResultData = new LinkedHashMap<>();
+		List<Integer> fileIds = new ArrayList<>();
+
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (! multipartFile.isEmpty()) {
+				ResultData fileResultData = save(multipartFile, 0); // 연관 게시물 생성 전이므로 relId를 0으로 처리
+				int fileId = (int) fileResultData.getBody().get("id");
+
+				fileIds.add(fileId);
+
+				filesResultData.put(fileInputName, fileResultData);
+			}
+		}
+
+		String fileIdsStr = Joiner.on(",").join(fileIds);
+		// String fileIdsStr = fileIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+
+		return new ResultData("S-1", " 파일을 업로드하였습니다.", "filesResultData", filesResultData, "fileIdsStr", fileIdsStr);
+	}
+
+	/* 파일이 첨부된 게시물 번호(relId) 수정 */
+	public void changeRelId(int id, int relId) {
+		fileDao.updateRelId(id, relId);
+	}
+
 }

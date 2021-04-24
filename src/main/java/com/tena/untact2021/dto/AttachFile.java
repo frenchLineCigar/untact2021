@@ -1,6 +1,7 @@
 package com.tena.untact2021.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tena.untact2021.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,11 +31,6 @@ public class AttachFile {
 	private String fileExtType2Code; //파일 규격2 코드 (Ex. jpg, mp4)
 	private String fileExt; //파일 확장자
 	private String fileDir; //파일 저장 폴더 : yyyy_MM (Ex. 2021_03)
-	private MultipartFile multipartFile;
-
-	public boolean hasData() {
-		return !this.multipartFile.isEmpty();
-	}
 
 	@JsonIgnore
 	public String getFilePath(String fileDirPath) {
@@ -53,4 +49,27 @@ public class AttachFile {
 	public String getForPrintUrl() {
 		return "/file" + getBaseFileUri() + "?updateDate=" + updateDate;
 	}
+
+	/* Map MultipartFile To AttachFile */
+	public static AttachFile from(MultipartFile multipartFile, int relId) {
+		String paramName = multipartFile.getName(); // file__article__0__common__attachment__1
+		String[] paramNameBits = paramName.split("__"); // ["file", "article", "0", "common", "attachment", "1"]
+
+		AttachFile attachFile = AttachFile.builder()
+				.relTypeCode(paramNameBits[1]) // article
+				.relId(relId)
+				.typeCode(paramNameBits[3]) // common
+				.type2Code(paramNameBits[4]) // attachment
+				.fileNo(Integer.parseInt(paramNameBits[5])) // 1 (order)
+				.fileSize((int) multipartFile.getSize())
+				.originFileName(multipartFile.getOriginalFilename())
+				.fileExtTypeCode(Util.getFileExtTypeCodeFromFileName(multipartFile.getOriginalFilename()))
+				.fileExtType2Code(Util.getFileExtType2CodeFromFileName(multipartFile.getOriginalFilename()))
+				.fileExt(Util.getFileExtFromFileName(multipartFile.getOriginalFilename()))
+				.fileDir(Util.getNowYearMonthDateStr())
+				.build();
+
+		return attachFile;
+	}
+
 }

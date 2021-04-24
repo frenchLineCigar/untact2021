@@ -3,6 +3,11 @@
 
 <%@ include file="../layout/main_layout_head.jspf" %>
 
+<c:set var="fileInputMaxCount" value="10" />
+<script>
+ArticleAdd__fileInputMaxCount = ${fileInputMaxCount};
+</script>
+
 <script>
 ArticleAdd__isSubmitted = false; // 폼 전송 상태 (중복 전송 방지)
 function ArticleAdd__checkAndSubmit(form) {
@@ -36,35 +41,37 @@ function ArticleAdd__checkAndSubmit(form) {
     let maxSizeMb = 10;
     let maxSize = maxSizeMb * 1024 * 1024; //10MB
 
-    if (form.file__article__0__common__attachment__1.value) {
-        if (form.file__article__0__common__attachment__1.files[0].size > maxSize) {
-            alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요.");
-            form.file__article__0__common__attachment__1.focus();
+    for (let inputNo = 1; inputNo <= ArticleAdd__fileInputMaxCount; inputNo++) {
+        const input = form["file__article__0__common__attachment__" + inputNo];
 
-            return;
-        }
-    }
+        if (input.value) {
+            if (input.files[0].size > maxSize) {
+                alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요.");
+                input.focus();
 
-    if (form.file__article__0__common__attachment__2.value) {
-        if (form.file__article__0__common__attachment__2.files[0].size > maxSize) {
-            alert(maxSizeMb + "MB 이하의 파일을 업로드 해주세요.");
-            form.file__article__0__common__attachment__2.focus();
-
-            return;
+                return;
+            }
         }
     }
 
     // 파일 전송 함수
     const startUploadFiles = function (onSuccess) {
 
-        // 첨부파일 1 체크
-        let needToUpload = form.file__article__0__common__attachment__1.value.length > 0;
-        // 첨부파일 2 체크
-        if (!needToUpload) needToUpload = form.file__article__0__common__attachment__2.value.length > 0;
+        // 첨부파일 유무를 담을 변수
+        let needToUpload = false;
+
+        for (let inputNo = 1; inputNo <= ArticleAdd__fileInputMaxCount; inputNo++) {
+            const input = form["file__article__0__common__attachment__" + inputNo];
+
+            if (input.value.length > 0) { // 크기가 0보다 큰 것이 하나라도 있으면
+                needToUpload = true; // 업로드 할 첨부파일 있음
+                break; // 반복문 빠져나감
+            }
+        }
 
         // 첨부파일이 딱히 없다?
         if (needToUpload == false) {
-            onSuccess(); // 바로 콜백 실행 -> 폼 전송
+            onSuccess(); // 바로 콜백 실행 -> startSubmitForm
             return;
         }
 
@@ -79,21 +86,20 @@ function ArticleAdd__checkAndSubmit(form) {
             contentType: false, // important! -> multipart/form-data
             dataType: "json",
             type: 'POST',
-            success: onSuccess // 업로드 성공시 콜백 -> 폼 전송
+            success: onSuccess // 업로드 성공시 콜백 -> startSubmitForm
         });
     }
 
     // 폼 전송 함수
     const startSubmitForm = function (data) {
-        let fileIdsStr = '';
-
         if (data && data.body && data.body.fileIdsStr) {
-            fileIdsStr = data.body.fileIdsStr;
+            form.fileIdsStr.value = data.body.fileIdsStr;
         }
 
-        form.fileIdsStr.value = fileIdsStr;
-        form.file__article__0__common__attachment__1.value = ''; // 이미 전송했으므로 file 타입 제외
-        form.file__article__0__common__attachment__2.value = ''; // 이미 전송했으므로 file 타입 제외
+        for (let inputNo = 1; inputNo <= ArticleAdd__fileInputMaxCount; inputNo++) {
+            const input = form["file__article__0__common__attachment__" + inputNo];
+            input.value = ''; // 파일을 이미 startUploadFiles에서 Ajax로 업로드 했으므로, 폼 요소에서 file 타입은 비움
+        }
 
         form.submit();
     };
@@ -125,22 +131,16 @@ function ArticleAdd__checkAndSubmit(form) {
           <textarea name="body" class="form-row-input w-full rounded-sm" placeholder="내용을 입력해주세요."></textarea>
         </div>
       </div>
-      <div class="form-row flex flex-col lg:flex-row">
-        <div class="lg:flex lg:items-center lg:w-28">
-          <span>첨부파일 1</span>
+      <c:forEach begin="1" end="${fileInputMaxCount}" var="inputNo">
+        <div class="form-row flex flex-col lg:flex-row">
+          <div class="lg:flex lg:items-center lg:w-28">
+            <span>첨부파일 ${inputNo}</span>
+          </div>
+          <div class="lg:flex-grow">
+            <input type="file" name="file__article__0__common__attachment__${inputNo}" class="form-row-input w-full rounded-sm" />
+          </div>
         </div>
-        <div class="lg:flex-grow">
-          <input type="file" name="file__article__0__common__attachment__1" class="form-row-input w-full rounded-sm" />
-        </div>
-      </div>
-      <div class="form-row flex flex-col lg:flex-row">
-        <div class="lg:flex lg:items-center lg:w-28">
-          <span>첨부파일 2</span>
-        </div>
-        <div class="lg:flex-grow">
-          <input type="file" name="file__article__0__common__attachment__2" class="form-row-input w-full rounded-sm" />
-        </div>
-      </div>
+      </c:forEach>
       <div class="form-row flex flex-col lg:flex-row">
         <div class="lg:flex lg:items-center lg:w-28">
           <span>작성</span>

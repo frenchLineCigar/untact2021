@@ -69,7 +69,7 @@ public class AdminArticleController extends BaseController {
 
 	/* 게시물 추가 */
 	@RequestMapping("/admin/article/doAdd")
-	public String doAdd(Article article, @CurrentMember Member currentMember, List<AttachFile> attachFiles, Model model) {
+	public String doAdd(Article article, @CurrentMember Member currentMember, Model model) {
 		if (article.getBoardId() == null) return msgAndBack(model, "boardId를 입력해주세요.");
 		if (article.getTitle() == null) return msgAndBack(model, "title을 입력해주세요.");
 		if (article.getBody() == null) return msgAndBack(model, "body을 입력해주세요.");
@@ -78,11 +78,27 @@ public class AdminArticleController extends BaseController {
 		article.setMemberId(currentMember.getId());
 
 		//게시물 저장
-		ResultData addArticleRd = articleService.addArticle(article, attachFiles);
+		ResultData addArticleRd = articleService.addArticle(article);
 		int newArticleId = (int) addArticleRd.getBody().get("id");
 
 		return msgAndReplace(model, String.format("%d번 게시물이 작성되었습니다.", newArticleId), "./detail?id=" + newArticleId);
 	}
+//	/* 게시물 추가 */
+//	@RequestMapping("/admin/article/doAdd")
+//	public String doAdd(Article article, @CurrentMember Member currentMember, Map<String, MultipartFile> fileMap, Model model) {
+//		if (article.getBoardId() == null) return msgAndBack(model, "boardId를 입력해주세요.");
+//		if (article.getTitle() == null) return msgAndBack(model, "title을 입력해주세요.");
+//		if (article.getBody() == null) return msgAndBack(model, "body을 입력해주세요.");
+//
+//		//작성자 정보는 현재 인증된 사용자
+//		article.setMemberId(currentMember.getId());
+//
+//		//게시물 저장
+//		ResultData addArticleRd = articleService.addArticle(article, fileMap);
+//		int newArticleId = (int) addArticleRd.getBody().get("id");
+//
+//		return msgAndReplace(model, String.format("%d번 게시물이 작성되었습니다.", newArticleId), "./detail?id=" + newArticleId);
+//	}
 
 	/* 게시물 삭제 */
 	@RequestMapping("/admin/article/doDelete")

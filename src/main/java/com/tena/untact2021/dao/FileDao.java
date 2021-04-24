@@ -17,4 +17,6 @@ public interface FileDao {
 	                                        @Param("type2Code") String type2Code,
 	                                        @Param("fileNo") int fileNo);
 
+	/* 파일이 첨부된 게시물 번호(relId) 수정 */
+	void updateRelId(@Param("id") int id, @Param("relId") int relId);
 }
