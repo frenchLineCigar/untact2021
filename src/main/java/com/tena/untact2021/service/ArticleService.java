@@ -106,12 +106,16 @@ public class ArticleService {
 	/* 게시물 상세 조회 (작성자명, 게시판명, 썸네일 포함) */
 	public Article getForDetailPrintById(int id) {
 		ArticleDetail articleDetail = articleDao.findForDetailPrintById(id);
-		System.out.println("articleDetail = " + articleDetail);
 
-		Article article = articleDetail.getArticle();
-		AttachFile thumbImgFile = articleDetail.getThumbImgFile();
-		if (thumbImgFile != null) {
-			article.setExtra__thumbImg(thumbImgFile.getForPrintUrl());
+		Article article = null;
+
+		if (articleDetail != null) {
+			article = articleDetail.getArticle();
+			AttachFile thumbImgFile = articleDetail.getThumbImgFile();
+
+			if (article != null && thumbImgFile != null) {
+				article.setExtra__thumbImg(thumbImgFile.getForPrintUrl());
+			}
 		}
 
 		return article;
