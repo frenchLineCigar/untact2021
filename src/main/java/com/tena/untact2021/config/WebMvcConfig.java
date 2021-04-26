@@ -84,6 +84,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         // 컨텐츠 수정, 삭제 권한 검증
         registry.addInterceptor(checkWriterInterceptor)
+            .addPathPatterns("/admin/article/doModify")
+            .addPathPatterns("/admin/article/doDelete")
             .addPathPatterns("/user/article/doModify")
             .addPathPatterns("/user/article/doDelete")
             .addPathPatterns("/user/reply/doModify")

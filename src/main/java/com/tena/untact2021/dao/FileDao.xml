@@ -36,6 +36,14 @@
 		  AND fileNo = #{fileNo}
 	</select>
 
+	<select id="findFiles" resultType="AttachFile">
+		SELECT *
+		FROM attach_file
+		WHERE 1
+		  AND relTypeCode = #{relTypeCode}
+		  AND relId = #{relId}
+	</select>
+
 	<!-- 파일이 첨부된 게시물 번호(relId) 수정 -->
 	<update id="updateRelId">
 		UPDATE `attach_file`
@@ -45,5 +53,17 @@
 		</set>
 		WHERE id = #{id}
 	</update>
+
+	<!-- 파일 정보 삭제 -->
+	<delete id="deleteFiles">
+		DELETE FROM `attach_file`
+		WHERE relTypeCode = #{relTypeCode}
+		  AND relId = #{relId}
+	</delete>
+
+	<delete id="deleteFile">
+		DELETE FROM `attach_file`
+		WHERE id = #{id}
+	</delete>
 
 </mapper>

@@ -307,4 +307,13 @@ public class Util {
 		return getIdsToList(ids, ",");
 	}
 
+	/* 지정된 경로의 파일 삭제 */
+	public static boolean deleteFile(String filePath) {
+		java.io.File ioFile = new java.io.File(filePath);
+		if (ioFile.exists()) {
+			return ioFile.delete();
+		}
+
+		return false;
+	}
 }

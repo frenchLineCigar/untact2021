@@ -39,24 +39,22 @@ public class CheckWriterInterceptor implements HandlerInterceptor {
         //게시물 or 댓글 번호
         String idStr = request.getParameter("id");
         int id = Integer.parseInt(idStr);
-        System.out.println("id = " + id);
+        log.debug("id = " + id);
 
         //작성자 번호 조회
         int writerId = 0;
         String requestURI = request.getRequestURI();
-        System.out.println("requestURI = " + requestURI);
+        log.debug("requestURI = " + requestURI);
         if (requestURI.contains("/article")) {
             //게시물인 경우
-            System.out.println("/article");
             writerId = articleService.getArticle(id).getMemberId();
         }
 
         if (requestURI.contains("/reply")) {
             //댓글인 경우
             writerId = replyService.getReply(id).getMemberId();
-            System.out.println("/reply");
         }
-        System.out.println("writerId = " + writerId);
+        log.debug("writerId = " + writerId);
 
 
         //수정, 삭제 가능 여부 체크

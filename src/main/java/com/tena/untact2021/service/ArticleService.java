@@ -53,6 +53,9 @@ public class ArticleService {
 	public ResultData deleteArticle(int id) {
 		boolean result = articleDao.deleteById(id);
 
+		// 게시물과 연관된 파일 삭제
+		fileService.deleteFiles("article", id);
+
 		if (result == false) {
 			return new ResultData("F-2", "게시물 삭제에 실패했습니다.", "id", id);
 		}

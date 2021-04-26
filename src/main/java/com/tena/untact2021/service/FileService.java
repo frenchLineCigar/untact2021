@@ -134,4 +134,21 @@ public class FileService {
 		fileDao.updateRelId(id, relId);
 	}
 
+	/* 파일 삭제 */
+	public void deleteFiles(String relTypeCode, int relId) {
+		List<AttachFile> files = fileDao.findFiles(relTypeCode, relId);
+
+		for (AttachFile file : files) {
+			deleteFile(file);
+		}
+	}
+
+	private void deleteFile(AttachFile file) {
+		// 실제 파일 삭제
+		String filePath = file.getFilePath(fileDirPath);
+		Util.deleteFile(filePath);
+
+		// 파일 정보 삭제
+		fileDao.deleteFile(file.getId());
+	}
 }
