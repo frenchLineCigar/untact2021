@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.tena.untact2021.dao.FileDao;
 import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.ResultData;
+import com.tena.untact2021.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,7 @@ import org.springframework.web.multipart.MultipartRequest;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -115,12 +113,23 @@ public class FileService {
 		}
 
 		String fileIdsStr = Joiner.on(",").join(fileIds);
+		// String fileIdsStr = StringUtils.join(fileIds, ",")
 		// String fileIdsStr = fileIds.stream().map(String::valueOf).collect(Collectors.joining(","));
 
 		return new ResultData("S-1", " 파일을 업로드하였습니다.", "filesResultData", filesResultData, "fileIdsStr", fileIdsStr);
 	}
 
-	/* 파일이 첨부된 게시물 번호(relId) 수정 */
+	/* 파일과 연관된 게시물 번호(relId) 변경 */
+	public void changeRelIdInFiles(String fileIdsStr, int relId) {
+		List<Integer> fileIds = Util.getIdsToList(fileIdsStr, ",");
+		fileIds.forEach(fileId -> changeRelId(fileId, relId));
+		/*
+		Arrays.stream(fileIdsStr.split(","))
+				.map(id -> Integer.parseInt(id.trim()))
+				.forEach(fileId -> changeRelId(fileId, relId));
+		*/
+	}
+
 	public void changeRelId(int id, int relId) {
 		fileDao.updateRelId(id, relId);
 	}

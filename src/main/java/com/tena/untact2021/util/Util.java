@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 //유틸리티성 공용 함수
 public class Util {
@@ -286,6 +287,24 @@ public class Util {
 		String dateStr = format1.format(System.currentTimeMillis());
 
 		return dateStr;
+	}
+
+	/**
+	 * Example of using "," as a delimiter
+	 * "1, 2" -> [1, 2]
+	 */
+	public static List<Integer> getIdsToList(String ids, String delimiter) {
+		return Arrays.asList(ids.split(delimiter))
+				.stream()
+				.map(id -> Integer.parseInt(id.trim()))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * delimiter 미입력 시 기본값은 콤마(,)
+	 */
+	public static List<Integer> getIdsToList(String ids) {
+		return getIdsToList(ids, ",");
 	}
 
 }

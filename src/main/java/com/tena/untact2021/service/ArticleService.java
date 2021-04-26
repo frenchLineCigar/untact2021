@@ -6,9 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static com.tena.untact2021.dto.Search.SearchKeywordType;
 
@@ -39,42 +38,16 @@ public class ArticleService {
 		//생성된 게시물 번호
 		int articleId = article.getId();
 
-		//업로드된 파일 번호
-		String fileIdsStr = article.getFileIdsStr();
+		//업로드된 파일이 있다면, 해당 파일의 relId 를 생성된 게시물 번호로 변경한다
+		if (article.hasUploadedFiles()) {
+			// 업로드된 파일 번호
+			String fileIdsStr = article.getFileIdsStr();
 
-		//업로드된 파일의 연관 게시물 번호(relId) 수정
-		if (! fileIdsStr.isBlank()) {
-			// "1,2" -> [1, 2]
-			List<Integer> fileIds = Arrays.stream(fileIdsStr.split(","))
-										.map(s -> Integer.valueOf(s.trim()))
-										.collect(Collectors.toList());
-
-			// 처음에 0으로 할당해서 업로드한 첨부파일들의 relId를 생성된 게시물 번호로 수정한다
-			for (int fileId : fileIds) {
-				fileService.changeRelId(fileId, articleId);
-			}
+			fileService.changeRelIdInFiles(fileIdsStr, articleId);
 		}
 
 		return new ResultData("S-1", "성공하였습니다.", "id", article.getId());
 	}
-
-//	/* 게시물 추가  */
-//	public ResultData addArticle(Article article, Map<String, MultipartFile> fileMap) {
-//
-//		//게시물 저장
-//		articleDao.save(article);
-//
-//		//생성된 게시물 번호
-//		int newArticleId = article.getId();
-//
-//		//파일 저장 처리
-//		fileMap.keySet().stream()
-//				.map(fileMap::get)
-//				.filter(not(MultipartFile::isEmpty)) // no file, no content면 skip
-//				.forEach(multipartFile -> fileService.save(multipartFile, newArticleId));
-//
-//		return new ResultData("S-1", "성공하였습니다.", "id", article.getId());
-//	}
 
 	/* 게시물 삭제 */
 	public ResultData deleteArticle(int id) {
@@ -107,16 +80,11 @@ public class ArticleService {
 	public Article getForDetailPrintById(int id) {
 		ArticleDetail articleDetail = articleDao.findForDetailPrintById(id);
 
-		Article article = null;
-
-		if (articleDetail != null) {
-			article = articleDetail.getArticle();
-			AttachFile thumbImgFile = articleDetail.getThumbImgFile();
-
-			if (article != null && thumbImgFile != null) {
-				article.setExtra__thumbImg(thumbImgFile.getForPrintUrl());
-			}
-		}
+		Article article = Optional.ofNullable(articleDetail)
+				.stream()
+				.peek(ArticleDetail::validAndValuateArticle) //썸네일 있으면 이미지 링크 셋팅
+				.map(ArticleDetail::getArticle)
+				.findFirst().orElse(null); //결과 없을땐 그냥 null 리턴
 
 		return article;
 	}
