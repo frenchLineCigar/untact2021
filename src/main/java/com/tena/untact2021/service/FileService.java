@@ -88,8 +88,22 @@ public class FileService {
 	}
 
 	/* 썸네일 가져오기 */
-	public AttachFile getFileByThumbnailCondition(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
-		return fileDao.findFileByThumbnailCondition(relTypeCode, relId, typeCode, type2Code, fileNo);
+	public AttachFile getThumbnail(String relTypeCode, int relId, String typeCode, String type2Code) {
+		return fileDao.findThumbnail(relTypeCode, relId, typeCode, type2Code);
+	}
+
+	/* 단일 파일 1개 (FileNo 로 특정) */
+	public AttachFile getFileByFileNo(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+		return fileDao.findOneByFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
+	}
+
+	/* 파일 조회 */
+	public List<AttachFile> getFiles(String relTypeCode, int relId, String typeCode, String type2Code) {
+		return fileDao.findAll(relTypeCode, relId, typeCode, type2Code);
+	}
+
+	private List<AttachFile> getFiles(String relTypeCode, int relId) {
+		return fileDao.findAll(relTypeCode, relId, null, null);
 	}
 
 	/* Ajax 업로드 파일 저장 처리 */
@@ -136,7 +150,7 @@ public class FileService {
 
 	/* 파일 삭제 */
 	public void deleteFiles(String relTypeCode, int relId) {
-		List<AttachFile> files = fileDao.findFiles(relTypeCode, relId);
+		List<AttachFile> files = getFiles(relTypeCode, relId);
 
 		for (AttachFile file : files) {
 			deleteFile(file);

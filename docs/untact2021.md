@@ -4,6 +4,27 @@ for my good memory
 
 ---
 
+[2021-04-27]
+
+### TIL
+
+ - SQL : MySQL 정렬 시 우선 순위 차등과 조건에 따른 정렬
+   - [[MySQL] ORDER BY 특정 값 우선 정렬 하기 (ORDER BY FIELD) :: 개발 잡동사니 저장소](https://jabstorage.tistory.com/30)
+   - [MySQL FIELD() Function](https://www.w3schools.com/sql/func_mysql_field.asp)
+   - [MySQL #2_ SELECT 조건에 따른 데이터 검색](https://doorbw.tistory.com/22)
+   - [[MySQL] 8장 다양한 조건으로 데이터 추출하기 - 회복맨 블로그](https://recoveryman.tistory.com/172)
+   - 
+   
+ - JSTL/EL
+   - [[Servlet/JSP] 표현언어(EL)에서 ${}과 #{} 표기법의 차이](https://velog.io/@tenacity/ServletJSP-%ED%91%9C%ED%98%84%EC%96%B8%EC%96%B4EL%EC%97%90%EC%84%9C-%EA%B3%BC-%ED%91%9C%EA%B8%B0%EB%B2%95%EC%9D%98-%EC%B0%A8%EC%9D%B4)
+   - [[JSTL core] [c:forEach] varStatus를 활용한 변수](https://velog.io/@tenacity/JSTL-core-cforEach-varStatus%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%EB%B3%80%EC%88%98)
+   - [[링크모음] JSTL 케바케 활용](https://velog.io/@tenacity/%EB%A7%81%ED%81%AC%EB%AA%A8%EC%9D%8C-JSTL-%EB%AC%B8%EB%B2%95)
+  
+  - JAVA
+    - [[Java 8] 변환 추출 쪼개기 합치기 거르기 모으기](https://velog.io/@tenacity/Java-8-%EB%B3%80%ED%99%98-%EC%B6%94%EC%B6%9C-%EC%AA%BC%EA%B0%9C%EA%B8%B0-%ED%95%A9%EC%B9%98%EA%B8%B0-%EA%B1%B0%EB%A5%B4%EA%B8%B0-%EB%AA%A8%EC%9C%BC%EA%B8%B0)
+    
+---
+
 [2021-04-24]
 
 ### PLAN

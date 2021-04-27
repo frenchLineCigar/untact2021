@@ -89,7 +89,9 @@
 			LEFT OUTER JOIN `board` AS B ON A.boardId = B.id
 			LEFT OUTER JOIN `attach_file` AS F ON A.id = F.relId
 		WHERE A.id = #{id}
-		ORDER BY F.fileNo ASC LIMIT 1
+		ORDER BY
+			FIELD(F.fileExtTypeCode, 'img') DESC,
+			F.fileNo ASC LIMIT 1
     </select>
 
 	<!-- 전체 게시물 조회 -->

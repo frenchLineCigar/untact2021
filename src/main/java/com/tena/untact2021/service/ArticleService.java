@@ -100,9 +100,10 @@ public class ArticleService {
 
 	    List<Article> articles = articleDao.findAllForPrint(boardId, searchKeywordType, searchKeyword, limitFrom, limitTake);
 
-	    // 첨부파일 1이 이미지면 썸네일로 사용
+	    // 첨부 파일들 중 이미지 타입의 첫번째 파일을 썸네일로 사용 (쿼리 처리)
 	    for (Article article : articles) {
-		    AttachFile file = fileService.getFileByThumbnailCondition("article", article.getId(), "common", "attachment", 1);
+		    AttachFile file = fileService.getThumbnail("article", article.getId(), "common", "attachment");
+
 		    if (file != null) {
 			    article.setExtra__thumbImg(file.getForPrintUrl());
 		    }

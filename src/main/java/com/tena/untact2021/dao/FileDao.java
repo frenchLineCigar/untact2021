@@ -13,17 +13,17 @@ public interface FileDao {
 	void save(AttachFile attachFile);
 
 	/* 썸네일 가져오기 */
-	AttachFile findFileByThumbnailCondition(@Param("relTypeCode") String relTypeCode,
-	                                        @Param("relId") int relId,
-	                                        @Param("typeCode") String typeCode,
-	                                        @Param("type2Code") String type2Code,
-	                                        @Param("fileNo") int fileNo);
+	AttachFile findThumbnail(String relTypeCode, int relId, String typeCode, String type2Code);
+
+	/* 특정 파일 1개 (FileNo 로 특정) */
+	AttachFile findOneByFileNo(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId, @Param("typeCode") String typeCode, @Param("type2Code") String type2Code,
+	                           @Param("fileNo") int fileNo);
 
 	/* 파일이 첨부된 게시물 번호(relId) 수정 */
 	void updateRelId(@Param("id") int id, @Param("relId") int relId);
 
-	/* 파일 정보 조회 */
-	List<AttachFile> findFiles(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId);
+	/* 파일 조회 */
+	List<AttachFile> findAll(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId, @Param("typeCode") String typeCode, @Param("type2Code") String type2Code);
 
 	void deleteFiles(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId);
 

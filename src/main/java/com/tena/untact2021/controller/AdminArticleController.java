@@ -3,6 +3,7 @@ package com.tena.untact2021.controller;
 import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.*;
 import com.tena.untact2021.service.ArticleService;
+import com.tena.untact2021.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import static com.tena.untact2021.dto.Search.SearchKeywordType;
 public class AdminArticleController extends BaseController {
 
 	private final ArticleService articleService;
+	private final FileService fileService;
 
 	/* 게시물 상세 조회 */
 	@RequestMapping("/admin/article/detail")
@@ -97,6 +99,26 @@ public class AdminArticleController extends BaseController {
 		}
 
 		return articleService.deleteArticle(id);
+	}
+
+	/* 게시물 수정 폼 */
+	@RequestMapping("/admin/article/modify")
+	public String showModify(Integer id, Model model) {
+		if (id == null) return msgAndBack(model, "id를 입력해주세요.");
+
+		// 해당 게시물 가져오기
+		Article article = articleService.getForDetailPrintById(id);
+		//Article article = articleService.getForPrintArticle(id);
+
+		if (article == null) return msgAndBack(model, "존재하지 않는 게시물번호 입니다.");
+
+		// 해당 게시물의 첨부파일 가져오기
+		List<AttachFile> files = fileService.getFiles("article", article.getId(), "common", "attachment");
+		article.setFileMapFromList(files);
+
+		model.addAttribute("article", article);
+
+		return "admin/article/modify";
 	}
 
 	/* 게시물 수정 */
