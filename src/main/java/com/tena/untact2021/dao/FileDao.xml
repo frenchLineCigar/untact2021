@@ -50,7 +50,7 @@
 		  AND fileNo = #{fileNo}
 	</select>
 
-	<select id="findAll" resultType="AttachFile">
+	<select id="findFiles" resultType="AttachFile">
 		SELECT *
 		FROM attach_file
 		WHERE 1

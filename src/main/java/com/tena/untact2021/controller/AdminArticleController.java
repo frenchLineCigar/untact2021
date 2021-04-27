@@ -114,6 +114,8 @@ public class AdminArticleController extends BaseController {
 
 		// 해당 게시물의 첨부파일 가져오기
 		List<AttachFile> files = fileService.getFiles("article", article.getId(), "common", "attachment");
+
+		// 게시물에 첨부파일 정보 담기
 		article.setFileMapFromList(files);
 
 		model.addAttribute("article", article);

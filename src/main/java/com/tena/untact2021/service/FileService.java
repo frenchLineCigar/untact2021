@@ -93,17 +93,17 @@ public class FileService {
 	}
 
 	/* 단일 파일 1개 (FileNo 로 특정) */
-	public AttachFile getFileByFileNo(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+	public AttachFile getOneByFileNo(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
 		return fileDao.findOneByFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
 	}
 
 	/* 파일 조회 */
 	public List<AttachFile> getFiles(String relTypeCode, int relId, String typeCode, String type2Code) {
-		return fileDao.findAll(relTypeCode, relId, typeCode, type2Code);
+		return fileDao.findFiles(relTypeCode, relId, typeCode, type2Code);
 	}
 
 	private List<AttachFile> getFiles(String relTypeCode, int relId) {
-		return fileDao.findAll(relTypeCode, relId, null, null);
+		return fileDao.findFiles(relTypeCode, relId, null, null);
 	}
 
 	/* Ajax 업로드 파일 저장 처리 */
