@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -316,4 +317,36 @@ public class Util {
 
 		return false;
 	}
+
+	/**
+	 * 숫자를 콤마(,)로 구분된 문자열로 포맷해서 반환
+	 * @param num  변환할 숫자
+	 * @param fixed  출력할 소수점 자릿수
+	 * @return {String}
+	 */
+	public static String formatNumberWithComma(double num, Integer fixed) {
+		// 기본 콤마 표기
+		DecimalFormat df = new DecimalFormat("###,###,###");
+
+		// 소수점 자릿수 표기
+		// if value of 'fixed' is 2, then it is like using 'DecimalFormat df = new DecimalFormat("###,###,###.00");'
+		if (fixed != null && fixed > 0) {
+			df.setMaximumFractionDigits(fixed);
+		}
+
+		return df.format(num);
+	}
+
+	public static String formatNumberWithComma(String numStr, Integer fixed) {
+		return formatNumberWithComma(Double.parseDouble(numStr), fixed);
+	}
+
+	public static String formatNumberWithComma(double num) {
+		return formatNumberWithComma(num, null);
+	}
+
+	public static String formatNumberWithComma(String numStr) {
+		return formatNumberWithComma(Double.parseDouble(numStr));
+	}
+
 }

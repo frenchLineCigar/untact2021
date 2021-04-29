@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.tena.untact2021.util.Util" %>
 
 <%@ include file="../layout/main_layout_head.jspf" %>
 
@@ -140,16 +141,32 @@
 						<span>첨부파일 ${fileNo}</span>
 					</div>
 					<div class="lg:flex-grow">
-						<input type="file" name="file__article__${article.id}__common__attachment__${fileNo}" class="form-row-input w-full rounded-sm" />
-						<c:if test="${file != null && file.fileExtTypeCode == 'img'}">
-							<div class="img-box img-box-auto">
-								<img src="${file.forPrintUrl}">
+						<input type="file" name="file__article__${article.id}__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
+						<c:if test="${file != null}">
+							<%-- 파일명/용량 표시--%>
+							<div>
+									<a href="${file.forPrintUrl}" target="_blank" class="text-blue-500 hover:underline">${file.fileName}</a> (${Util.formatNumberWithComma(file.fileSize)} Byte)
 							</div>
-						</c:if>
-						<c:if test="${file != null && file.fileExtTypeCode == 'video'}">
-							<div class="video-box">
-								<video preload="auto" controls src="${file.forPrintGenUrl}"></video>
+							<div>
+								<label>
+									<input type="checkbox" name="deleteFile__article__${article.id}__common__attachment__${fileNo}" value="Y" />
+									<span>삭제</span>
+								</label>
 							</div>
+							<%-- 파일이 이미지인 경우 --%>
+							<c:if test="${file.fileExtTypeCode == 'img'}">
+								<div class="img-box img-box-auto">
+									<a href="${file.forPrintUrl}" target="_blank" class="inline-block" title="자세히 보기">
+										<img class="max-w-sm" src="${file.forPrintUrl}">
+									</a>
+								</div>
+							</c:if>
+							<%-- 파일이 비디오인 경우 --%>
+							<c:if test="${file.fileExtTypeCode == 'video'}">
+								<div class="video-box">
+									<video preload="auto" controls src="${file.forPrintGenUrl}"></video>
+								</div>
+							</c:if>
 						</c:if>
 					</div>
 				</div>

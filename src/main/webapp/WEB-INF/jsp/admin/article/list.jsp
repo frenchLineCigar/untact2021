@@ -27,24 +27,25 @@
 		</div>
 		<%-- 게시물 리스트 --%>
 		<c:forEach items="${articles}" var="article">
+			<c:set var="detailUrl" value="detail?id=${article.id}" />
 			<div class="border-2 border-gray-50 p-4 mt-10 mx-5">
 				<div class="flex items-center">
-					<span class="font-bold">NO. ${article.id}</span>
-					<span class="ml-2 font-light text-gray-600">${article.regDate}</span>
+					<a href="${detailUrl}" class="font-bold">NO. ${article.id}
+						<span class="ml-2 font-light text-gray-600">${article.regDate}</span>
+					</a>
 					<div class="flex-grow"></div>
 					<a href="list?boardId=${article.boardId}"
 					   class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded hover:bg-gray-500">${article.extra__boardName}</a>
 				</div>
-				<div class="mt-2">
-					<a href="detail?id=${article.id}"
-					   class="text-2xl text-gray-700 font-bold hover:underline">${article.title}</a>
-					<p class="mt-2 text-gray-600">${article.body}</p>
-				</div>
-				<%-- 첨부파일 1이 이미지면 썸네일로 표시 --%>
-				<div>
+				<div class="article-preview mt-2">
+					<a href="${detailUrl}" class="text-2xl text-gray-700 font-bold hover:underline">${article.title}</a>
+					<%-- 썸네일 표시 --%>
 					<c:if test="${article.extra__thumbImg != null}">
-						<img src="${article.extra__thumbImg}" alt="" class="w-1/5">
+						<div>
+							<img class="max-w-sm" src="${article.extra__thumbImg}" alt="">
+						</div>
 					</c:if>
+					<p class="mt-2 text-gray-600">${article.body}</p>
 				</div>
 				<div class="flex items-center mt-4">
 					<a href="detail?id=${article.id}" class="text-blue-500 hover:underline">자세히 보기</a>
@@ -53,7 +54,7 @@
 						 href="doDelete?id=${article.id}" class="ml-2 text-blue-500 hover:underline">삭제</a>
 					<div class="flex-grow"></div>
 					<div>
-						<a href="detail?id=${article.id}" class="flex items-center">
+						<a class="flex items-center">
 							<img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=731&amp;q=80"
 							     alt="avatar" class="mx-4 w-10 h-10 object-cover rounded-full">
 							<h1 class="text-gray-700 font-bold hover:underline">${article.extra__writer}</h1>
@@ -64,5 +65,30 @@
 		</c:forEach>
 	</div>
 </section>
+<script>
+$(document).ready(function () {
 
+    let $preview = $(".article-preview").find("p, img");
+
+    $preview.mouseover(function () {
+        $(this).css("text-decoration", "underline");
+        $(this).css("cursor", "pointer");
+    });
+
+    $preview.mouseout(function () {
+        $(this).css("text-decoration", "none");
+    });
+
+    let goDetailUrl = function (e, target) {
+        let detailUrl = $(this).closest('div.article-preview').find('a').attr('href');
+        location.href = detailUrl;
+        // console.log(detailUrl);
+        // console.log(this);
+        // console.log(e);
+        // console.log(target);
+    };
+    $preview.on("click", this, goDetailUrl)
+
+});
+</script>
 <%@ include file="../layout/main_layout_foot.jspf" %>

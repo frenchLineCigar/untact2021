@@ -42,7 +42,7 @@ public class AttachFile {
 		return "/" + relTypeCode + "/" + fileDir + "/" + getFileName();
 	}
 
-	private String getFileName() {
+	public String getFileName() {
 		return id + "." + fileExt;
 	}
 
