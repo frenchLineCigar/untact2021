@@ -133,17 +133,20 @@ public class FileService {
 		return new ResultData("S-1", " 파일을 업로드하였습니다.", "filesResultData", filesResultData, "fileIdsStr", fileIdsStr);
 	}
 
-	/* 파일과 연관된 게시물 번호(relId) 변경 */
-	public void changeRelIdInFiles(String fileIdsStr, int relId) {
-		List<Integer> fileIds = Util.getIdsToList(fileIdsStr, ",");
-		fileIds.forEach(fileId -> changeRelId(fileId, relId));
-		/*
-		Arrays.stream(fileIdsStr.split(","))
-				.map(id -> Integer.parseInt(id.trim()))
-				.forEach(fileId -> changeRelId(fileId, relId));
-		*/
+	public void changeRelIds(String idsStr, int relId) {
+		List<Integer> ids = Util.getIdsToList(idsStr, ",");
+		for (Integer id : ids) {
+			changeRelId(id, relId);
+		}
 	}
 
+	public void changeRelIds(List<Integer> ids, int relId) {
+		for (Integer id : ids) {
+			changeRelId(id, relId);
+		}
+	}
+
+	/* 파일의 연관 게시물 번호(relId) 변경 */
 	public void changeRelId(int id, int relId) {
 		fileDao.updateRelId(id, relId);
 	}

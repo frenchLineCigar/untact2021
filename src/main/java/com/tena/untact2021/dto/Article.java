@@ -32,7 +32,7 @@ public class Article {
 	@JsonIgnore
 	private String fileIdsStr; //Ajax 요청으로 먼저 저장된 게시물의 첨부 파일번호
 
-	public boolean hasUploadedFiles() {
+	public boolean hasInputFiles() {
 		return fileIdsStr != null && ! fileIdsStr.isBlank();
 	}
 

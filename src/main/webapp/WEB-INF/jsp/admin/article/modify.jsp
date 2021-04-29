@@ -61,6 +61,7 @@
             // 첨부파일 유무를 담을 변수
             let needToUpload = false;
 
+            // 파일 크기 유효성 체크
             for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
                 const input = form["file__article__0__common__attachment__" + fileNo];
 
@@ -141,12 +142,9 @@
 						<span>첨부파일 ${fileNo}</span>
 					</div>
 					<div class="lg:flex-grow">
-						<input type="file" name="file__article__${article.id}__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
+						<input type="file" name="file__article__0__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
 						<c:if test="${file != null}">
 							<%-- 파일명/용량 표시--%>
-							<%--<div>
-								<a href="${file.forPrintUrl}" target="_blank" class="text-blue-500 hover:underline">${file.fileName}</a> (${Util.formatNumberWithComma(file.fileSize)} Byte)
-							</div>--%>
 							<div>
 								<a href="${file.forPrintUrl}" target="_blank" class="text-blue-500 hover:underline">${file.originFileName}</a> (${file.fileSizeWithUnit})
 							</div>
@@ -176,11 +174,11 @@
 			</c:forEach>
 			<div class="form-row flex flex-col lg:flex-row">
 				<div class="lg:flex lg:items-center lg:w-28">
-					<span>작성</span>
+					<span>수정</span>
 				</div>
 				<div class="lg:flex-grow">
 					<div class="btn-submit">
-						<input type="submit" class="btn-primary bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" value="완료"/>
+						<input type="submit" class="btn-primary bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" value="수정"/>
 						<input onclick="history.back()" type="button" class="btn-info bg-red-500 hover:bg-red-dark text-white font-bold py-2 px-4 rounded" value="취소"/>
 					</div>
 				</div>

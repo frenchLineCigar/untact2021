@@ -35,16 +35,8 @@ public class ArticleService {
 		//게시물 저장
 		articleDao.save(article);
 
-		//생성된 게시물 번호
-		int articleId = article.getId();
-
-		//업로드된 파일이 있다면, 해당 파일의 relId 를 생성된 게시물 번호로 변경한다
-		if (article.hasUploadedFiles()) {
-			// 업로드된 파일 번호
-			String fileIdsStr = article.getFileIdsStr();
-
-			fileService.changeRelIdInFiles(fileIdsStr, articleId);
-		}
+		//첨부 파일의 게시물 번호 갱신
+		changeInputFilesRelId(article);
 
 		return new ResultData("S-1", "성공하였습니다.", "id", article.getId());
 	}
@@ -67,11 +59,24 @@ public class ArticleService {
 	public ResultData modifyArticle(Article article) {
         boolean result = articleDao.update(article);
 
+		//첨부 파일의 게시물 번호 갱신
+		changeInputFilesRelId(article);
+
         if (result == false) {
             return new ResultData("F-2", "게시물 수정에 실패했습니다.", "id", article.getId());
         }
 
         return new ResultData("S-1", "게시물을 수정하였습니다.", "id", article.getId());
+	}
+
+	/* 게시물의 첨부 파일 갱신  */
+	private void changeInputFilesRelId(Article article) {
+		//첨부 파일이 있다면, 해당 파일의 게시물 번호(relId)를 갱신
+		if (article.hasInputFiles()) {
+			String fileIdsStr = article.getFileIdsStr(); // Ajax로 업로드한 파일 번호가 담긴 문자열
+			Integer articleId = article.getId(); // 현재 게시물 번호
+			fileService.changeRelIds(fileIdsStr, articleId);
+		}
 	}
 
     /* 게시물 조회 (작성자명 포함) */
