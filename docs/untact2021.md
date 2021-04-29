@@ -4,6 +4,24 @@ for my good memory
 
 ---
 
+[2021-04-29]
+
+### TIL
+
+> 스프링은 디폴트로 UnCheckedException 과 Error에 대해서만 롤백 정책을 설정한다.
+>
+> 그럼 CheckedException 발생 시 트랜잭션 롤백 처리는 어떻게 해야할까? (예: 파일 입출력 예외(IOException) 발생 시)
+
+ - [[Spring] @Transactional 롤백은 언제 되는 걸까? - 예외가 발생했는데도 DB 반영이 된다고?](https://pjh3749.tistory.com/269) 
+   - 스프링은 RuntimeException 과 Error 를 기본적인 롤백 정책으로 사용
+   - 즉 Transactional의 rollbackFor 속성을 별도로 주지 않는다면, @Transactional(rollbackFor = {RuntimeException.class, Error.class}) 로 이해함
+   - 따라서 IOException 처럼 CheckedException 이 발생했을 때는 트랜잭션이 롤백되지 않고, DB는 변경사항이 반영됨
+   - 일일히 각각의 Exception 을 따로 명시하는 것은 번거로우므로,
+   - 모든 예외에 대해서 전부 트랜잭션을 롤백하기 위해 @Transactional(rollbackFor = Exception.class) 로 처리
+    
+---
+
+
 [2021-04-28]
 
 ### TIL

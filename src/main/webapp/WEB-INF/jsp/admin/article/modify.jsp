@@ -6,7 +6,8 @@
 
 <c:set var="fileInputMaxCount" value="10" />
 <script>
-    ArticleModify__fileInputMaxCount = ${fileInputMaxCount};
+    ArticleModify__fileInputMaxCount = parseInt("${fileInputMaxCount}");
+    const articleId = parseInt("${article.id}");
 </script>
 
 <script>
@@ -43,7 +44,7 @@
         let maxSize = maxSizeMb * 1024 * 1024; //10MB
 
         for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
-            const input = form["file__article__0__common__attachment__" + fileNo];
+            const input = form["file__article__"+ articleId +"__common__attachment__" + fileNo];
 
             if (input.value) {
                 if (input.files[0].size > maxSize) {
@@ -63,7 +64,7 @@
 
             // 파일 크기 유효성 체크
             for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
-                const input = form["file__article__0__common__attachment__" + fileNo];
+                const input = form["file__article__"+ articleId +"__common__attachment__" + fileNo];
 
                 if (input.value.length > 0) { // 크기가 0보다 큰 것이 하나라도 있으면
                     needToUpload = true; // 업로드 할 첨부파일 있음
@@ -94,12 +95,17 @@
 
         // 폼 전송 함수
         const startSubmitForm = function (data) {
+            // console.log(data);
+            // console.log(data.resultCode);
+            // console.log(data.msg);
+            // console.log(data.body);
+
             if (data && data.body && data.body.fileIdsStr) {
                 form.fileIdsStr.value = data.body.fileIdsStr;
             }
 
             for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
-                const input = form["file__article__0__common__attachment__" + fileNo];
+                const input = form["file__article__"+ articleId +"__common__attachment__" + fileNo];
                 input.value = ''; // 파일을 이미 startUploadFiles에서 Ajax로 업로드 했으므로, 폼 요소에서 file 타입은 비움
             }
 
@@ -142,7 +148,7 @@
 						<span>첨부파일 ${fileNo}</span>
 					</div>
 					<div class="lg:flex-grow">
-						<input type="file" name="file__article__0__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
+						<input type="file" name="file__article__${article.id}__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
 						<c:if test="${file != null}">
 							<%-- 파일명/용량 표시--%>
 							<div>

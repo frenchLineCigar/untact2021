@@ -6,6 +6,7 @@ import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.util.Util;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +15,14 @@ import org.springframework.web.multipart.MultipartRequest;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class) // 모든 예외에 대해서 트랜잭션 롤백, 파일 저장 시 IOException(Checked Exception) 터지면 롤백 처리
 @RequiredArgsConstructor
 public class FileService {
 
@@ -25,66 +30,101 @@ public class FileService {
 	@Value("${custom.fileDirPath}")
 	private String fileDirPath;
 
-	/* 메타 데이터 저장 (DB)*/
+	/* 파일 메타 데이터 저장 (DB) */
 	public void saveFileMetaData(AttachFile attachFile) {
 		fileDao.save(attachFile);
 	}
 
-	/* 파일 저장 */
-	public ResultData save(MultipartFile multipartFile, int relId) {
-		String fileInputName = multipartFile.getName();
-		String[] fileInputNameBits = fileInputName.split("__");
-		int fileSize = (int) multipartFile.getSize();
-
-		// 파라미터명 prefix 체크 -> file 이 아니면 ㄴㄴ
-		if (fileInputNameBits[0].equals("file") == false) return new ResultData("F-1", "파라미터 명이 올바르지 않습니다.");
-
-		// 크기 체크 ->  0 이하면 ㄴㄴ
-		if (fileSize <= 0) return new ResultData("F-2", "파일이 업로드 되지 않았습니다.");
-
-		AttachFile attachFile = AttachFile.from(multipartFile, relId);
-
-		// 파일 메타 데이터 DB에 저장
-		saveFileMetaData(attachFile);
-
-		// 실제 파일 저장
-		return saveRealFileOnDisk(multipartFile, attachFile);
-	}
-
 	/* 실제 파일 저장 (서버 경로) */
-	public ResultData saveRealFileOnDisk(MultipartFile multipartFile, AttachFile attachFile) {
-		int newFileId = attachFile.getId();
-		String relTypeCode = attachFile.getRelTypeCode();
-		String fileDir = attachFile.getFileDir();
-		String fileExt = attachFile.getFileExt();
+	public boolean saveRealFileOnDisk(MultipartFile multipartFile, String targetFilePath) {
 
-		// 새 파일이 저장될 폴더 객체(java.io.File) 생성
-		String targetDirPath = fileDirPath + "/" + relTypeCode + "/" + fileDir;
-		File targetDir = new File(targetDirPath);
-
-		// 새 파일이 저장될 폴더가 존재하지 않는다면 생성
-		if (!targetDir.exists()) targetDir.mkdirs();
-
-		// Ex. ${fileDirPath}/article/2021_03/1.jpg
-		// 새 파일 이름 지정
-		String targetFileName = newFileId + "." + fileExt;
-		// 새 파일 경로 지정
-		String targetFilePath = targetDirPath + "/" + targetFileName;
-
-		// 파일 생성(업로드된 파일을 지정된 경로로 옮김)
+		// 업로드된 파일을 지정된 경로로 옮김
 		try {
 			multipartFile.transferTo(new File(targetFilePath));
+			// throw new IOException("Force Checked Exception");
 		} catch (IllegalStateException | IOException e) {
-			//e.printStackTrace();
+			// log.info("Exception Caught");
+			// e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	/* 파일 저장 */
+	public ResultData saveFile(MultipartFile multipartFile) {
+
+		String paramName = multipartFile.getName();
+		String[] paramNameBits = paramName.split("__");
+
+		// 파라미터명 체크 -> file 이 아니면 ㄴㄴ
+		boolean isValidParam = paramNameBits[0].equals("file");
+		if (!isValidParam) return new ResultData("F-1", "파라미터 명이 올바르지 않습니다.");
+
+		// 크기 체크 ->  0 이하면 ㄴㄴ
+		int fileSize = (int) multipartFile.getSize();
+		if (fileSize <= 0) return new ResultData("F-2", "파일이 업로드 되지 않았습니다.");
+
+		// AttachFile 도메인 타입으로 파일 메타 데이터 맵핑
+		AttachFile attachFile = AttachFile.from(multipartFile);
+
+		// 파일 메타 데이터 저장 (DB)
+		saveFileMetaData(attachFile);
+
+		// 파일이 저장될 폴더 객체(java.io.File) 생성
+		String targetDirPath = fileDirPath + "/" + attachFile.getRelTypeCode() + "/" + attachFile.getFileDir();
+		File targetDir = new File(targetDirPath);
+
+		// 파일이 저장될 폴더가 존재하지 않는다면 생성
+		if (!targetDir.exists()) targetDir.mkdirs();
+
+		// 파일 이름
+		String targetFileName = attachFile.getId() + "." + attachFile.getFileExt();
+
+		// 파일 저장 경로
+		String targetFilePath = targetDirPath + "/" + targetFileName; // Ex. ${fileDirPath}/article/2021_03/1.jpg
+
+		// 실제 파일 저장 (서버 경로)
+		boolean isSuccess = saveRealFileOnDisk(multipartFile, targetFilePath);
+
+		if (! isSuccess) {
 			return new ResultData("F-1", "파일 저장에 실패하였습니다.");
 		}
 
-		Map<String, Object> resultMap = new LinkedHashMap<>();
-		resultMap.put("id", newFileId);
-		resultMap.put("fileRealPath", targetFilePath);
-		resultMap.put("fileName", targetFileName);
+		// 생성된 파일 id, 파일 경로, 파일명을 리턴
+		return new ResultData("S-1", "파일이 저장되었습니다.", "id", attachFile.getId(), "fileRealPath", targetFilePath, "fileName", targetFileName);
+	}
 
-		return new ResultData("S-1", "파일이 저장되었습니다.", resultMap);
+	/* 다중 파일 저장 (Ajax 파일 업로드 처리) */
+	public ResultData saveFiles(MultipartRequest multipartRequest) {
+
+		// A Map containing the Parameter names as Keys, and the MultipartFile objects as Values
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		Map<String, Object> saveFileResults = new LinkedHashMap<>();
+
+		List<Integer> fileIds = new ArrayList<>();
+
+		for (String paramName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(paramName);
+
+			log.debug("서로 같지? : " + multipartFile.getName().equals(paramName));
+
+			if (! multipartFile.isEmpty()) {
+				ResultData saveFileResult = saveFile(multipartFile);
+
+				int fileId = (int) saveFileResult.getBody().get("id");
+				fileIds.add(fileId);
+
+				saveFileResults.put(paramName, saveFileResult);
+			}
+		}
+
+		String fileIdsStr = Joiner.on(",").join(fileIds);
+		// String fileIdsStr = StringUtils.join(fileIds, ",")
+		// String fileIdsStr = fileIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+
+		return new ResultData("S-1", " 파일을 업로드하였습니다.", "saveFileResults", saveFileResults, "fileIdsStr", fileIdsStr);
 	}
 
 	/* 썸네일 가져오기 */
@@ -104,33 +144,6 @@ public class FileService {
 
 	private List<AttachFile> getFiles(String relTypeCode, int relId) {
 		return fileDao.findFiles(relTypeCode, relId, null, null);
-	}
-
-	/* Ajax 업로드 파일 저장 처리 */
-	public ResultData saveFiles(MultipartRequest multipartRequest) {
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-
-		Map<String, ResultData> filesResultData = new LinkedHashMap<>();
-		List<Integer> fileIds = new ArrayList<>();
-
-		for (String fileInputName : fileMap.keySet()) {
-			MultipartFile multipartFile = fileMap.get(fileInputName);
-
-			if (! multipartFile.isEmpty()) {
-				ResultData fileResultData = save(multipartFile, 0); // 연관 게시물 생성 전이므로 relId를 0으로 처리
-				int fileId = (int) fileResultData.getBody().get("id");
-
-				fileIds.add(fileId);
-
-				filesResultData.put(fileInputName, fileResultData);
-			}
-		}
-
-		String fileIdsStr = Joiner.on(",").join(fileIds);
-		// String fileIdsStr = StringUtils.join(fileIds, ",")
-		// String fileIdsStr = fileIds.stream().map(String::valueOf).collect(Collectors.joining(","));
-
-		return new ResultData("S-1", " 파일을 업로드하였습니다.", "filesResultData", filesResultData, "fileIdsStr", fileIdsStr);
 	}
 
 	public void changeRelIds(String idsStr, int relId) {

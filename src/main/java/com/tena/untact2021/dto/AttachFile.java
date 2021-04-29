@@ -56,16 +56,16 @@ public class AttachFile {
 	}
 
 	/* Map MultipartFile To AttachFile */
-	public static AttachFile from(MultipartFile multipartFile, int relId) {
-		String paramName = multipartFile.getName(); // file__article__0__common__attachment__1
-		String[] paramNameBits = paramName.split("__"); // ["file", "article", "0", "common", "attachment", "1"]
+	public static AttachFile from(MultipartFile multipartFile) {
+		String paramName = multipartFile.getName(); // file__article__5__common__attachment__1
+		String[] paramNameBits = paramName.split("__"); // ["vfile", "article", "5", "common", "attachment", "1"]
 
 		AttachFile attachFile = AttachFile.builder()
 				.relTypeCode(paramNameBits[1]) // article
-				.relId(relId)
+				.relId(Integer.parseInt(paramNameBits[2])) // 5 (연관 게시물 번호)
 				.typeCode(paramNameBits[3]) // common
 				.type2Code(paramNameBits[4]) // attachment
-				.fileNo(Integer.parseInt(paramNameBits[5])) // 1 (order)
+				.fileNo(Integer.parseInt(paramNameBits[5])) // 1 (첨부파일 순서)
 				.fileSize((int) multipartFile.getSize())
 				.originFileName(multipartFile.getOriginalFilename())
 				.fileExtTypeCode(Util.getFileExtTypeCodeFromFileName(multipartFile.getOriginalFilename()))
