@@ -66,20 +66,23 @@ public class FileService {
 		if (fileSize <= 0) return new ResultData("F-2", "파일이 업로드 되지 않았습니다.");
 
 		// AttachFile 도메인 타입으로 파일 메타 데이터 맵핑
-		AttachFile attachFile = AttachFile.from(multipartFile);
+		AttachFile file = AttachFile.from(multipartFile);
+
+		// 파일 변경 시 기존 위치의 파일 삭제
+		checkAndDeleteOldFileIfExists(file);
 
 		// 파일 메타 데이터 저장 (DB)
-		saveFileMetaData(attachFile);
+		saveFileMetaData(file);
 
 		// 파일이 저장될 폴더 객체(java.io.File) 생성
-		String targetDirPath = fileDirPath + "/" + attachFile.getRelTypeCode() + "/" + attachFile.getFileDir();
+		String targetDirPath = fileDirPath + "/" + file.getRelTypeCode() + "/" + file.getFileDir();
 		File targetDir = new File(targetDirPath);
 
 		// 파일이 저장될 폴더가 존재하지 않는다면 생성
 		if (!targetDir.exists()) targetDir.mkdirs();
 
 		// 파일 이름
-		String targetFileName = attachFile.getId() + "." + attachFile.getFileExt();
+		String targetFileName = file.getId() + "." + file.getFileExt();
 
 		// 파일 저장 경로
 		String targetFilePath = targetDirPath + "/" + targetFileName; // Ex. ${fileDirPath}/article/2021_03/1.jpg
@@ -92,7 +95,7 @@ public class FileService {
 		}
 
 		// 생성된 파일 id, 파일 경로, 파일명을 리턴
-		return new ResultData("S-1", "파일이 저장되었습니다.", "id", attachFile.getId(), "fileRealPath", targetFilePath, "fileName", targetFileName);
+		return new ResultData("S-1", "파일이 저장되었습니다.", "id", file.getId(), "fileRealPath", targetFilePath, "fileName", targetFileName);
 	}
 
 	/* 다중 파일 저장 (Ajax 파일 업로드 처리) */
@@ -181,4 +184,13 @@ public class FileService {
 		// 파일 정보 삭제
 		fileDao.deleteFile(file.getId());
 	}
+
+	private void checkAndDeleteOldFileIfExists(AttachFile file) {
+		AttachFile oldFile = getOneByFileNo(file.getRelTypeCode(), file.getRelId(), file.getTypeCode(), file.getType2Code(), file.getFileNo());
+
+		if (oldFile != null) {
+			deleteFile(oldFile);
+		}
+	}
+
 }

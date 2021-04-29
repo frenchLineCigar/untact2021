@@ -19,6 +19,16 @@ for my good memory
    - 일일히 각각의 Exception 을 따로 명시하는 것은 번거로우므로,
    - 모든 예외에 대해서 전부 트랜잭션을 롤백하기 위해 @Transactional(rollbackFor = Exception.class) 로 처리
     
+### TODO
+ - 글 작성
+   - 첨부파일 생성 DONE
+ - 글 삭제
+   - 첨부파일 제거 DONE
+ - 글 수정
+   - 첨부파일 생성 DONE
+   - 첨부파일 수정 DONE
+   - 첨부파일 제거 TODO
+
 ---
 
 
