@@ -319,6 +319,48 @@ public class Util {
 	}
 
 	/**
+	 * byte 용량을 환산하여 반환
+	 * 용량의 크기에 따라 MB, KB, byte 단위로 환산함
+	 * @param fileSize  byte 값
+	 * @param fixed     환산된 용량의 소수점 자릿수
+	 * @return {String}
+	 */
+	public static String byteSizeTo(float fileSize, Integer fixed) {
+		String str;
+
+		//MB 단위 이상일때 MB 단위로 환산
+		if (fileSize >= 1024 * 1024) {
+			fileSize = fileSize / (1024 * 1024);
+			str = formatNumberWithComma(fileSize, fixed) + " MB";
+			//str = toFixed(fileSize, fixed) + " MB";
+		}
+		//KB 단위 이상일때 KB 단위로 환산
+		else if (fileSize >= 1024) {
+			fileSize = fileSize / 1024;
+			str = formatNumberWithComma(fileSize, fixed) + " KB";
+		}
+		//KB 단위보다 작을때 byte 단위로 환산
+		else {
+			str = formatNumberWithComma(fileSize, fixed) + " byte";
+		}
+		return str;
+	}
+
+	public static String byteSizeTo(float fileSize) {
+		return byteSizeTo(fileSize, null);
+	}
+
+//	// 소수점 자릿수 표기
+//	public static String toFixed(float fileSize, Integer fixed) {
+//
+//		if (fixed == null || fixed <= 0) {
+//			return String.valueOf(fileSize);
+//		}
+//
+//		return String.format("%." + fixed + "f", fileSize);
+//	}
+
+	/**
 	 * 숫자를 콤마(,)로 구분된 문자열로 포맷해서 반환
 	 * @param num  변환할 숫자
 	 * @param fixed  출력할 소수점 자릿수

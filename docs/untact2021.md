@@ -4,6 +4,17 @@ for my good memory
 
 ---
 
+[2021-04-28]
+
+### TIL
+
+ - Java : Number Formatting
+   - [Formatting Large Integers With Commas](https://www.baeldung.com/java-number-formatting#1-formatting-large-integers-with-commas)
+   - [자바 숫자 Format 변경 - DecimalFormat](https://all-record.tistory.com/192)
+   - [[JAVA] NumberFormat 클래스](https://xzio.tistory.com/329)
+   - [[JAVA] DecimalFormat 클래스](https://xzio.tistory.com/330)
+---
+
 [2021-04-27]
 
 ### TIL

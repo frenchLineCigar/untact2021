@@ -32,6 +32,11 @@ public class AttachFile {
 	private String fileExt; //파일 확장자
 	private String fileDir; //파일 저장 폴더 : yyyy_MM (Ex. 2021_03)
 
+	/* 단위 환산된 파일 크기 리턴 (byte, KB, MB) */
+	public String getFileSizeWithUnit() {
+		return Util.byteSizeTo(fileSize, 2);
+	}
+
 	@JsonIgnore
 	public String getFilePath(String fileDirPath) {
 		return fileDirPath + getBaseFileUri();

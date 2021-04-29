@@ -144,8 +144,11 @@
 						<input type="file" name="file__article__${article.id}__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
 						<c:if test="${file != null}">
 							<%-- 파일명/용량 표시--%>
+							<%--<div>
+								<a href="${file.forPrintUrl}" target="_blank" class="text-blue-500 hover:underline">${file.fileName}</a> (${Util.formatNumberWithComma(file.fileSize)} Byte)
+							</div>--%>
 							<div>
-									<a href="${file.forPrintUrl}" target="_blank" class="text-blue-500 hover:underline">${file.fileName}</a> (${Util.formatNumberWithComma(file.fileSize)} Byte)
+								<a href="${file.forPrintUrl}" target="_blank" class="text-blue-500 hover:underline">${file.originFileName}</a> (${file.fileSizeWithUnit})
 							</div>
 							<div>
 								<label>
