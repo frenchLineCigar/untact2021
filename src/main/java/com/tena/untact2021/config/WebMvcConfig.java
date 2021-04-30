@@ -97,7 +97,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         /* 서버 리소스(앱 외부 디렉터리) 요청 처리 */
         registry.addResourceHandler("/file/**")
-                .addResourceLocations("file:///" + fileDirPath + "/").setCachePeriod(20); //캐시 지속시간 20초
+                .addResourceLocations("file://" + fileDirPath + "/").setCachePeriod(20); //캐시 지속시간 20초
     }
 
 }

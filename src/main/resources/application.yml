@@ -43,7 +43,7 @@ logging:
   config: classpath:logback-spring.xml
 
 custom:
-  fileDirPath: C:/2021/untact2021-file
+  fileDirPath: /2021/untact2021-file
   logging:
     dir: log
     level: INFO
