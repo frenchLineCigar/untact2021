@@ -59,28 +59,40 @@
         // 파일 전송 함수
         const startUploadFiles = function (onSuccess) {
 
-            // 첨부파일 유무를 담을 변수
+            // 첨부파일 변경 유무를 담을 변수
             let needToUpload = false;
 
-            // 파일 크기 유효성 체크
+						// 업로드할 파일 체크
             for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
                 const input = form["file__article__"+ articleId +"__common__attachment__" + fileNo];
 
+                // 파일 크기 유효성 체크
                 if (input.value.length > 0) { // 크기가 0보다 큰 것이 하나라도 있으면
                     needToUpload = true; // 업로드 할 첨부파일 있음
                     break; // 반복문 빠져나감
                 }
             }
 
-            // 첨부파일이 딱히 없다?
+            // 업로드할 파일이 없다면 삭제할 파일을 마저 체크
+            if (needToUpload == false) {
+                // 삭제할 파일 체크
+                for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
+                    const deleteInput = form["deleteFile__article__"+ articleId +"__common__attachment__" + fileNo];
+
+                    if (deleteInput && deleteInput.checked) { // 삭제 체크가 하나라도 있으면
+                        needToUpload = true; // 삭제할 첨부파일 있음
+                        break; // 반복문 빠져나감
+                    }
+                }
+            }
+
+            // 변경 사항이 딱히 없다?
             if (needToUpload == false) {
                 onSuccess(); // 바로 콜백 실행 -> startSubmitForm
                 return;
             }
 
-            // 첨부파일이 있다? Ajax 로 파일 업로드 먼저 ㄱㄱ
-            // Ajax로 폼 전송을 하기 위한 FormData 객체 생성
-            // Ajax로 폼 전송 시, 기본 폼 동작은 e.preventDefault()로 멈추고, 페이지 전환 없이 폼 데이터를 전송
+            // 변경 사항이 있다? Ajax 로 변경사항 반영 ㄱㄱ
             const fileUploadFormData = new FormData(form);
             $.ajax({
                 url: '/common/file/doUpload',
@@ -104,9 +116,22 @@
                 form.fileIdsStr.value = data.body.fileIdsStr;
             }
 
+            // 파일 비움
             for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
+                // 업로드 파일 비움
                 const input = form["file__article__"+ articleId +"__common__attachment__" + fileNo];
                 input.value = ''; // 파일을 이미 startUploadFiles에서 Ajax로 업로드 했으므로, 폼 요소에서 file 타입은 비움
+
+		            // 파일 삭제 체크박스 해제
+                const deleteInput = form["deleteFile__article__"+ articleId +"__common__attachment__" + fileNo];
+                if (deleteInput) {
+                    deleteInput.checked = false;
+                }
+                // console.log(deleteInput); // logs the expandable <html>…</html>
+                // console.dir(deleteInput); // logs the element’s properties and values
+                // console.log(deleteInput.outerHTML);
+                // console.log('deleteInput.value ---> ' + input.value);
+                // console.log('deleteInput.checked --->' + input.checked);
             }
 
             form.submit();
@@ -147,7 +172,7 @@
 					<div class="lg:flex lg:items-center lg:w-28">
 						<span>첨부파일 ${fileNo}</span>
 					</div>
-					<div class="lg:flex-grow">
+					<div class="lg:flex-grow input-file-wrap">
 						<input type="file" name="file__article__${article.id}__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
 						<c:if test="${file != null}">
 							<%-- 파일명/용량 표시--%>
@@ -156,7 +181,7 @@
 							</div>
 							<div>
 								<label>
-									<input type="checkbox" name="deleteFile__article__${article.id}__common__attachment__${fileNo}" value="Y" />
+									<input onclick="$(this).closest('div.input-file-wrap').find('> input[type=file]').val('');" type="checkbox" name="deleteFile__article__${article.id}__common__attachment__${fileNo}" value="Y" />
 									<span>삭제</span>
 								</label>
 							</div>
@@ -192,5 +217,17 @@
 		</form>
 	</div>
 </section>
+<%--<script>--%>
+<%--    function readURL(input) {--%>
+<%--        if (input.files && input.files[0]) {--%>
+<%--            const reader = new FileReader();--%>
 
+<%--            reader.readAsDataURL(input.files[0]);--%>
+
+<%--            reader.onload = function (e) {--%>
+<%--                $('#blah').attr('src', e.target.result);--%>
+<%--            }--%>
+<%--        }--%>
+<%--    }--%>
+<%--</script>--%>
 <%@ include file="../layout/main_layout_foot.jspf" %>

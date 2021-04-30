@@ -98,24 +98,23 @@ public class FileService {
 		return new ResultData("S-1", "파일이 저장되었습니다.", "id", file.getId(), "fileRealPath", targetFilePath, "fileName", targetFileName);
 	}
 
-	/* 다중 파일 저장 (Ajax 파일 업로드 처리) */
-	public ResultData saveFiles(MultipartRequest multipartRequest) {
+	/* 다중 파일 저장 (Ajax 파일 추가/삭제 요청) */
+	public ResultData saveFiles(MultipartRequest multipartRequest, Map<String, Object> paramMap) {
+
+		// 체크된 파일 삭제
+		int deleteCount = deleteCheckedFiles(paramMap);
 
 		// A Map containing the Parameter names as Keys, and the MultipartFile objects as Values
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 
 		Map<String, Object> saveFileResults = new LinkedHashMap<>();
-
 		List<Integer> fileIds = new ArrayList<>();
 
 		for (String paramName : fileMap.keySet()) {
 			MultipartFile multipartFile = fileMap.get(paramName);
 
-			log.debug("서로 같지? : " + multipartFile.getName().equals(paramName));
-
 			if (! multipartFile.isEmpty()) {
 				ResultData saveFileResult = saveFile(multipartFile);
-
 				int fileId = (int) saveFileResult.getBody().get("id");
 				fileIds.add(fileId);
 
@@ -127,7 +126,33 @@ public class FileService {
 		// String fileIdsStr = StringUtils.join(fileIds, ",")
 		// String fileIdsStr = fileIds.stream().map(String::valueOf).collect(Collectors.joining(","));
 
-		return new ResultData("S-1", " 파일을 업로드하였습니다.", "saveFileResults", saveFileResults, "fileIdsStr", fileIdsStr);
+		return new ResultData("S-1", " 파일을 업로드하였습니다.", "saveFileResults", saveFileResults, "fileIdsStr", fileIdsStr, "deleteCount", deleteCount);
+	}
+
+	private int deleteCheckedFiles(Map<String, Object> paramMap) {
+		// 삭제한 파일 개수 리턴
+		int deleteCount = 0;
+
+		for (String paramName : paramMap.keySet()) {
+			String[] paramNameBits = paramName.split("__");
+			boolean isValidParam = paramNameBits[0].equals("deleteFile"); // 체크박스의 파라미터명이 deleteFile 로 시작
+
+			if (isValidParam) {
+				String relTypeCode = paramNameBits[1];
+				int relId = Integer.parseInt(paramNameBits[2]);
+				String typeCode = paramNameBits[3];
+				String type2Code = paramNameBits[4];
+				int fileNo = Integer.parseInt(paramNameBits[5]);
+
+				AttachFile oldFile = getOneByFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
+
+				if (oldFile != null) {
+					deleteFile(oldFile);
+					deleteCount++;
+				}
+			}
+		}
+		return deleteCount;
 	}
 
 	/* 썸네일 가져오기 */
