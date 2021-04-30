@@ -37,6 +37,7 @@ public class AttachFile {
 		return Util.byteSizeTo(fileSize, 2);
 	}
 
+	/* 실제 파일이 저장된 서버 경로 */
 	@JsonIgnore
 	public String getFilePath(String fileDirPath) {
 		return fileDirPath + getBaseFileUri();
@@ -53,6 +54,10 @@ public class AttachFile {
 
 	public String getForPrintUrl() {
 		return "/file" + getBaseFileUri() + "?updateDate=" + updateDate;
+	}
+
+	public String getForDownloadUrl() {
+		return "/file/download?id=" + id;
 	}
 
 	/* Map MultipartFile To AttachFile */

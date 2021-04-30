@@ -18,7 +18,17 @@ for my good memory
    - 따라서 IOException 처럼 CheckedException 이 발생했을 때는 트랜잭션이 롤백되지 않고, DB는 변경사항이 반영됨
    - 일일히 각각의 Exception 을 따로 명시하는 것은 번거로우므로,
    - 모든 예외에 대해서 전부 트랜잭션을 롤백하기 위해 @Transactional(rollbackFor = Exception.class) 로 처리
-    
+ 
+ - Spring/Java
+   - [Returning Image/Media Data with Spring MVC](https://www.baeldung.com/spring-mvc-image-media-data)
+   - [Java - Convert File to InputStream](https://www.baeldung.com/convert-file-to-input-stream)
+   - [Returning an Image or a File with Spring](https://www.baeldung.com/spring-controller-return-image-file)
+   - [MediaType (Spring Framework 5.3.6 API)](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/MediaType.html)
+   - [[HTTP & Spring MVC] 파일 다운로드 구현시 파일명 지정](https://namocom.tistory.com/391)
+ 
+ - HTTP : Response Header 'Content-Disposition'
+   - [[RFC 6266] Content-Disposition in HTTP](https://namocom.tistory.com/393#footnote_link_393_1)
+ 
 ### TODO
  - 글 작성
    - 첨부파일 생성 DONE
@@ -27,7 +37,7 @@ for my good memory
  - 글 수정
    - 첨부파일 생성 DONE
    - 첨부파일 수정 DONE
-   - 첨부파일 제거 TODO
+   - 첨부파일 제거 DONE
 
 ---
 

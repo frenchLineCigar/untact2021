@@ -27,8 +27,67 @@ import java.util.Map;
 public class FileService {
 
 	private final FileDao fileDao;
+
 	@Value("${custom.fileDirPath}")
 	private String fileDirPath;
+
+	/* id로 파일 조회 */
+	public AttachFile getFileById(int id) {
+		return fileDao.findById(id);
+	}
+
+	/* 썸네일 가져오기 */
+	public AttachFile getThumbnail(String relTypeCode, int relId, String typeCode, String type2Code) {
+		return fileDao.findThumbnail(relTypeCode, relId, typeCode, type2Code);
+	}
+
+	/* 단일 파일 1개 (FileNo 로 특정) */
+	public AttachFile getOneByFileNo(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+		return fileDao.findOneByFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
+	}
+
+	/* 파일 조회 */
+	public List<AttachFile> getFiles(String relTypeCode, int relId, String typeCode, String type2Code) {
+		return fileDao.findFiles(relTypeCode, relId, typeCode, type2Code);
+	}
+
+	private List<AttachFile> getFiles(String relTypeCode, int relId) {
+		return fileDao.findFiles(relTypeCode, relId, null, null);
+	}
+
+	/* 파일의 연관 게시물 번호(relId) 변경 */
+	public void changeRelId(int id, int relId) {
+		fileDao.updateRelId(id, relId);
+	}
+
+	public void changeRelIds(List<Integer> ids, int relId) {
+		for (Integer id : ids) {
+			changeRelId(id, relId);
+		}
+	}
+
+	public void changeRelIds(String idsStr, int relId) {
+		List<Integer> ids = Util.getIdsToList(idsStr, ",");
+		changeRelIds(ids, relId);
+	}
+
+	/* 파일 삭제 */
+	private void deleteFile(AttachFile file) {
+		// 실제 파일 삭제
+		String filePath = file.getFilePath(fileDirPath);
+		Util.deleteFile(filePath);
+
+		// 파일 정보 삭제
+		fileDao.deleteFile(file.getId());
+	}
+
+	public void deleteFiles(String relTypeCode, int relId) {
+		List<AttachFile> files = getFiles(relTypeCode, relId);
+
+		for (AttachFile file : files) {
+			deleteFile(file);
+		}
+	}
 
 	/* 파일 메타 데이터 저장 (DB) */
 	public void saveFileMetaData(AttachFile attachFile) {
@@ -153,61 +212,6 @@ public class FileService {
 			}
 		}
 		return deleteCount;
-	}
-
-	/* 썸네일 가져오기 */
-	public AttachFile getThumbnail(String relTypeCode, int relId, String typeCode, String type2Code) {
-		return fileDao.findThumbnail(relTypeCode, relId, typeCode, type2Code);
-	}
-
-	/* 단일 파일 1개 (FileNo 로 특정) */
-	public AttachFile getOneByFileNo(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
-		return fileDao.findOneByFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
-	}
-
-	/* 파일 조회 */
-	public List<AttachFile> getFiles(String relTypeCode, int relId, String typeCode, String type2Code) {
-		return fileDao.findFiles(relTypeCode, relId, typeCode, type2Code);
-	}
-
-	private List<AttachFile> getFiles(String relTypeCode, int relId) {
-		return fileDao.findFiles(relTypeCode, relId, null, null);
-	}
-
-	public void changeRelIds(String idsStr, int relId) {
-		List<Integer> ids = Util.getIdsToList(idsStr, ",");
-		for (Integer id : ids) {
-			changeRelId(id, relId);
-		}
-	}
-
-	public void changeRelIds(List<Integer> ids, int relId) {
-		for (Integer id : ids) {
-			changeRelId(id, relId);
-		}
-	}
-
-	/* 파일의 연관 게시물 번호(relId) 변경 */
-	public void changeRelId(int id, int relId) {
-		fileDao.updateRelId(id, relId);
-	}
-
-	/* 파일 삭제 */
-	public void deleteFiles(String relTypeCode, int relId) {
-		List<AttachFile> files = getFiles(relTypeCode, relId);
-
-		for (AttachFile file : files) {
-			deleteFile(file);
-		}
-	}
-
-	private void deleteFile(AttachFile file) {
-		// 실제 파일 삭제
-		String filePath = file.getFilePath(fileDirPath);
-		Util.deleteFile(filePath);
-
-		// 파일 정보 삭제
-		fileDao.deleteFile(file.getId());
 	}
 
 	private void checkAndDeleteOldFileIfExists(AttachFile file) {

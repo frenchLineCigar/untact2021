@@ -24,6 +24,12 @@
 		    fileDir = #{fileDir}
 	</insert>
 
+	<select id="findById" resultType="AttachFile">
+		SELECT *
+		FROM attach_file
+		WHERE id = #{id}
+	</select>
+
 	<!-- 썸네일 가져오기 -->
 	<select id="findThumbnail" resultType="AttachFile">
 		SELECT *

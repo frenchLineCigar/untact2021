@@ -12,6 +12,8 @@ public interface FileDao {
 	/* 파일 정보 저장 */
 	void save(AttachFile attachFile);
 
+	AttachFile findById(int id);
+
 	/* 썸네일 가져오기 */
 	AttachFile findThumbnail(String relTypeCode, int relId, String typeCode, String type2Code);
 
