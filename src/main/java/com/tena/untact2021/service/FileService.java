@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartRequest;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -96,10 +97,11 @@ public class FileService {
 
 	/* 실제 파일 저장 (서버 경로) */
 	public boolean saveRealFileOnDisk(MultipartFile multipartFile, String targetFilePath) {
+		Path path = Path.of(targetFilePath).toAbsolutePath().normalize();
 
 		// 업로드된 파일을 지정된 경로로 옮김
 		try {
-			multipartFile.transferTo(new File(targetFilePath));
+			multipartFile.transferTo(path);
 			// throw new IOException("Force Checked Exception");
 		} catch (IllegalStateException | IOException e) {
 			// log.info("Exception Caught");
