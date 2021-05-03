@@ -88,7 +88,7 @@ function ArticleAdd__checkAndSubmit(form) {
             type: 'POST',
             success: onSuccess // 업로드 성공시 콜백 -> startSubmitForm
         });
-    }
+    };
 
     // 폼 전송 함수
     const startSubmitForm = function (data) {

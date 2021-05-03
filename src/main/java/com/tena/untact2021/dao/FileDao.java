@@ -25,7 +25,13 @@ public interface FileDao {
 	void updateRelId(@Param("id") int id, @Param("relId") int relId);
 
 	/* 파일 조회 */
-	List<AttachFile> findFiles(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId, @Param("typeCode") String typeCode, @Param("type2Code") String type2Code);
+	List<AttachFile> findFiles(@Param("relTypeCode") String relTypeCode,
+	                           @Param("relId") int relId,
+	                           @Param("typeCode") String typeCode, @Param("type2Code") String type2Code);
+
+	List<AttachFile> findFilesByRelIds(@Param("relTypeCode") String relTypeCode,
+	                                   @Param("relIds") List<Integer> relIds,
+	                                   @Param("typeCode") String typeCode, @Param("type2Code") String type2Code);
 
 	void deleteFiles(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId);
 

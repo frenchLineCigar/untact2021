@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -118,6 +115,9 @@ public class FileService {
 		String paramName = multipartFile.getName();
 		String[] paramNameBits = paramName.split("__");
 
+		System.out.println("paramName = " + paramName);
+		System.out.println("paramNameBits = " + Arrays.toString(paramNameBits));
+
 		// 파라미터명 체크 -> file 이 아니면 ㄴㄴ
 		boolean isValidParam = paramNameBits[0].equals("file");
 		if (!isValidParam) return new ResultData("F-1", "파라미터 명이 올바르지 않습니다.");
@@ -173,6 +173,9 @@ public class FileService {
 
 		for (String paramName : fileMap.keySet()) {
 			MultipartFile multipartFile = fileMap.get(paramName);
+			System.out.println("paramName = " + paramName);
+			System.out.println("multipartFile = " + multipartFile);
+
 
 			if (! multipartFile.isEmpty()) {
 				ResultData saveFileResult = saveFile(multipartFile);
@@ -222,6 +225,10 @@ public class FileService {
 		if (oldFile != null) {
 			deleteFile(oldFile);
 		}
+	}
+
+	public List<AttachFile> getFilesByRelIds(String relTypeCode, List<Integer> relIds, String typeCode, String type2Code) {
+		return fileDao.findFilesByRelIds(relTypeCode, relIds, typeCode, type2Code);
 	}
 
 }

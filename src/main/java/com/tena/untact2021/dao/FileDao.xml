@@ -71,6 +71,20 @@
 		ORDER BY typeCode, type2Code, fileNo
 	</select>
 
+	<select id="findFilesByRelIds" resultType="AttachFile">
+		SELECT *
+		FROM attach_file
+		WHERE 1
+		AND relId IN
+		<foreach item="relId" index="index" collection="relIds" open="(" separator="," close=")">
+			#{relId}
+		</foreach>
+		AND relTypeCode = #{relTypeCode}
+		AND typeCode = #{typeCode}
+		AND type2Code = #{type2Code}
+		ORDER BY relId, fileNo
+	</select>
+
 	<!-- 파일이 첨부된 게시물 번호(relId) 수정 -->
 	<update id="updateRelId">
 		UPDATE `attach_file`

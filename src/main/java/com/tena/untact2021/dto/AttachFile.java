@@ -63,7 +63,7 @@ public class AttachFile {
 	/* Map MultipartFile To AttachFile */
 	public static AttachFile from(MultipartFile multipartFile) {
 		String paramName = multipartFile.getName(); // file__article__5__common__attachment__1
-		String[] paramNameBits = paramName.split("__"); // ["vfile", "article", "5", "common", "attachment", "1"]
+		String[] paramNameBits = paramName.split("__"); // ["file", "article", "5", "common", "attachment", "1"]
 
 		AttachFile attachFile = AttachFile.builder()
 				.relTypeCode(paramNameBits[1]) // article

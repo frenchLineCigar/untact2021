@@ -28,6 +28,7 @@
 		<%-- 게시물 리스트 --%>
 		<c:forEach items="${articles}" var="article">
 			<c:set var="detailUrl" value="detail?id=${article.id}" />
+			<c:set var="thumbUrl" value="${article.extra__thumbImg}" />
 			<div class="border-2 border-gray-50 p-4 mt-10 mx-5">
 				<div class="flex items-center">
 					<a href="${detailUrl}" class="font-bold">NO. ${article.id}
@@ -40,9 +41,9 @@
 				<div class="article-preview mt-2">
 					<a href="${detailUrl}" class="text-2xl text-gray-700 font-bold hover:underline">${article.title}</a>
 					<%-- 썸네일 표시 --%>
-					<c:if test="${article.extra__thumbImg != null}">
+					<c:if test="${thumbUrl != null}">
 						<div>
-							<img class="max-w-sm" src="${article.extra__thumbImg}" alt="">
+							<img class="max-w-sm" src="${thumbUrl}" alt="">
 						</div>
 					</c:if>
 					<p class="mt-2 text-gray-600">${article.body}</p>
