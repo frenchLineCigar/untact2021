@@ -177,7 +177,7 @@
 						<c:if test="${file != null}">
 							<%-- 파일명/용량 표시--%>
 							<div>
-								<a href="${file.forDownloadUrl}" target="_blank" class="text-blue-500 hover:underline">${file.originFileName}</a> (${file.fileSizeWithUnit})
+								<a href="${file.downloadUrl}" target="_blank" class="text-blue-500 hover:underline">${file.originFileName}</a> (${file.fileSizeWithUnit})
 							</div>
 							<div>
 								<label>

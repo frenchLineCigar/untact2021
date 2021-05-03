@@ -1,27 +1,41 @@
 package com.tena.untact2021.controller;
 
+import com.google.common.io.ByteStreams;
 import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.tomcat.util.net.openssl.ciphers.Protocol;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
+import org.springframework.core.io.*;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.util.UriBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -41,56 +55,376 @@ public class CommonFileController extends BaseController {
 		return fileService.saveFiles(multipartRequest, paramMap);
 	}
 
-	@RequestMapping(value = "/file/download")
-	@ResponseBody
-	public void getImageAsByteArray(int id, HttpServletResponse response, HttpServletRequest request) throws IOException {
-		AttachFile found = fileService.getFileById(id);
-		String fileRealPath = found.getFilePath(fileDirPath);
+	/* 파일 다운로드 */
+	@RequestMapping(value = "/common/file/doDownload")
+	public ResponseEntity<Resource> doDownload(int id, HttpServletRequest request) {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+		Path path = Path.of(fileRealPath);
 
-		// 해당 파일의 인풋 스트림 생성
-		InputStream in = new FileInputStream(fileRealPath);
+		// 응답 바디에 담을 파일을 리소스로 로드해 담는다
+		Resource resource = null;
+		try {
+			resource = new UrlResource(path.toUri()); // UrlResource
+			// resource = new FileSystemResource(path); // FileSystemResource
+		} catch (MalformedURLException e) {
+			log.info("Resource Could not be found on the given path.");
+		}
+
+		// Content-Type 을 결정한다
+		String contentType = null;
+		try {
+			contentType = Files.probeContentType(path);
+			// contentType = request.getServletContext().getMimeType(resource.getFilename());
+			log.info("contentType : " + contentType);
+			log.info("canonicalPath : " + resource.getFile().getCanonicalPath());
+		} catch (IOException ex) {
+			log.info("Could not determine file type.");
+		}
+
+		// Content-Type 을 결정할 수 없다면 다음의 기본 타입으로 Fallback
+		if(contentType == null) {
+			contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+			// contentType = MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE; // @since 4.0
+		}
+
+		// Content-Disposition 헤더 생성
+		String contentDisposition = ContentDisposition.attachment()
+										.filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8) // 다운로드 파일 이름 초기화
+										.build().toString();
+
+		// 응답 헤더와 바디에 담아 리턴
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+				.body(resource);
+	}
+
+
+	// 연습 3-2. ResponseEntity 빌더 체이닝 2
+	@RequestMapping(value = "/test/responseEntityBuilder2")
+	public ResponseEntity<Resource> returnUsingResponseEntityBuilder2(int id) throws IOException {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+
+		Path path = Path.of(fileRealPath);
+		Resource resource = new UrlResource(path.toUri());
+
+		// Content-Type
+		String contentType = Files.probeContentType(path);
+
+		// Content-Disposition
+		ContentDisposition contentDisposition = ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType(contentType)); // <=> headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+		headers.setContentDisposition(contentDisposition); // <=> headers.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
+
+		// ResponseEntity 빌더를 사용한 체이닝
+		return ResponseEntity.ok()
+				.headers(headers) // 맵으로 한꺼번에
+				.body(resource);
+	}
+
+
+	// 연습 3-1. ResponseEntity 빌더 체이닝 1
+	@RequestMapping(value = "/test/responseEntityBuilder")
+	public ResponseEntity<Resource> returnUsingResponseEntityBuilder(int id) throws IOException {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+
+//		// CASE 1.
+//		Path path = Path.of(fileRealPath);
+//		Resource resource = new UrlResource(path.toUri());
+//		String contentType = Files.probeContentType(path);
+//		// String contentType= URLConnection.guessContentTypeFromName(path.toFile().getAbsolutePath());
+
+//		// CASE 2.
+//		 File file = new File(fileRealPath);
+//		 Resource resource = new UrlResource(file.toURI());
+//		 String contentType = Files.probeContentType(file.toPath());
+//		 // String contentType= URLConnection.guessContentTypeFromName(file.getAbsolutePath());
+
+//		// CASE 3. 프로토콜 문자열 직접 입력
+//		Resource resource = new UrlResource("file", fileRealPath);
+//		String contentType = Files.probeContentType(resource.getFile().toPath());
+//		// String contentType= URLConnection.guessContentTypeFromName(resource.getFile().getAbsolutePath());
+
+		// CASE 4. ResourceUtils 의 getFile() 또는 getURL()
+		Resource resource = new UrlResource(ResourceUtils.getURL(fileRealPath));
+		// String contentType= URLConnection.guessContentTypeFromName(resource.getFile().getAbsolutePath());
+
+		String contentType = Files.probeContentType(resource.getFile().toPath());
+		String contentDisposition = ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build().toString();
+
+		// ResponseEntity 빌더를 사용한 체이닝
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType)) // <=> .header(HttpHeaders.CONTENT_TYPE, contentType)
+				.header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+				.body(resource);
+	}
+
+
+
+	// 연습 2-3.  ResponseBody Type 으로 `FileSystemResource` (Resource) 리턴
+	@RequestMapping(value = "/test/resource3")
+	public ResponseEntity<Resource> returnFileSystemResourceInResponseBody(int id) throws IOException {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+
+		Path path = Path.of(fileRealPath);
 
 		// Content-Type 추출
-		String contentType= URLConnection.guessContentTypeFromName(fileRealPath);
-		// String contentType = request.getServletContext().getMimeType(fileRealPath);
+		String contentType = Files.probeContentType(path);
+		// String contentType = URLConnection.guessContentTypeFromName(fileRealPath);
+
+		// 응답 헤더
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType(contentType));
+		headers.setContentDisposition(ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build());
+
+		// 응답 바디 : FileSystemResource
+		Resource resource = new FileSystemResource(path);
+		// Resource resource = new FileSystemResource(fileRealPath);
+		// Resource resource = new FileSystemResource(new File(fileRealPath));
+
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+
+
+	// 연습 2-2. ResponseBody Type 으로 `UrlResource` (Resource) 리턴
+	@RequestMapping(value = "/test/resource2")
+	public ResponseEntity<Resource> returnUrlResourceInResponseBody(int id) throws IOException {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+
+		Path path = Path.of(fileRealPath);
+
+		// Content-Type 추출
+		String contentType = Files.probeContentType(path);
+		// String contentType = URLConnection.guessContentTypeFromName(fileRealPath);
+
+		// 응답 헤더
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType(contentType));
+		headers.setContentDisposition(ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build());
+
+		// 응답 바디 : UrlResource
+		Resource resource = new UrlResource(path.toUri());
+		// Resource resource = new UrlResource(new File(fileRealPath).toURI());
+
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+
+
+
+	// 연습 2-1. ResponseBody Type 으로 `InputStreamResource` (Resource) 리턴
+	@RequestMapping(value = "/test/resource")
+	public ResponseEntity<Resource> returnInputStreamResourceInResponseBody(int id) throws IOException {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+
+		// Path 객체 생성
+		Path path = Path.of(fileRealPath);
+
+		// Content-Type 추출
+		String contentType = Files.probeContentType(path);
+		// String contentType = URLConnection.guessContentTypeFromName(fileRealPath);
+
+		// 응답 헤더
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType(contentType));
+		headers.setContentDisposition(ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build());
+		// headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+		// headers.add(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build().toString());
+
+		// 응답 바디 : InputStreamResource
+		Resource resource = new InputStreamResource(Files.newInputStream(path)); // using 'newInputStream()' in Package java.nio.file.Files
+		// Resource resource = new InputStreamResource(FileUtils.openInputStream(new File(fileRealPath))); // using 'FileUtils.openInputStream()' in Apache Commons IO
+
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+
+
+
+	// 연습 1. ResponseBody Type 으로 `Byte Array` 리턴
+	@RequestMapping(value = "/test/byteArray")
+	public ResponseEntity<byte[]> returnByteArrayInResponseBody(int id) throws IOException {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+
+		// Path 객체 생성
+		Path path = Paths.get(fileRealPath);
+
+		// Content-Type 추출
+		String contentType = Files.probeContentType(path);
+		// String contentType = URLConnection.guessContentTypeFromName(fileRealPath);
+
+		// 응답 헤더
+		HttpHeaders headers = new HttpHeaders();
+
+		// 1) Content-Type 헤더 설정
+		// headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+		headers.setContentType(MediaType.parseMediaType(contentType));
+
+		// 2) Content-Disposition 헤더 설정
+
+		// headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + ioFile.getName() + "\"");
+		// -> XSS 보안 이슈 : 위와 같이 사용 시, 반드시 filename 의 sanitization 필요
+		// -> ContentDisposition 빌더를 사용해 설정
+
+		// 방법 1. add 를 사용한 Content-Disposition 헤더 설정
+		// headers.add(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.builder("attachment").filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build().toString());
+		// headers.add(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build().toString());
+
+		// 방법 2. Content-Disposition 헤더용 setter 를 통한 설정 (훨씬 간편)
+		headers.setContentDisposition(ContentDisposition.attachment().filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8).build());
+
+		// 응답 바디
+		byte[] byteArray = ByteStreams.toByteArray(Files.newInputStream(path));// using 'ByteStreams.toByteArray()' in Google Guava
+		// byte[] byteArray = IOUtils.toByteArray(Files.newInputStream(path));// using 'IOUtils.toByteArray()' in Apache Commons IO
+
+		return new ResponseEntity<>(byteArray, headers, HttpStatus.OK);
+	}
+
+
+
+	// Load file as `FileSystemResource` and Check Content-Type
+	@RequestMapping(value = "/test/downloadFile3")
+	public ResponseEntity<Resource> downloadFile3_FileSystemResource(int id, HttpServletRequest request) {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+		Path path = Paths.get(fileRealPath);
+
+		// Try to Load file as FileSystemResource
+		Resource resource = new FileSystemResource(path);
+
+		// Try to determine file's content type
+		String contentType = null;
+		try {
+			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+			log.info("contentType : " + contentType);
+			log.info("canonicalPath : " + resource.getFile().getCanonicalPath());
+		} catch (IOException ex) {
+			log.info("Could not determine file type.");
+		}
+
+		// Fallback to the default content type if type could not be determined
+		if(contentType == null) {
+			contentType = "application/octet-stream";
+		}
+
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachFile.getOriginFileName() + "\"")
+				.body(resource);
+	}
+
+
+
+	// Load file as `UrlResource` and Check Content-Type
+	@RequestMapping(value = "/test/downloadFile2")
+	public ResponseEntity<Resource> downloadFile2_UrlResource(int id, HttpServletRequest request) {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+		Path path = Paths.get(fileRealPath);
+
+		// Try to Load file as UrlResource
+		Resource resource = null;
+		try {
+			resource = new UrlResource(path.toUri());
+		} catch (MalformedURLException e) {
+			log.info("Resource Could not be found on the given path.");
+		}
+
+		// Try to determine file's content type
+		String contentType = null;
+		try {
+			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+			log.info("contentType : " + contentType);
+			log.info("canonicalPath : " + resource.getFile().getCanonicalPath());
+		} catch (IOException ex) {
+			log.info("Could not determine file type.");
+		}
+
+		// Fallback to the default content type if type could not be determined
+		if(contentType == null) {
+			contentType = "application/octet-stream";
+		}
+
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachFile.getOriginFileName() + "\"")
+				.body(resource);
+	}
+
+
+
+	// Load file as `InputStreamResource` and Check Content-Type
+	@RequestMapping(value = "/test/downloadFile")
+	public ResponseEntity<Resource> downloadFile_InputStreamResource(int id, HttpServletRequest request) {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+		Path path = Paths.get(fileRealPath);
+
+		// Try to Load file as InputStreamResource
+		Resource resource = null;
+		try {
+			resource = new InputStreamResource(Files.newInputStream(path));
+		} catch (IOException e) {
+			log.info("Resource Could not be loaded through the given InputStream.");
+		}
+
+		// Try to determine file's content type
+		String contentType = request.getServletContext().getMimeType(path.toFile().getAbsolutePath());
+		log.info("contentType : " + contentType);
+
+		// Fallback to the default content type if type could not be determined
+		if (contentType == null) {
+			contentType = "application/octet-stream";
+		}
+
+		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachFile.getOriginFileName() + "\"")
+				.body(resource);
+	}
+
+
+
+	// FileCopyUtils.copy(InputStream in, OutputStream out) : 리턴없이 파일의 인풋스트림을 응답객체의 아웃풋스트림으로 복제하는 방식
+	@RequestMapping(value = "/test/getFile")
+	@ResponseBody
+	public void getFile(int id, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		AttachFile attachFile = fileService.getFileById(id);
+		String fileRealPath = attachFile.getFilePath(fileDirPath);
+
+		// 해당 파일의 인풋 스트림 생성
+		InputStream in = new FileInputStream(fileRealPath);
+
+		// Path 객체 생성 : Path.of() 또는 Paths.get() 사용
+		Path path = Paths.get(fileRealPath);
+		// Path path = Paths.get(fileRealPath).toAbsolutePath().normalize();
+		// Path path = Paths.get(new File(fileRealPath).toURI());
+		// Path path = Path.of(fileRealPath);
+		// Path path = Path.of(fileRealPath).toAbsolutePath().normalize();
+		// Path path = Path.of(new File(fileRealPath).toURI());
+
+		// Content-Type 체크
+		// 방법 1.
+		String contentType = Files.probeContentType(path); // using 'probeContentType()' in Package java.nio.file.Files
+		// 방법 2.
+		// String contentType = URLConnection.guessContentTypeFromName(fileRealPath); // using 'guessContentTypeFromName()' in Package java.net.URLConnection
+		// 방법 3
+	    // String contentType = request.getServletContext().getMimeType(fileRealPath); // using 'getMimeType()' in Package javax.servlet.ServletContext
 
 		// Content-Type 헤더 설정
-		response.setContentType(contentType);
 		// response.setHeader("Content-Type", contentType);
+		response.setContentType(contentType); // Type-safety!
 
 		// Content-Disposition 헤더를 attachment 로 설정하여 다운로드 받을 파일임을 브라우저에게 알려줌
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + found.getOriginFileName() + "\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + attachFile.getOriginFileName() + "\""); // -> XSS 보안 이슈: filename sanitization 필요
 
 		FileCopyUtils.copy(in, response.getOutputStream());
-	}
-
-	@RequestMapping(value = "/test/download/v1", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
-	public @ResponseBody byte[] getImageAsByteArrayTest_V1(int id, HttpServletResponse response) throws IOException {
-		AttachFile found = fileService.getFileById(id);
-		String fileRealPath = found.getFilePath(fileDirPath);
-
-		// 해당 파일의 인풋 스트림 생성
-		InputStream in = new FileInputStream(fileRealPath);
-
-		// Content-Disposition 헤더를 attachment 로 설정하여 다운로드 받을 파일임을 브라우저에게 알려줌
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + found.getOriginFileName() + "\"");
-
-		return IOUtils.toByteArray(in); // produces 에 명시한 타입으로 Content-Type 헤더가 설정됨
-	}
-
-	// 원시 파일(raw file)로 퉁치려면 APPLICATION_OCTET_STREAM_VALUE
-	@RequestMapping(value = "/test/download/v2", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public @ResponseBody byte[] getImageAsByteArray_Test_V2(int id, HttpServletResponse response) throws IOException {
-		AttachFile found = fileService.getFileById(id);
-		String fileRealPath = found.getFilePath(fileDirPath);
-
-		// 해당 파일의 인풋 스트림 생성
-		InputStream in = new FileInputStream(fileRealPath);
-
-		// Content-Disposition 헤더를 attachment 로 설정하여 다운로드 받을 파일임을 브라우저에게 알려줌
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + found.getOriginFileName() + "\"");
-
-		return IOUtils.toByteArray(in); // produces 에 명시한 타입으로 Content-Type 헤더가 설정됨
 	}
 
 }

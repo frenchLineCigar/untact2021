@@ -40,7 +40,7 @@ public class AttachFile {
 	/* 실제 파일이 저장된 서버 경로 */
 	@JsonIgnore
 	public String getFilePath(String fileDirPath) {
-		return fileDirPath + getBaseFileUri();
+		return fileDirPath + getBaseFileUri(); // -> /2021/untact2021-file/article/2021_04/1.png
 	}
 
 	@JsonIgnore
@@ -56,8 +56,8 @@ public class AttachFile {
 		return "/file" + getBaseFileUri() + "?updateDate=" + updateDate;
 	}
 
-	public String getForDownloadUrl() {
-		return "/file/download?id=" + id;
+	public String getDownloadUrl() {
+		return "/common/file/doDownload?id=" + id;
 	}
 
 	/* Map MultipartFile To AttachFile */
