@@ -242,6 +242,7 @@ public class Util {
 			case "jpg":
 			case "gif":
 			case "png":
+			case "jfif":
 				return "img";
 			case "mp4":
 			case "avi":

@@ -165,7 +165,7 @@
 				</div>
 			</div>
 
-			<c:set var="fileMap" value="${article.fileMap}" />
+			<c:set var="fileMap" value="${article.extra.fileMap}" />
 			<c:forEach var="fileNo" begin="1" end="${fileInputMaxCount}">
 				<c:set var="file" value="${fileMap[fileNo]}" />
 				<div class="form-row flex flex-col lg:flex-row">

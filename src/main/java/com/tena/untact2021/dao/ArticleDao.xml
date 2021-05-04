@@ -16,7 +16,7 @@
 		<result column="body" property="body" />
 		<result column="extra__writer" property="extra__writer" />
 		<result column="extra__boardName" property="extra__boardName" />
-		<!--<result column="extra__thumbImg" property="extra__thumbImg" />-->
+		<!--<result column="extra__thumbUrl" property="extra__thumbUrl" />-->
 	</resultMap>
 
 	<resultMap id="thumbImgFile" type="AttachFile">
@@ -36,7 +36,6 @@
 		<result column="fileExtType2Code" property="fileExtType2Code" />
 		<result column="fileExt" property="fileExt" />
 		<result column="fileDir" property="fileDir" />
-		<!--<result column="multipartFile" property="multipartFile" />-->
 	</resultMap>
 	 <!--/ Single Result Maps-->
 

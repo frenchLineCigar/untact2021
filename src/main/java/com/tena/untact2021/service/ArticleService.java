@@ -6,10 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.tena.untact2021.dto.Search.SearchKeywordType;
@@ -114,19 +112,21 @@ public class ArticleService {
 
 	    // 게시물의 첨부파일 및 대표 이미지 설정
 	    for (Article article : articles) {
-		    // 해당 게시물의 첨부파일만 추출
-		    List<AttachFile> sortedFiles = filesByRelIds.stream()
-				    .filter(file -> file.getRelId() == article.getId()).collect(Collectors.toList());
 
-		    // 게시물과 연관된 첨부파일 저장 : 추후 목록 화면에서 파일관련 기능 구현 시 사용
-		    // article.setFileMapFromList(sortedFiles);
+		    // 해당 게시물의 첨부파일로 필터링 후, fileNo 를 키로 갖는 맵으로 가공
+		    Map<Integer, AttachFile> fileMap = filesByRelIds.stream()
+				    .filter(file -> file.getRelId() == article.getId())
+				    .collect(Collectors.toMap(AttachFile::getFileNo, Function.identity()));
+
+		    // 게시물에 첨부파일 정보 저장
+		    article.addToExtra("fileMap", fileMap);
 
 		    // 첨부 파일 중 이미지 타입이면서 순서가 빠른 파일을 썸네일로 사용
-		    Optional<AttachFile> thumbFile = sortedFiles.stream()
+		    Optional<AttachFile> thumbFile = fileMap.values().stream()
 				    .filter(attachFile -> attachFile.getFileExtTypeCode().equals("img")) // 이미지 타입 중
 				    .min(Comparator.comparingInt(AttachFile::getFileNo)); //fileNo 가 빠른 것
 		    thumbFile.
-				    ifPresent(attachFile -> article.setExtra__thumbImg(attachFile.getForPrintUrl()));
+				    ifPresent(attachFile -> article.setExtra__thumbUrl(attachFile.getForPrintUrl()));
 	    }
 
 	    return articles;
@@ -137,37 +137,36 @@ public class ArticleService {
 	 *
 	 * 전체 게시물 조회
 	 */
-	public List<Article> getForPrintArticles2(int boardId, SearchKeywordType searchKeywordType, String searchKeyword,
-	                                         int page, int itemsInAPage) {
+	public List<Article> getForPrintArticlesV2(int boardId, SearchKeywordType searchKeywordType, String searchKeyword,
+	                                           int page, int itemsInAPage) {
 		int limitFrom = (page - 1) * itemsInAPage;
 		int limitTake = itemsInAPage;
 
 		// 게시물 가져오기
 		List<Article> articles = articleDao.findAllForPrint(boardId, searchKeywordType, searchKeyword, limitFrom, limitTake);
 
-		// 해당 게시물들의 아이디만 리스트로 추출해서
-		List<Integer> articleIds = articles.stream().map(article -> article.getId()).collect(Collectors.toList());
+		// 가져온 게시물들의 아이디만 리스트로 추출해서
+		List<Integer> articleIds = articles.stream().map(Article::getId).collect(Collectors.toList());
 
-		// 게시물 아이디 리스트에 해당하는 첨부 파일 가져오기
+		// 해당하는 첨부 파일 가져오기
 		Map<Integer, Map<Integer, AttachFile>> filesMap = fileService.getFilesMapKeyRelIdAndFileNo("article", articleIds, "common", "attachment");
 
-		// 게시물의 첨부파일 및 대표 이미지 설정
+		// 게시물 당 첨부파일 및 대표 이미지 설정
 		for (Article article : articles) {
 			// 해당 게시물의 첨부파일 추출
 			Map<Integer, AttachFile> fileMap = filesMap.get(article.getId());
 
 			if (fileMap != null) {
 				// 게시물과 연관된 첨부파일 셋팅
-				article.setFileMap(fileMap);
+				article.addToExtra("fileMap", fileMap);
 
-				// 대표 이미지 셋팅
 				// 첨부 파일 중 이미지 타입이면서 순서가 빠른 파일을 썸네일로 사용
 				Optional<AttachFile> thumbFile = fileMap.values()
 						.stream()
 						.filter(attachFile -> attachFile.getFileExtTypeCode().equals("img")) // 이미지 타입 중
 						.min(Comparator.comparingInt(AttachFile::getFileNo)); //fileNo 가 빠른 것
 				thumbFile.
-						ifPresent(attachFile -> article.setExtra__thumbImg(attachFile.getForPrintUrl()));
+						ifPresent(attachFile -> article.setExtra__thumbUrl(attachFile.getForPrintUrl())); // 해당하는 파일이 있으면 URL 을 썸네일 링크로 설정
 			}
 		}
 

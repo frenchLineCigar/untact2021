@@ -255,4 +255,26 @@ public class FileService {
 		return filesMap;
 	}
 
+
+
+//	public Map<Integer, AttachFile> getFileMapKeyFileNo(String relTypeCode, int relId, String typeCode, String type2Code) {
+//
+//		// 해당 게시물의 첨부파일 리스트 가져오기
+//		List<AttachFile> files = fileDao.findFiles(relTypeCode, relId, typeCode, type2Code);
+//
+//		// 파일 리스트를 fileNo 를 키로 갖는 맵으로 가공
+//		Map<Integer, AttachFile> fileMap = files.stream().collect(Collectors.toMap(AttachFile::getFileNo, file -> file));
+//
+//		/*
+//		Map<Integer, AttachFile> fileMap = new LinkedHashMap<>();
+//
+//		for (AttachFile file : files) {
+//			fileMap.put(file.getFileNo(), file); //`fileNo` is key of fileMap : Map<`Integer`, AttachFile>
+//		}
+//		*/
+//
+//		return fileMap;
+//	}
+
+
 }

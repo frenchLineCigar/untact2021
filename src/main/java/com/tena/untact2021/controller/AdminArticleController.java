@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.tena.untact2021.dto.Search.SearchKeywordType;
 
@@ -56,7 +59,7 @@ public class AdminArticleController extends BaseController {
 		int itemsInAPage = 20;
 
 		// List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
-		List<Article> articles = articleService.getForPrintArticles2(boardId, searchKeywordType, searchKeyword, page, itemsInAPage); // Beta
+		List<Article> articles = articleService.getForPrintArticlesV2(boardId, searchKeywordType, searchKeyword, page, itemsInAPage); // Beta
 
 		model.addAttribute("articles", articles);
 		model.addAttribute("board", board);
@@ -108,16 +111,18 @@ public class AdminArticleController extends BaseController {
 		if (id == null) return msgAndBack(model, "id를 입력해주세요.");
 
 		// 해당 게시물 가져오기
-		Article article = articleService.getForDetailPrintById(id);
-		//Article article = articleService.getForPrintArticle(id);
+		Article article = articleService.getForPrintArticle(id);
 
 		if (article == null) return msgAndBack(model, "존재하지 않는 게시물번호 입니다.");
 
-		// 해당 게시물의 첨부파일 가져오기
+		// 해당 게시물의 첨부파일 리스트 가져오기
 		List<AttachFile> files = fileService.getFiles("article", article.getId(), "common", "attachment");
 
+		// 파일 리스트를 fileNo 를 키로 갖는 맵으로 가공
+		Map<Integer, AttachFile> fileMap = files.stream().collect(Collectors.toMap(AttachFile::getFileNo, Function.identity()));
+
 		// 게시물에 첨부파일 정보 담기
-		article.setFileMapFromList(files);
+		article.addToExtra("fileMap", fileMap);
 
 		model.addAttribute("article", article);
 

@@ -18,7 +18,7 @@ public class ArticleDetail {
 	// 썸네일 링크 셋팅용 편의 메서드
 	public static void validAndValuateArticle(ArticleDetail articleDetail) {
 		if (articleDetail.hasArticle() && articleDetail.hasThumbImgFile()) {
-			articleDetail.getArticle().setExtra__thumbImg(articleDetail.getThumbImgFile().getForPrintUrl());
+			articleDetail.getArticle().setExtra__thumbUrl(articleDetail.getThumbImgFile().getForPrintUrl());
 		}
 	}
 

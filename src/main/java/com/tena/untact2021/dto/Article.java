@@ -25,28 +25,28 @@ public class Article {
 
 	private String extra__writer; //작성자 (M.nickname)
 	private String extra__boardName; //게시판 이름 (B.name)
-	private String extra__thumbImg; //썸네일 링크
+	private String extra__thumbUrl; //썸네일 링크
 
-	private Map<Integer, AttachFile> fileMap; //첨부파일, Key(Integer) : fileNo
+	private Map<String, Object> extra; //추가정보 맵핑에 사용할 필드
+
+	// 추가정보 저장 시 사용할 편의 메소드
+	public void addToExtra(String key, Object value) {
+		getExtraNotNull().put(key, value);
+	}
 
 	@JsonIgnore
-	private String fileIdsStr; //Ajax 요청으로 먼저 저장된 게시물의 첨부 파일번호
+	public Map<String, Object> getExtraNotNull() {
+		if (extra == null) extra = new HashMap<>();
 
+		return extra;
+	}
+
+	@JsonIgnore
+	private String fileIdsStr; //Ajax 요청으로 미리 저장된 게시물의 첨부 파일번호
+
+	// 게시물 작성시 Ajax로 미리 업로드된 첨부파일이 있는지 유무 체크
 	public boolean hasInputFiles() {
 		return fileIdsStr != null && ! fileIdsStr.isBlank();
 	}
 
-	@JsonIgnore
-	public Map<Integer, AttachFile> getFileMapNotNull() {
-		if (fileMap == null) fileMap = new HashMap<>();
-
-		return fileMap;
-	}
-
-	public void setFileMapFromList(List<AttachFile> files) {
-		// 입력 받은 파일 리스트를 fileMap 으로 가공 ( 맵의 key는 파일 순서(fileNo)로 할당 )
-		if (files != null) {
-			files.forEach(file -> this.getFileMapNotNull().put(file.getFileNo(), file));
-		}
-	}
 }
