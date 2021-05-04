@@ -45,6 +45,20 @@
 						<div>
 							<img class="max-w-sm" src="${thumbUrl}" alt="">
 						</div>
+						<%-- Beta --%>
+						<c:if test="${article.fileMap != null}">
+							<div class="max-w-sm flex items-center">
+								<c:set var="fileMap" value="${article.fileMap}" />
+								<c:set var="size" value="${fileMap.size()}" />
+								<c:forEach var="item" items="${fileMap}" varStatus="status">
+									<c:set var="file" value="${item.value}" />
+									<c:set var="anotherUrl" value="${file.forPrintUrl}" />
+									<img class="w-1/${size} h-full" src="${anotherUrl}" alt="">
+								</c:forEach>
+							</div>
+							<div class="w-max">사이즈 : ${size}</div>
+						</c:if>
+						<%-- / Beta --%>
 					</c:if>
 					<p class="mt-2 text-gray-600">${article.body}</p>
 				</div>

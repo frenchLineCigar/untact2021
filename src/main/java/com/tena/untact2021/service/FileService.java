@@ -231,4 +231,28 @@ public class FileService {
 		return fileDao.findFilesByRelIds(relTypeCode, relIds, typeCode, type2Code);
 	}
 
+	/**
+	 * Beta
+	 *
+	 * @return Map<Integer, Map<Integer, AttachFile>> filesMap
+	 * - Key(Integer) of Main Map (filesMap) : relId (ex. articleId)
+	 * - Key(Integer) of Entry Maps (Map<Integer, AttachFile>) : fileNo
+	 */
+	public Map<Integer, Map<Integer, AttachFile>> getFilesMapKeyRelIdAndFileNo(String relTypeCode, List<Integer> relIds, String typeCode, String type2Code) {
+		List<AttachFile> files = fileDao.findFilesByRelIds(relTypeCode, relIds, typeCode, type2Code);
+
+		Map<Integer, Map<Integer, AttachFile>> filesMap = new LinkedHashMap<>();
+
+		for (AttachFile file : files) {
+
+			if (! filesMap.containsKey(file.getRelId())) {
+				filesMap.put(file.getRelId(), new LinkedHashMap<>()); //`relId` is key of filesMap : Map<`Integer`, Map<Integer, AttachFile>>
+			}
+
+			filesMap.get(file.getRelId()).put(file.getFileNo(), file); //`fileNo` is key of entries : Map<`Integer`, AttachFile>
+		}
+
+		return filesMap;
+	}
+
 }

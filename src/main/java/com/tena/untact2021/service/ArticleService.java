@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -96,7 +97,7 @@ public class ArticleService {
 		return article;
 	}
 
-    /* 전체 게시물 조회 (작성자 정보 포함) */
+    /* 전체 게시물 조회 */
     public List<Article> getForPrintArticles(int boardId, SearchKeywordType searchKeywordType, String searchKeyword,
                                              int page, int itemsInAPage) {
         int limitFrom = (page - 1) * itemsInAPage;
@@ -130,6 +131,48 @@ public class ArticleService {
 
 	    return articles;
     }
+
+	/**
+	 * Beta
+	 *
+	 * 전체 게시물 조회
+	 */
+	public List<Article> getForPrintArticles2(int boardId, SearchKeywordType searchKeywordType, String searchKeyword,
+	                                         int page, int itemsInAPage) {
+		int limitFrom = (page - 1) * itemsInAPage;
+		int limitTake = itemsInAPage;
+
+		// 게시물 가져오기
+		List<Article> articles = articleDao.findAllForPrint(boardId, searchKeywordType, searchKeyword, limitFrom, limitTake);
+
+		// 해당 게시물들의 아이디만 리스트로 추출해서
+		List<Integer> articleIds = articles.stream().map(article -> article.getId()).collect(Collectors.toList());
+
+		// 게시물 아이디 리스트에 해당하는 첨부 파일 가져오기
+		Map<Integer, Map<Integer, AttachFile>> filesMap = fileService.getFilesMapKeyRelIdAndFileNo("article", articleIds, "common", "attachment");
+
+		// 게시물의 첨부파일 및 대표 이미지 설정
+		for (Article article : articles) {
+			// 해당 게시물의 첨부파일 추출
+			Map<Integer, AttachFile> fileMap = filesMap.get(article.getId());
+
+			if (fileMap != null) {
+				// 게시물과 연관된 첨부파일 셋팅
+				article.setFileMap(fileMap);
+
+				// 대표 이미지 셋팅
+				// 첨부 파일 중 이미지 타입이면서 순서가 빠른 파일을 썸네일로 사용
+				Optional<AttachFile> thumbFile = fileMap.values()
+						.stream()
+						.filter(attachFile -> attachFile.getFileExtTypeCode().equals("img")) // 이미지 타입 중
+						.min(Comparator.comparingInt(AttachFile::getFileNo)); //fileNo 가 빠른 것
+				thumbFile.
+						ifPresent(attachFile -> article.setExtra__thumbImg(attachFile.getForPrintUrl()));
+			}
+		}
+
+		return articles;
+	}
 
     /* 게시판 정보 조회 */
     public Board getBoard(int boardId) {
