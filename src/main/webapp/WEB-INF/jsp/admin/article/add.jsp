@@ -55,15 +55,15 @@ function ArticleAdd__checkAndSubmit(form) {
     }
 
     // 파일 전송 함수
-    const startUploadFiles = function (onSuccess) {
+    const startUploadFiles = function (onSuccess, onFailure) {
 
-        // 첨부파일 유무를 담을 변수
+        // Ajax 업로드 요청이 필요한지를 체크하기 위한 변수
         let needToUpload = false;
 
         for (let inputNo = 1; inputNo <= ArticleAdd__fileInputMaxCount; inputNo++) {
             const input = form["file__article__0__common__attachment__" + inputNo];
 
-            if (input.value.length > 0) { // 크기가 0보다 큰 것이 하나라도 있으면
+            if (input.value.length > 0) { // 파일이 있으면 (페이크 경로 문자열 길이, 파일 없으면 0)
                 needToUpload = true; // 업로드 할 첨부파일 있음
                 break; // 반복문 빠져나감
             }
@@ -84,10 +84,21 @@ function ArticleAdd__checkAndSubmit(form) {
             data: fileUploadFormData,
             processData: false, // important! -> multipart/form-data
             contentType: false, // important! -> multipart/form-data
-            dataType: "json",
+            dataType: 'JSON',
             type: 'POST',
-            success: onSuccess // 업로드 성공시 콜백 -> startSubmitForm
+            success: onSuccess, // 업로드 성공시 콜백 -> startSubmitForm
+            error: onFailure // 실패시 메시지 -> printFallBackMsg
         });
+    };
+
+    // 업로드 실패 시
+    const printFallBackMsg = function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseText);
+        console.log(jqXHR);
+        console.log(jqXHR.responseText);
+        console.log(jqXHR.status);
+
+        ArticleAdd__isSubmitted = false;
     };
 
     // 폼 전송 함수
@@ -106,7 +117,7 @@ function ArticleAdd__checkAndSubmit(form) {
 
     ArticleAdd__isSubmitted = true;
 
-    startUploadFiles(startSubmitForm);
+    startUploadFiles(startSubmitForm, printFallBackMsg);
 }
 </script>
 
@@ -136,8 +147,9 @@ function ArticleAdd__checkAndSubmit(form) {
           <div class="lg:flex lg:items-center lg:w-28">
             <span>첨부파일 ${inputNo}</span>
           </div>
-          <div class="lg:flex-grow">
-            <input type="file" name="file__article__0__common__attachment__${inputNo}" class="form-row-input w-full rounded-sm" />
+          <div class="lg:flex-grow input-file-wrap">
+            <input onchange="$(this).next('input[type=button]').show();" type="file" name="file__article__0__common__attachment__${inputNo}" class="form-row-input rounded-sm"/>
+            <input onclick="if(confirm('파일 첨부를 취소하시겠습니까?')) $(this).closest('div.input-file-wrap').find('> input[type=file]').val(''); $(this).hide();" type="button" value="취소" class="p-2 rounded-sm" style="display: none">
           </div>
         </div>
       </c:forEach>

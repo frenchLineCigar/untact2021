@@ -1,20 +1,20 @@
 server:
   port: 8021
+  tomcat:
+    max-swallow-size: -1 # 비동기 요청 Body의 최대 크기에 대한 값을 -1 로 주어, 사용자 정의 예외처리를 구현하도록 한다.(핵심 설정)
 #  servlet:
-#  ContextPath must start with '/' and not end with '/'
-#    context-path: /untact
-
+#    context-path: /untact # ContextPath must start with '/' and not end with '/'
 
 spring:
   servlet:
     multipart:
-      maxRequestSize: 10MB
-      maxFileSize: 10MB
+      max-file-size: 10MB # 전송되는 개별 파일의 크기 제한 : 한 파일이 가질 수 있는 크기
+      max-request-size: 10MB # 서버측으로 전송된 요청(request) 자체의 크기 제한 : 모든 파일의 크기를 합한 값
   devtools:
     restart:
       enabled: false
-#    livereload:
-#      enabled: true
+    livereload:
+      enabled: true
   output:
     ansi:
       enabled: always

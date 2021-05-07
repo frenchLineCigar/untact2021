@@ -57,17 +57,16 @@
         }
 
         // 파일 전송 함수
-        const startUploadFiles = function (onSuccess) {
+        const startUploadFiles = function (onSuccess, onFailure) {
 
-            // 첨부파일 변경 유무를 담을 변수
+	          // Ajax 업로드 요청이 필요한지를 체크하기 위한 변수
             let needToUpload = false;
 
-						// 업로드할 파일 체크
+						// 업로드할 파일 유무 체크
             for (let fileNo = 1; fileNo <= ArticleModify__fileInputMaxCount; fileNo++) {
                 const input = form["file__article__"+ articleId +"__common__attachment__" + fileNo];
 
-                // 파일 크기 유효성 체크
-                if (input.value.length > 0) { // 크기가 0보다 큰 것이 하나라도 있으면
+								if (input.value.length > 0) { // 파일이 있으면 (페이크 경로 문자열 길이, 파일 없으면 0)
                     needToUpload = true; // 업로드 할 첨부파일 있음
                     break; // 반복문 빠져나감
                 }
@@ -101,9 +100,19 @@
                 contentType: false, // important! -> multipart/form-data
                 dataType: "json",
                 type: 'POST',
-                success: onSuccess // 업로드 성공시 콜백 -> startSubmitForm
+	              success: onSuccess, // 업로드 성공시 콜백 -> startSubmitForm
+	              error: onFailure // 실패시 메시지 -> printFallBackMsg
             });
         };
+
+        // 업로드 실패 시
+		    const printFallBackMsg = function (jqXHR, textStatus, errorThrown) {
+			    alert(jqXHR.responseText);
+			    console.log(jqXHR);
+			    console.log(jqXHR.responseText);
+			    console.log(jqXHR.status);
+			    ArticleAdd__isSubmitted = false;
+		    };
 
         // 폼 전송 함수
         const startSubmitForm = function (data) {
@@ -139,7 +148,7 @@
 
         ArticleModify__isSubmitted = true;
 
-        startUploadFiles(startSubmitForm);
+        startUploadFiles(startSubmitForm, printFallBackMsg);
     }
 </script>
 
@@ -173,32 +182,35 @@
 						<span>첨부파일 ${fileNo}</span>
 					</div>
 					<div class="lg:flex-grow input-file-wrap">
-						<input type="file" name="file__article__${article.id}__common__attachment__${fileNo}" class="form-row-input rounded-sm" />
+						<input onchange="$(this).next('input[type=button]').show();" type="file" class="add-file-input form-row-input rounded-sm" name="file__article__${article.id}__common__attachment__${fileNo}" />
+						<input type="button" class="cancel-file-input p-2 rounded-sm" value="취소" style="display: none">
 						<c:if test="${file != null}">
-							<%-- 파일명/용량 표시--%>
-							<div>
-								<a href="${file.downloadUrl}" target="_blank" class="text-blue-500 hover:underline">${file.originFileName}</a> (${file.fileSizeWithUnit})
-							</div>
-							<div>
-								<label>
-									<input onclick="$(this).closest('div.input-file-wrap').find('> input[type=file]').val('');" type="checkbox" name="deleteFile__article__${article.id}__common__attachment__${fileNo}" value="Y" />
-									<span>삭제</span>
-								</label>
-							</div>
-							<%-- 파일이 이미지인 경우 --%>
-							<c:if test="${file.fileExtTypeCode == 'img'}">
-								<div class="img-box img-box-auto">
-									<a href="${file.forPrintUrl}" target="_blank" class="inline-block" title="자세히 보기">
-										<img class="max-w-sm" src="${file.forPrintUrl}">
-									</a>
+							<div class="existing-file-item">
+								<%-- 파일명/용량 표시--%>
+								<div>
+									<a href="${file.downloadUrl}" target="_blank" class="existing-file text-blue-500 hover:underline">${file.originFileName}</a> (${file.fileSizeWithUnit})
 								</div>
-							</c:if>
-							<%-- 파일이 비디오인 경우 --%>
-							<c:if test="${file.fileExtTypeCode == 'video'}">
-								<div class="video-box">
-									<video preload="auto" controls src="${file.forPrintGenUrl}"></video>
+								<%-- 파일이 이미지인 경우 --%>
+								<c:if test="${file.fileExtTypeCode == 'img'}">
+									<div class="img-box img-box-auto">
+										<a href="${file.forPrintUrl}" target="_blank" class="inline-block" title="자세히 보기">
+											<img class="max-w-sm" src="${file.forPrintUrl}">
+										</a>
+									</div>
+								</c:if>
+								<%-- 파일이 비디오인 경우 --%>
+								<c:if test="${file.fileExtTypeCode == 'video'}">
+									<div class="video-box">
+										<video preload="auto" controls src="${file.forPrintGenUrl}"></video>
+									</div>
+								</c:if>
+								<div>
+									<label>
+										<input onclick="$(this).closest('div.input-file-wrap').find('> input[type=file]').val('');" type="checkbox" name="deleteFile__article__${article.id}__common__attachment__${fileNo}" value="Y" />
+										<span>삭제</span>
+									</label>
 								</div>
-							</c:if>
+							</div>
 						</c:if>
 					</div>
 				</div>
@@ -217,6 +229,67 @@
 		</form>
 	</div>
 </section>
+<%--<input onchange="console.log(this.value); console.log(this.value.length - 'C:\\fakepath\\'.length);" type="file">--%>
+<script>
+	$(document).ready(function () {
+
+		/* 파일 선택 클릭 시 */
+	  $('.add-file-input').on('click', function (e) {
+		  e.stopPropagation(); // 상위 버블링 막기
+		  // e.stopImmediatePropagation(); // 같은 이벤트에 대해 바인딩된 다른 콜백 막기
+
+		  let $inputFileWrap = $(this).parent('div.input-file-wrap');
+	    let $existingFileItem = $inputFileWrap.find('div.existing-file-item'); // 기존 파일 노출 영역
+		  // console.log($existingFileItem[0]);
+
+		  if ($existingFileItem.length > 0) { // 기존 파일이 존재하면
+			  return confirm('파일 변경 시 기존파일이 삭제됩니다.') ? true : false; // 확인시 파일 변경 진행, 취소시 종료
+		  }
+	  });
+
+	  /* 파일 변경 시 */
+	  $('.add-file-input').on('change', function (e) {
+	    let fileLength = this.files.length; // 새로 첨부된 파일 개수 (파일이 없으면 0)
+
+		  let $inputFileWrap = $(this).parent('div.input-file-wrap');
+	    let $existingFileItem = $inputFileWrap.find('div.existing-file-item'); // 기존 파일 노출 영역
+		  let $deleteCheckbox = $existingFileItem.find('input[type=checkbox][name*=deleteFile]'); // 기존파일 삭제 체크박스
+
+	    // 첨부된 파일(fileLength)이 있으면 기존파일에 삭제 체크, 없으면 무조건 기존파일 삭제 체크 취소해서 기존파일 그대로 유지
+		  $deleteCheckbox.prop('checked', function(index, oldPropertyValue) {
+			  return (fileLength > 0) ? true : false; // 비어있는 파일로의 변경도 이벤트로 간주하므로, 이때는 기존파일을 삭제 체크하지 않도록
+		  });
+
+	    // 기존 파일 노출 숨기기
+	    $existingFileItem.hide();
+	  });
+
+	  /* 파일 취소 클릭 시 */
+	  $('.cancel-file-input').on('click', function (e) {
+		  if(! confirm('파일 첨부를 취소하시겠습니까?')) return false;
+
+		  let $inputFileWrap = $(this).closest('div.input-file-wrap');
+		  let $inputFile = $inputFileWrap.find('> input[type=file]'); // 첨부 파일 위치
+		  let $existingFileItem = $inputFileWrap.find('div.existing-file-item'); // 기존 파일 노출 영역
+		  let $deleteCheckbox = $inputFileWrap.find('input[type=checkbox][name*=deleteFile]'); // 기존파일 삭제 체크박스
+
+		  // 첨부 파일 비우기
+		  $inputFile.val('');
+
+		  // 기존 파일 다시 노출
+		  $existingFileItem.show();
+
+		  // 기존파일 삭제체크 해제
+		  $deleteCheckbox.prop('checked', false);
+
+		  // 파일 취소 버튼 감추기
+		  $(this).hide();
+
+		  return false;
+	  });
+
+});
+</script>
 <%--<script>--%>
 <%--    function readURL(input) {--%>
 <%--        if (input.files && input.files[0]) {--%>

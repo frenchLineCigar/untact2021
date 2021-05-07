@@ -232,7 +232,7 @@ public class FileService {
 	}
 
 	/**
-	 * Beta
+	 * 	relIds 에 해당하는 모든 파일들을 조회 후 맵 형태로 제공 : 상위키(Integer)는 relId, 하위키(Integer)는 fileNo
 	 *
 	 * @return Map<Integer, Map<Integer, AttachFile>> filesMap
 	 * - Key(Integer) of Main Map (filesMap) : relId (ex. articleId)

@@ -48,17 +48,17 @@
 						<%-- Beta --%>
 						<c:if test="${article.extra.fileMap != null}">
 							<c:set var="fileMap" value="${article.extra.fileMap}" />
-							<c:set var="size" value="${fileMap.size()}" />
+							<c:set var="numberToDisplay" value="3" />
 							<div class="border-2 border-red-500 max-w-sm flex">
 								<c:forEach var="key" items="${fileMap}" varStatus="status">
 									<c:set var="file" value="${key.value}" />
 									<c:set var="anotherUrl" value="${file.forPrintUrl}" />
 									<c:choose>
 										<c:when test="${file.fileExtTypeCode == 'img'}">
-											<img class="border-4 border-indigo-500 w-1/${size}" src="${anotherUrl}" alt="">
+											<img class="border-4 border-indigo-500 w-1/${numberToDisplay}" src="${anotherUrl}" alt="">
 										</c:when>
 										<c:otherwise>
-											<img class="border-4 border-indigo-500 w-1/${size}" src="/resource/temp/no_image_available.png" alt="">
+											<img class="border-4 border-indigo-500 w-1/${numberToDisplay}" src="/resource/temp/no_image_available.png" alt="">
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>

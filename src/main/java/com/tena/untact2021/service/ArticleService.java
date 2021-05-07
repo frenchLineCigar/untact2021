@@ -148,7 +148,7 @@ public class ArticleService {
 		// 가져온 게시물들의 아이디만 리스트로 추출해서
 		List<Integer> articleIds = articles.stream().map(Article::getId).collect(Collectors.toList());
 
-		// 해당하는 첨부 파일 가져오기
+		// articleIds 과 관련된 모든 첨부 파일을 맵 형태로 가져오기 : 상위키는 articleId, 하위키는 fileNo
 		Map<Integer, Map<Integer, AttachFile>> filesMap = fileService.getFilesMapKeyRelIdAndFileNo("article", articleIds, "common", "attachment");
 
 		// 게시물 당 첨부파일 및 대표 이미지 설정

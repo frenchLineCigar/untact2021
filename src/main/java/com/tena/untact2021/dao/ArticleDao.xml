@@ -19,8 +19,8 @@
 		<!--<result column="extra__thumbUrl" property="extra__thumbUrl" />-->
 	</resultMap>
 
-	<resultMap id="thumbImgFile" type="AttachFile">
-		<id column="id" property="id" />
+	<resultMap id="thumbFile" type="AttachFile">
+		<id column="thumbFileId" property="id" />
 		<result column="regDate" property="regDate" />
 		<result column="updateDate" property="updateDate" />
 		<result column="delStatus" property="delStatus" />
@@ -44,7 +44,7 @@
 		<collection property="article" resultMap="article" />
 		<discriminator javaType="string" column="fileExtTypeCode">
 			<case value="img">
-				<collection property="thumbImgFile" resultMap="thumbImgFile" />
+				<collection property="thumbFile" resultMap="thumbFile" />
 			</case>
 		</discriminator>
 	</resultMap>
@@ -82,7 +82,7 @@
 			A.*,
 			IFNULL(M.nickname, "탈퇴회원") AS extra__writer,
 			IFNULL(B.name, "No name") AS extra__boardName,
-			F.*
+			F.*, F.id AS thumbFileId
 		FROM article AS A
 			LEFT OUTER JOIN `member` AS M ON A.memberId = M.id
 			LEFT OUTER JOIN `board` AS B ON A.boardId = B.id
