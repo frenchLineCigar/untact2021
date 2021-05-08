@@ -22,6 +22,9 @@ public class Member {
     private String loginPw;
 
     @JsonIgnore
+    private int authLevel; // 권한
+
+    @JsonIgnore
     private String authKey;
 
     @JsonIgnore
@@ -56,18 +59,15 @@ public class Member {
             || (this.email != null && !this.email.isBlank());
     }
 
-    // TODO Role 정의 되면 Enum 처리
     /* 관리자 여부 */
     @JsonIgnore
     public boolean isAdmin() {
-        return "admin".equals(this.loginId) || "user1".equals(this.loginId);
-        //return this.loginId.equals("admin") || this.loginId.equals("user1"); //null 객체일 경우, equals 메소드 호출이 불가하므로 예외 발생
+        return this.authLevel == AuthLevel.ADMIN.getRoleNo();
     }
 
     @JsonIgnore
     public boolean isSameMember(int writerId) {
-        if (this.getId().equals(writerId)) return true;
-        return false;
+        return this.getId() == writerId;
     }
 
     @JsonIgnore

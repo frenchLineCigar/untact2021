@@ -4,6 +4,25 @@ for my good memory
 
 ---
 
+
+[2021-05-08]
+
+### TIL
+
+ - SQL
+   - [[SQL] GROUP_CONCAT 함수로 서로 다른 ROW들의 문자열 집계 (with IFNULL / ISNULL / COALESCE / NULLIF )](https://velog.io/@tenacity/SQL-GROUPCONCAT-%ED%95%A8%EC%88%98%EB%A1%9C-%EC%84%9C%EB%A1%9C-%EB%8B%A4%EB%A5%B8-ROW%EB%93%A4%EC%9D%98-%EB%AC%B8%EC%9E%90%EC%97%B4-%EC%A7%91%EA%B3%84)
+   - [Data Story: MySQL INT, BIGINT, TINYINT의 차이 및 INT(10), BIGINT(10), TINYINT(10)의 차이](https://parklize.blogspot.com/2014/09/mysql-int-bigint-tinyint-int10-bigint10.html)
+   - [MySQL, 데이터형과 범위 : 네이버 블로그](https://m.blog.naver.com/dudwo567890/220847437396)
+ - WEB
+   - [<input type="tel"> - HTML: HyperText Markup Language](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/tel)
+   - [<input type="email"> - HTML: HyperText Markup Language](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email)
+   - [<input>: 입력 요소 - HTML: Hypertext Markup Language](https://developer.mozilla.org/ko/docs/Web/HTML/Element/input)
+   - minlength / maxlength : 문자열 길이 밸리데이션
+   - max / min : 최대/최소 값 밸리데이션
+
+---
+
+
 [2021-05-06]
 
 ### TIL

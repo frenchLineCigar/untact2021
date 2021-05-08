@@ -11,7 +11,8 @@
 </script>
 
 <script>
-    ArticleModify__isSubmitted = false; // 폼 전송 상태 (중복 전송 방지)
+    let ArticleModify__isSubmitted = false; // 폼 전송 상태 (중복 전송 방지)
+
     function ArticleModify__checkAndSubmit(form) {
 
         if (ArticleModify__isSubmitted) {
@@ -221,7 +222,7 @@
 				</div>
 				<div class="lg:flex-grow">
 					<div class="btn-submit">
-						<input type="submit" class="btn-primary bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" value="수정"/>
+						<input type="submit" class="btn-primary bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded" value="수정"/>
 						<input onclick="history.back()" type="button" class="btn-info bg-red-500 hover:bg-red-dark text-white font-bold py-2 px-4 rounded" value="취소"/>
 					</div>
 				</div>

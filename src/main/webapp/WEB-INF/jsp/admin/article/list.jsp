@@ -23,7 +23,7 @@
 			<%-- 중앙 영역 점유 --%>
 			<div class="flex-grow"></div>
 			<%-- 글쓰기 버튼 --%>
-			<a href="add?boardId=${board.id}" class="btn-primary add-article bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded-full">글쓰기</a>
+			<a href="add?boardId=${board.id}" class="btn-primary add-article bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full">글쓰기</a>
 		</div>
 		<%-- 게시물 리스트 --%>
 		<c:forEach items="${articles}" var="article">

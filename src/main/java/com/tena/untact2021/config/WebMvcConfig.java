@@ -49,8 +49,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 관리자 권한 필요
         registry.addInterceptor(checkAdminInterceptor)
             .addPathPatterns("/admin/**")
-            .excludePathPatterns("/admin/member/login") // 어드민 로그인
-            .excludePathPatterns("/admin/member/doLogin");
+            .excludePathPatterns("/admin/member/login").excludePathPatterns("/admin/member/doLogin") // 어드민 로그인
+            .excludePathPatterns("/admin/member/join").excludePathPatterns("/admin/member/doJoin"); // 어드민 가입
 
         // 로그인 필요
         // 일단 모든 요청에 적용 후, 로그인 필요없이 접속할 수 있는 URI를 excludePathPatterns 로 추가

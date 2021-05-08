@@ -53,4 +53,9 @@ public class MemberService {
     public Member getMemberByAuthKey(String authKey) {
         return memberDao.findByAuthKey(authKey);
     }
+
+//    public Member joinAdmin(Member newAdmin) {
+//        memberDao.save(newAdmin);
+//        return new ResultData("S-1", String.format("%s님 환영합니다.", newMember.getNickname()), "id", newMember.getId());
+//    }
 }

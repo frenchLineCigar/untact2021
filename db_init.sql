@@ -162,9 +162,18 @@ ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER updateDat
 SELECT * FROM article;
 
 # 기존 데이터는 랜덤하게 게시판 번호 지정 (boardId = 1 또는 2)
+# UPDATE article
+# SET boardId = FLOOR(RAND() * 2) + 1
+# WHERE boardId = 0;
+
+# 기존 데이터 게시판 번호 지정
 UPDATE article
-SET boardId = FLOOR(RAND() * 2) + 1
-WHERE boardId = 0;
+SET boardId = 1
+WHERE id BETWEEN 1 AND 3;
+
+UPDATE article
+SET boardId = 2
+WHERE id IN (4, 5);
 
 SELECT COUNT(*) FROM article WHERE boardId = 1;
 SELECT COUNT(*) FROM article WHERE boardId = 2;
@@ -286,3 +295,33 @@ CREATE TABLE `attach_file` (
 #   AND typeCode = 'common'
 #   AND type2Code = 'attachment'
 #   AND fileNo = 1;
+
+
+# 회원 테이블에 권한필드 추가
+ALTER TABLE `member`
+ADD COLUMN `authLevel` SMALLINT(2) UNSIGNED
+DEFAULT 3 NOT NULL COMMENT '(3=일반,7=관리자)' AFTER `loginPw`;
+
+# 상태값 정의시 유의사항 : 따로 만들어 줘야 할 것과 그룹지어야 할 것의 구분
+# 1. '절대로 양립 할 수 없는 상태' (Ex. authLevel : 권한 )
+# 기본 회원이면서 동시에 정회원 일 수 없다.
+# 관리자 이면서 준 관리자 일 수 없다.
+# 2. '병렬적으로 있을 수 있는 상태' (Ex. stopStatus : 계정 잠금상태 )
+# 어느 관리자 회원이 물의를 일으켜서 계정 비활성화(계정 잠금)
+
+# SMALLINT vs. TINYINT
+# -> TINYINT 는 -128 ~ 127 까지 지원하나, MyBatis 에서 true/false 로 인식하려는 경향이 있기에 SMALLINT 로 설정
+# 기본값(DEFAULT) 설정
+# 3 = 기본
+# 4 = 인증된 회원
+# 5 = 정회원
+# 6 = 준 관리자 회원
+# 7 = 관리자 회원
+
+DESC `member`;
+SELECT * FROM `member`;
+
+# 1번 회원을 관리자로 지정
+UPDATE `member`
+SET authLevel = 7
+WHERE id = 1;

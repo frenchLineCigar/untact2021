@@ -23,8 +23,38 @@ public class AdminMemberController extends BaseController {
 
     private final MemberService memberService;
 
+    @RequestMapping("/admin/member/join")
+    public String showJoin() {
+
+        return "admin/member/join";
+    }
+
+    @RequestMapping("/admin/member/doJoin")
+    @ResponseBody
+    public String doJoin(Member member, String redirectUrl) {
+
+        // 아이디 중복 체크
+        Member existingMember = memberService.getMemberByLoginId(member.getLoginId());
+        if (existingMember != null) return msgAndBack("이미 사용 중인 로그인 아이디입니다.");
+
+        if (member.getLoginId() == null) return msgAndBack("loginId를 입력해주세요.");
+        if (member.getLoginPw() == null) return msgAndBack("loginPw를 입력해주세요.");
+        if (member.getName() == null) return msgAndBack("name을 입력해주세요.");
+        if (member.getNickname() == null) return msgAndBack("nickname을 입력해주세요.");
+        if (member.getEmail() == null) return msgAndBack("email을 입력해주세요.");
+        if (member.getCellphoneNo() == null) return msgAndBack("cellphoneNo를 입력해주세요.");
+
+
+        // 가입 처리
+        memberService.joinMember(member);
+
+        String msg = String.format("%s님 환영합니다.", member.getNickname());
+
+        return msgAndReplace(msg, redirectUrl);
+    }
+
     @RequestMapping("/admin/member/login")
-    public String login() {
+    public String showLogin() {
 
         return "admin/member/login";
     }
