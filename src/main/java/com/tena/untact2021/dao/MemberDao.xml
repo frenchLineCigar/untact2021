@@ -90,6 +90,9 @@
                 AND M.loginId LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
         </if>
+        <if test="param.authLevel != null and param.authLevel !=''">
+            AND M.authLevel = #{param.authLevel}
+        </if>
         ORDER BY M.id DESC
         <if test="limitFrom != null and limitTake != null">
             LIMIT #{limitFrom}, #{limitTake}

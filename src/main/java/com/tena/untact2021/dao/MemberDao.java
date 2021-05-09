@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface MemberDao {
@@ -28,6 +29,7 @@ public interface MemberDao {
     List<Member> findAllForPrint(@Param("searchKeywordType") String searchKeywordType,
                                  @Param("searchKeyword") String searchKeyword,
                                  @Param("limitFrom") int limitFrom,
-                                 @Param("limitTake") int limitTake);
+                                 @Param("limitTake") int limitTake,
+                                 Map<String, Object> param);
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO : 리팩토링 해야할 것
@@ -29,7 +30,8 @@ public class AdminMemberController extends BaseController {
     /* 회원 관리 리스트 */
     @RequestMapping("/admin/member/list")
     public String showList(@RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
-                           String searchKeywordType, String searchKeyword, Model model) {
+                           @RequestParam Map<String, Object> param, String searchKeywordType, String searchKeyword, Model model) {
+
         if (searchKeywordType != null) {
             searchKeywordType = searchKeywordType.trim();
         }
@@ -52,7 +54,7 @@ public class AdminMemberController extends BaseController {
 
         int itemsInAPage = 20;
 
-        List<Member> members = memberService.getForPrintMembers(searchKeywordType, searchKeyword, page, itemsInAPage);
+        List<Member> members = memberService.getForPrintMembers(searchKeywordType, searchKeyword, page, itemsInAPage, param);
 
         model.addAttribute("members", members);
 

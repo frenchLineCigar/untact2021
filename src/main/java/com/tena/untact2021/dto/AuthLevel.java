@@ -9,14 +9,16 @@ import java.util.Arrays;
 @Getter
 public enum AuthLevel {
 
-	ADMIN(7, "관리자"), USER(3, "일반회원"), EMPTY(0, "없음");
+	ADMIN(7, "관리자", "red"), USER(3, "일반회원", "gray"), EMPTY(0, "없음", "");
 
 	private final int value;
 	private final String name;
+	private final String color;
 
-	AuthLevel(int value, String name) {
+	AuthLevel(int value, String name, String color) {
 		this.value = value;
 		this.name = name;
+		this.color = color;
 	}
 
 	public static AuthLevel fromName(String name) {

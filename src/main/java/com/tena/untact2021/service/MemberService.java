@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -56,11 +57,11 @@ public class MemberService {
     }
 
     /* 회원 관리 리스트 */
-    public List<Member> getForPrintMembers(String searchKeywordType, String searchKeyword, int page, int itemsInAPage) {
+    public List<Member> getForPrintMembers(String searchKeywordType, String searchKeyword, int page, int itemsInAPage, Map<String, Object> param) {
         int limitFrom = (page - 1) * itemsInAPage;
         int limitTake = itemsInAPage;
 
-        return memberDao.findAllForPrint(searchKeywordType, searchKeyword, limitFrom, limitTake);
+        return memberDao.findAllForPrint(searchKeywordType, searchKeyword, limitFrom, limitTake, param);
     }
 
 //    public ResultData joinAdmin(Member newAdmin) {

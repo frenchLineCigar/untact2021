@@ -50,15 +50,6 @@ public class Member {
         return loginStatus;
     }
 
-    @JsonIgnore
-    public boolean isValidInput() {
-        return (this.loginPw != null && !this.loginPw.isBlank())
-            || (this.name != null && !this.name.isBlank())
-            || (this.nickname != null && !this.nickname.isBlank())
-            || (this.cellphoneNo != null && !this.cellphoneNo.isBlank())
-            || (this.email != null && !this.email.isBlank());
-    }
-
     /* 관리자 여부 */
     @JsonIgnore
     public boolean isAdmin() {
@@ -68,6 +59,11 @@ public class Member {
     /* 권한 이름 리턴 */
     public String getAuthLevelName() {
         return AuthLevel.fromValue(this.authLevel).getName();
+    }
+
+    /* 권한별 표시 색상 */
+    public String getAuthLevelColor() {
+        return AuthLevel.fromValue(this.authLevel).getColor();
     }
 
     @JsonIgnore
@@ -85,4 +81,12 @@ public class Member {
         return canModify(writerId);
     }
 
+    @JsonIgnore
+    public boolean isValidInput() {
+        return (this.loginPw != null && !this.loginPw.isBlank())
+                || (this.name != null && !this.name.isBlank())
+                || (this.nickname != null && !this.nickname.isBlank())
+                || (this.cellphoneNo != null && !this.cellphoneNo.isBlank())
+                || (this.email != null && !this.email.isBlank());
+    }
 }

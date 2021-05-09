@@ -23,14 +23,34 @@ for my good memory
      - [Breakpoints - Tailwind CSS](https://tailwindcss.com/docs/breakpoints)
      - [Responsive Design - Tailwind CSS](https://tailwindcss.com/docs/responsive-design)
      - [Container - Tailwind CSS](https://tailwindcss.com/docs/container)
+   - tailwind cursor pointer
+     - [Cursor - Tailwind CSS](https://tailwindcss.com/docs/cursor)
+     - [Pointer Events - Tailwind CSS](https://tailwindcss.com/docs/pointer-events)
 
 
  - CSS/FontAwesome
    - [Detail Icons](https://fontawesome.com/icons?d=gallery&p=2&q=detail&m=free)
    - [Edit Icons](https://fontawesome.com/icons?d=gallery&p=2&q=edit&m=free)
    - [Delete Icons](https://fontawesome.com/icons?d=gallery&p=2&q=delete&m=free)
- - WEB
-   - 
+
+
+ - MyBatis
+   - [MyBatis, Dynamic SQL 타입별 기본값](https://jsonobject.tistory.com/240)
+   - [[Mybatis] 동적쿼리 (if test) 문자열처리](https://developyo.tistory.com/242)
+   - [[MyBatis] 동적 쿼리 if문 문법 총 정리](https://java119.tistory.com/42)
+   - [mybatis dynamic empty string check - Google 검색](https://www.google.com/search?q=mybatis+dynamic+empty+string+check&sxsrf=ALeKk00EdALPDNAj1E5QcFHtb-eeZWsRMg%3A1620563251855&ei=M9WXYObZM6uWr7wP3oKt-AM&oq=mybatis+dynamic+empty+string+check&gs_lcp=Cgdnd3Mtd2l6EAMyBwghEAoQoAEyBwghEAoQoAEyBAghEBU6BwgjELADECc6BQgAEM0COgUIIRCgAVDKLFjQMmC5M2gEcAB4AIABmQGIAYUGkgEDMC42mAEAoAEBqgEHZ3dzLXdpesgBAcABAQ&sclient=gws-wiz&ved=0ahUKEwimv9nHzLzwAhUry4sBHV5BCz8Q4dUDCA4&uact=5)
+     - [How to check for an empty string in MyBatis? - Stack Overflow](https://stackoverflow.com/questions/15436712/how-to-check-for-an-empty-string-in-mybatis)
+     - [MyBatis에서 null과 nullString을 체크할 때](https://showbang.github.io/typistShow/2017/04/11/nullCheck/)
+     - [MyBatis isNull isEmpty 사용하기](https://cofs.tistory.com/309)
+     - [스토브 훌로구 :: mybatis 동적쿼리 조건문에 isEmpty, isNotEmpty 를 써보자.](https://stove99.tistory.com/73)
+     - [OKKY - myBatis empty()함수 사용하기](https://okky.kr/article/179882)
+
+
+ - JS
+   - [javascript empty string check - Google 검색](https://www.google.com/search?q=javascript+empty+string+check&oq=javascript+empty+string&aqs=chrome.1.69i57j0l3.4447j0j7&sourceid=chrome&ie=UTF-8)
+     - [How to Check for an Empty String in JavaScript](https://www.tutorialrepublic.com/faq/how-to-check-for-an-empty-string-in-javascript.php)
+     - [JavaScript에서 빈 문자열을 확인하는 방법](https://www.delftstack.com/ko/howto/javascript/javascript-check-if-string-is-empty/)
+     - [소금인형 - SW개발자? :: Javascript의 null 과 empty string등 비교](https://blog.edit.kr/entry/Javascript%EC%9D%98-null-%EA%B3%BC-empty-string%EB%93%B1-%EB%B9%84%EA%B5%90)
 
 ---
 

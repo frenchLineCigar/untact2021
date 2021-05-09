@@ -5,6 +5,24 @@
 
 <section class="section-1">
 	<div class="bg-white shadow-md rounded container mx-auto p-8 mt-8">
+		<div class="flex">
+			<select class="select-auth-level py-2 px-2 rounded-full border border-gray-300 text-gray-600 bg-white hover:border-gray-400 focus:outline-none">
+				<option value="">전체</option>
+				<option value="3">일반회원</option>
+				<option value="7">관리자</option>
+			</select>
+			<script>
+			  if (! param.authLevel) {
+			    param.authLevel = '';
+			  }
+
+			  $('.section-1 .select-auth-level').val(param.authLevel);
+
+			  $('.section-1 .select-auth-level').change(function () {
+				  location.href = (this.value) ? ('?authLevel=' + this.value) : ('list');
+			  });
+			</script>
+		</div>
 		<div class="mb-10">
 			<%-- 회원 리스트 --%>
 			<c:forEach items="${members}" var="member">
@@ -15,20 +33,20 @@
 							<span class="ml-2 font-light text-gray-600">${member.regDate}</span>
 						</a>
 						<div class="flex-grow"></div>
-						<a class="px-2 py-1 bg-gray-600 text-gray-100 font-bold rounded hover:bg-gray-500">${member.authLevelName}</a>
+						<a href="?authLevel=${member.authLevel}" class="cursor-pointer px-2 py-1 bg-${member.authLevelColor}-600 text-${member.authLevelColor}-100 font-bold rounded hover:bg-${member.authLevelColor}-500">${member.authLevelName}</a>
 					</div>
 					<div class="member-preview mt-2">
 						<%--<a href="${detailUrl}" class="text-2xl text-gray-700 font-bold hover:underline">${member.loginId}</a>--%>
 						<p class="mt-2 text-gray-600">
-							<span class="inline-flex justify-center items-center px-2 rounded-full bg-green-600 text-white">로그인 아이디</span>
+							<span class="inline-flex justify-center items-center px-2 rounded-full bg-green-500 text-white">로그인 아이디</span>
 							<span>${member.loginId}</span>
 						</p>
 						<p class="mt-2 text-gray-600">
-							<span class="inline-flex justify-center items-center px-2 rounded-full bg-green-600 text-white">이름</span>
+							<span class="inline-flex justify-center items-center px-2 rounded-full bg-green-500 text-white">이름</span>
 							<span>${member.name}</span>
 						</p>
 						<p class="mt-2 text-gray-600">
-							<span class="inline-flex justify-center items-center px-2 rounded-full bg-green-600 text-white">닉네임</span>
+							<span class="inline-flex justify-center items-center px-2 rounded-full bg-green-500 text-white">닉네임</span>
 							<span>${member.nickname}</span>
 						</p>
 					</div>
