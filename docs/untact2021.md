@@ -4,6 +4,36 @@ for my good memory
 
 ---
 
+[2021-05-09]
+
+### TIL
+
+ - CSS/Tailwind
+   - tailwind chip
+     - [tailwind chips](https://codepen.io/junchow/pen/GRoJzqN)
+     - [Chip UI Kit - Tailwind CSS Design](https://tailwindesign.com/components/chip)
+     - [Chips by haynajjar](https://tailwindcomponents.com/component/chips)
+     - [Svelte and tailwindcss Chip component - DEV Community](https://dev.to/haynajjar/svelte-and-tailwindcss-chip-component-4oh0)
+     - [Smelte: Material design using Tailwind CSS for Svelte](https://smeltejs.com/components/chips/)
+   - [Font Weight - Tailwind CSS](https://tailwindcss.com/docs/font-weight)
+   - [Font Size - Tailwind CSS](https://tailwindcss.com/docs/font-size)
+   - [css tip 5. margin과 padding의 차이점 (마진과 패딩의 차이점) : 블루씰 디자인](https://m.blog.naver.com/codbs7/221421798264)
+   - [Display - Tailwind CSS](https://tailwindcss.com/docs/display#hidden)
+   - tailwind responsive/breakpoint : xs 없음
+     - [Breakpoints - Tailwind CSS](https://tailwindcss.com/docs/breakpoints)
+     - [Responsive Design - Tailwind CSS](https://tailwindcss.com/docs/responsive-design)
+     - [Container - Tailwind CSS](https://tailwindcss.com/docs/container)
+
+
+ - CSS/FontAwesome
+   - [Detail Icons](https://fontawesome.com/icons?d=gallery&p=2&q=detail&m=free)
+   - [Edit Icons](https://fontawesome.com/icons?d=gallery&p=2&q=edit&m=free)
+   - [Delete Icons](https://fontawesome.com/icons?d=gallery&p=2&q=delete&m=free)
+ - WEB
+   - 
+
+---
+
 
 [2021-05-08]
 
@@ -14,9 +44,9 @@ for my good memory
    - [Data Story: MySQL INT, BIGINT, TINYINT의 차이 및 INT(10), BIGINT(10), TINYINT(10)의 차이](https://parklize.blogspot.com/2014/09/mysql-int-bigint-tinyint-int10-bigint10.html)
    - [MySQL, 데이터형과 범위 : 네이버 블로그](https://m.blog.naver.com/dudwo567890/220847437396)
  - WEB
-   - [<input type="tel"> - HTML: HyperText Markup Language](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/tel)
-   - [<input type="email"> - HTML: HyperText Markup Language](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email)
-   - [<input>: 입력 요소 - HTML: Hypertext Markup Language](https://developer.mozilla.org/ko/docs/Web/HTML/Element/input)
+   - [<input type="tel"\> - HTML: HyperText Markup Language](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/tel)
+   - [<input type="email"\> - HTML: HyperText Markup Language](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email)
+   - [<input\>: 입력 요소 - HTML: Hypertext Markup Language](https://developer.mozilla.org/ko/docs/Web/HTML/Element/input)
    - minlength / maxlength : 문자열 길이 밸리데이션
    - max / min : 최대/최소 값 밸리데이션
 

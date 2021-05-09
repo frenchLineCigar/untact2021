@@ -7,10 +7,13 @@ import com.tena.untact2021.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * TODO : 리팩토링 해야할 것
@@ -23,6 +26,39 @@ public class AdminMemberController extends BaseController {
 
     private final MemberService memberService;
 
+    /* 회원 관리 리스트 */
+    @RequestMapping("/admin/member/list")
+    public String showList(@RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
+                           String searchKeywordType, String searchKeyword, Model model) {
+        if (searchKeywordType != null) {
+            searchKeywordType = searchKeywordType.trim();
+        }
+
+        if (searchKeywordType == null || searchKeywordType.length() == 0) {
+            searchKeywordType = "name";
+        }
+
+        if (searchKeyword != null && searchKeyword.length() == 0) {
+            searchKeyword = null;
+        }
+
+        if (searchKeyword != null) {
+            searchKeyword = searchKeyword.trim();
+        }
+
+        if (searchKeyword == null) {
+            searchKeywordType = null;
+        }
+
+        int itemsInAPage = 20;
+
+        List<Member> members = memberService.getForPrintMembers(searchKeywordType, searchKeyword, page, itemsInAPage);
+
+        model.addAttribute("members", members);
+
+        return "admin/member/list";
+    }
+
     @RequestMapping("/admin/member/join")
     public String showJoin() {
 
@@ -31,7 +67,7 @@ public class AdminMemberController extends BaseController {
 
     @RequestMapping("/admin/member/doJoin")
     @ResponseBody
-    public String doJoin(Member member, String redirectUrl) {
+    public String doJoin(Member member) {
 
         // 아이디 중복 체크
         Member existingMember = memberService.getMemberByLoginId(member.getLoginId());
@@ -49,6 +85,7 @@ public class AdminMemberController extends BaseController {
         memberService.joinMember(member);
 
         String msg = String.format("%s님 환영합니다.", member.getNickname());
+        String redirectUrl = "./login";
 
         return msgAndReplace(msg, redirectUrl);
     }

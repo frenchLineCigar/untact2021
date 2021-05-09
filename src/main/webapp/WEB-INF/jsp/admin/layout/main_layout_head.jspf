@@ -26,6 +26,11 @@
                     </a>
                 </li>
                 <li>
+                    <a class="flex items-center h-full text-xl px-4 hover:underline" href="${root}/admin/member/list">
+                        <span>회원 관리</span>
+                    </a>
+                </li>
+                <li>
                     <a class="flex items-center h-full text-xl px-4 hover:underline" href="${root}/admin/article/list">
                         <span>게시물 관리</span>
                     </a>

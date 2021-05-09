@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 @Transactional
@@ -54,8 +55,18 @@ public class MemberService {
         return memberDao.findByAuthKey(authKey);
     }
 
-//    public Member joinAdmin(Member newAdmin) {
+    /* 회원 관리 리스트 */
+    public List<Member> getForPrintMembers(String searchKeywordType, String searchKeyword, int page, int itemsInAPage) {
+        int limitFrom = (page - 1) * itemsInAPage;
+        int limitTake = itemsInAPage;
+
+        return memberDao.findAllForPrint(searchKeywordType, searchKeyword, limitFrom, limitTake);
+    }
+
+//    public ResultData joinAdmin(Member newAdmin) {
+//        newAdmin.setAuthLevel(AuthLevel.ADMIN.getValue());
 //        memberDao.save(newAdmin);
-//        return new ResultData("S-1", String.format("%s님 환영합니다.", newMember.getNickname()), "id", newMember.getId());
+//        return new ResultData("S-1", String.format("%s님 환영합니다.", newAdmin.getNickname()));
 //    }
+
 }

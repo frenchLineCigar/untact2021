@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface MemberDao {
@@ -24,5 +23,11 @@ public interface MemberDao {
 
     /* 회원 조회 (authKey) */
     Member findByAuthKey(@Param("authKey") String authKey);
+
+	/* 전체 회원 조회 */
+    List<Member> findAllForPrint(@Param("searchKeywordType") String searchKeywordType,
+                                 @Param("searchKeyword") String searchKeyword,
+                                 @Param("limitFrom") int limitFrom,
+                                 @Param("limitTake") int limitTake);
 
 }

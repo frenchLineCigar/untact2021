@@ -70,4 +70,29 @@
         WHERE id = #{id}
     </update>
 
+    <!-- 전체 회원 조회 -->
+    <select id="findAllForPrint" resultType="Member">
+        SELECT M.*
+        FROM `member` AS M
+        WHERE 1
+        <if test='searchKeyword != null and !"".equals(searchKeyword)'>
+            <if test='searchKeywordType == "name"'>
+                AND M.`name` LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test='searchKeywordType == "nickname"'>
+                AND M.nickname LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test='searchKeywordType == "nameAndNickname"'>
+                AND(M.`name` LIKE CONCAT('%', #{searchKeyword}, '%') OR
+                    M.nickname LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test='searchKeywordType == "loginId"'>
+                AND M.loginId LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+        </if>
+        ORDER BY M.id DESC
+        <if test="limitFrom != null and limitTake != null">
+            LIMIT #{limitFrom}, #{limitTake}
+        </if>
+    </select>
 </mapper>

@@ -62,7 +62,12 @@ public class Member {
     /* 관리자 여부 */
     @JsonIgnore
     public boolean isAdmin() {
-        return this.authLevel == AuthLevel.ADMIN.getRoleNo();
+        return this.authLevel == AuthLevel.ADMIN.getValue();
+    }
+
+    /* 권한 이름 리턴 */
+    public String getAuthLevelName() {
+        return AuthLevel.fromValue(this.authLevel).getName();
     }
 
     @JsonIgnore
