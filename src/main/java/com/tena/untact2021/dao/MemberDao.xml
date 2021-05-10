@@ -36,6 +36,13 @@
             loginId = #{loginId}
     </select>
 
+    <select id="findForPrintById" resultType="Member">
+        SELECT *
+        FROM `member`
+        WHERE
+            id = #{id}
+    </select>
+
     <!-- 회원 조회 (authKey) -->
     <select id="findByAuthKey" resultType="Member">
         SELECT *

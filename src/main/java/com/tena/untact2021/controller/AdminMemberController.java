@@ -1,6 +1,8 @@
 package com.tena.untact2021.controller;
 
 import com.tena.untact2021.custom.CurrentMember;
+import com.tena.untact2021.dto.Article;
+import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.service.MemberService;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * TODO : 리팩토링 해야할 것
@@ -131,6 +135,21 @@ public class AdminMemberController extends BaseController {
         session.invalidate();
 
         return msgAndReplace("로그아웃 되었습니다.", "../member/login");
+    }
+
+    /* 회원 정보 수정 폼 */
+    @RequestMapping("/admin/member/modify")
+    public String showModify(Integer id, Model model) {
+        if (id == null) return msgAndBack(model, "id를 입력해주세요.");
+
+        // 해당 회원 조회
+        Member member = memberService.getForPrintMember(id);
+
+        if (member == null) return msgAndBack(model, "존재하지 않는 회원번호 입니다.");
+
+        model.addAttribute("member", member);
+
+        return "admin/member/modify";
     }
 
     /* 관리자 정보 수정 */

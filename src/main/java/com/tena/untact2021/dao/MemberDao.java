@@ -19,6 +19,8 @@ public interface MemberDao {
     /* 회원 조회 (로그인 ID) */
     Member findByLoginId(@Param("loginId") String loginId);
 
+    Member findForPrintById(@Param("id") int id);
+
     /* 회원 정보 수정 */
     void update(Member member);
 

@@ -64,6 +64,10 @@ public class MemberService {
         return memberDao.findAllForPrint(searchKeywordType, searchKeyword, limitFrom, limitTake, param);
     }
 
+    public Member getForPrintMember(Integer id) {
+        return memberDao.findForPrintById(id);
+    }
+
 //    public ResultData joinAdmin(Member newAdmin) {
 //        newAdmin.setAuthLevel(AuthLevel.ADMIN.getValue());
 //        memberDao.save(newAdmin);
