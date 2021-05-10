@@ -15,6 +15,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,9 +23,7 @@ import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -51,8 +50,41 @@ public class CommonFileController extends BaseController {
 	}
 
 	/* 파일 다운로드 */
-	@RequestMapping(value = "/common/file/doDownload")
+	@GetMapping("/common/file/doDownload")
 	public ResponseEntity<Resource> doDownload(int id, HttpServletRequest request) {
+		AttachFile attachFile = fileService.getFileById(id);
+		String filePath = attachFile.getFilePath(fileDirPath);
+
+		// 응답 바디에 담을 파일을 리소스로 로드해 담는다
+		Resource resource = null;
+		try {
+			resource = new InputStreamResource(new FileInputStream(filePath));
+		} catch (FileNotFoundException e) {
+			log.info("지정된 경로의 파일을 찾을 수 없습니다. : " + e.getMessage());
+		}
+
+		// Content-Type 확인
+		String contentType = request.getServletContext().getMimeType(new File(filePath).getAbsolutePath());
+
+		// Content-Type 이 없으면 옥텟 스트림으로 Fallback
+		if (contentType == null) {
+			contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE; // application/octet-stream
+		}
+
+		// Content-Disposition 헤더 생성
+		String contentDisposition = ContentDisposition.attachment()
+				.filename(attachFile.getOriginFileName(), StandardCharsets.UTF_8) // 다운로드 파일 이름 초기화
+				.build().toString();
+
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+				.body(resource);
+	}
+
+	/* 파일 다운로드 V1 : 라이브러리 및 각종 내장 클래스 활용 연습 */
+	@RequestMapping(value = "/common/file/doDownloadV1")
+	public ResponseEntity<Resource> doDownloadV1(int id, HttpServletRequest request) {
 		AttachFile attachFile = fileService.getFileById(id);
 		String fileRealPath = attachFile.getFilePath(fileDirPath);
 		Path path = Path.of(fileRealPath);
@@ -71,6 +103,7 @@ public class CommonFileController extends BaseController {
 		try {
 			contentType = Files.probeContentType(path);
 			// contentType = request.getServletContext().getMimeType(resource.getFilename());
+			// contentType = request.getServletContext().getMimeType(new File(fileRealPath).getAbsolutePath());
 			log.info("contentType : " + contentType);
 			log.info("canonicalPath : " + resource.getFile().getCanonicalPath());
 		} catch (IOException ex) {
