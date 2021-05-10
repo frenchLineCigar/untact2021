@@ -4,6 +4,53 @@ for my good memory
 
 ---
 
+[2021-05-10]
+
+### TIL
+
+ - HTTP / WEB
+   - [에러 status code - Google 검색](https://www.google.com/search?q=%EC%97%90%EB%9F%AC+status+code&sxsrf=ALeKk022_8X_Hwm10rFLObMdb25_3jbSOw%3A1620607072828&ei=YICYYKyMMoiF0wTt1ILABw&oq=%EC%97%90%EB%9F%AC+status+code&gs_lcp=Cgdnd3Mtd2l6EAMyBQgAEM0CMgUIABDNAjIFCAAQzQI6CAgAELADEM0CUO0wWPwzYKs1aANwAHgBgAF1iAGgBZIBAzAuNpgBAKABAaoBB2d3cy13aXrIAQPAAQE&sclient=gws-wiz&ved=0ahUKEwisvJXn773wAhWIwpQKHW2qAHgQ4dUDCA4&uact=5)
+   - [HTTP 상태 코드(HTTP status code)](https://velog.io/@honeysuckle/HTTP-%EC%83%81%ED%83%9C-%EC%BD%94%EB%93%9C-HTTP-status-code-#500---599--%EC%84%9C%EB%B2%84-%EC%97%90%EB%9F%AC-%EC%83%81%ED%83%9C-%EC%BD%94%EB%93%9C)
+     > 100 - 199 : 정보성 상태 코드  
+     200 - 299 : 성공 상태 코드  
+     300 - 399 : 리다이렉션 상태 코드  
+     400 - 499 : 클라이언트 에러 상태 코드  
+     500 - 599 : 서버 에러 상태 코드  
+     600이상~
+   - API / Open API / Rest API
+ 
+   
+ - [Springfox / Swagger 로 API 문서 자동화](https://velog.io/@tenacity/SpringRestAPI-Swagger%EB%A1%9C-API-%EB%AC%B8%EC%84%9C-%EC%9E%90%EB%8F%99%ED%99%94)
+   - Swagger는 Web API 문서화를 위한 도구이다
+     - API Documentation & Design Tools, OAS(Open API Specification)
+   - [GitHub - springfox/springfox: Automated JSON API documentation for API's built with Spring](https://github.com/springfox/springfox#springfox)
+   - Swagger 개요 및 프로젝트 적용
+     - Swagger 3 / Springfox Boot Starter 프로젝트 적용 및 3.0.0+ 최신버전 유의사항
+       - swagger 3.0 오면서 편해졌다. springfox-boot-starter 하나만 추가 하면 얘가 필요한 dependency를 다 들고 있기 때문에 신경 쓸게 적다.
+       - 주의할 점은 swagger 2.0과 달리 기본 swagger-ui 접속 URL이 http://localhost:8080/swagger-ui.html이 아닌 http://localhost:8080/swagger-ui/로 바뀌었다는 점이다.
+       - 이 점을 몰라서 “왜 작동이 안되지? “하면서 한참 헤맸다. 스프링 설정 구성 시 꼭 알아둬야 할 사항이다.
+       - [Setting up Swagger 3 With Spring Boot](https://medium.com/@hala3k/setting-up-swagger-3-with-spring-boot-2-a7c1c3151545)
+       - [Springfox swagger-ui.html not loading using version 3.0.0-SNAPSHOT · Issue #3362 · springfox/springfox · GitHub](https://github.com/springfox/springfox/issues/3362)
+       - [java-swagger-ui-3.0-사용하기 - Deliwind](https://blog2.deliwind.com/20201127/java-swagger-ui-3-0-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/)
+     - 기타 참고 사항
+       - [Springfox Reference Documentation](https://springfox.github.io/springfox/docs/current/)
+       - [API 문서 자동화 - Swagger](https://velog.io/@tigger/API-%EB%AC%B8%EC%84%9C-%EC%9E%90%EB%8F%99%ED%99%94-Swagger)
+       - [OpenAPI 3.0을 사용할 경우 / Spring REST API 문서화](https://recordsoflife.tistory.com/342)
+       - [안경잡이개발자 :: Swagger Hub를 이용한 REST API 관리](https://ndb796.tistory.com/249)
+       - [Spring Boot에 Swagger 적용하기](https://hyeran-story.tistory.com/73)
+       - [SwaggerHub를 사용하여 API 관리하기 :: 전자기린 스튜디오](https://jsmun.com/54)
+       - [Swagger 개요 및 설정](https://velog.io/@oyeon/Swagger-%EC%84%A4%EC%A0%95)
+       - [Spring Swagger 적용](https://augustines.tistory.com/206)
+       - [Swagger 사용하기(Swagger-ui 적용) : 네이버 블로그](https://m.blog.naver.com/PostView.nhn?blogId=jjeaby&logNo=220968368638&proxyReferer=https:%2F%2Fwww.google.com%2F)
+   
+ 
+ - JS / jQuery / Ajax
+   - [jQuery Form onsubmit 이벤트 시 ajax 결과에 따라서 전송 처리하기 - async: false :: 사이트 구축/최적화 활용 팁](https://han288.tistory.com/69)
+
+
+
+---
+
 [2021-05-09]
 
 ### TIL

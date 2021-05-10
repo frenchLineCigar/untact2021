@@ -70,7 +70,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .excludePathPatterns("/user/article/detail")
             .excludePathPatterns("/user/reply/list")
             .excludePathPatterns("/test/**")
-            .excludePathPatterns("/error");
+            .excludePathPatterns("/error")
+            .excludePathPatterns("/swagger-resources/**")
+            .excludePathPatterns("/swagger-ui/**") // swagger v3 사용시
+            //.excludePathPatterns("/swagger-ui.html") // swagger v2 사용시
+            .excludePathPatterns("/v2/api-docs")
+            .excludePathPatterns("/webjars/**");
 
         // 로그인 상태에서 접속할 수 없는 URI를 추가
         // 로그인 상태에서는 로그인 요청을 반복하거나 가입 요청을 할 수 없도록 로그아웃 여부 먼저 체크
