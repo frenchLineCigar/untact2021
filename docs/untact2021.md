@@ -4,6 +4,25 @@ for my good memory
 
 ---
 
+[2021-05-11]
+
+### TIL
+
+ - Springfox / Swagger API Docs
+   - 버전 3 이슈 : @ApiModelProperty 의 position 속성은 작동하지 않음
+     - 해결 방법 : 없음, 다음 버전 업데이트의 fix를 기다리거나 다운 그레이드 해야 함
+     - [Model properties are alphabetically sorted (without order attribute) · Issue #3391 · springfox/springfox · GitHub](https://github.com/springfox/springfox/issues/3391)
+     - [springfox ApiModelProperty position sorting not working - Stack Overflow](https://stackoverflow.com/questions/63616811/springfox-apimodelproperty-position-sorting-not-working/63628683#63628683)
+     - [@apimodelproperty position not working - Google 검색](https://www.google.com/search?q=%40apimodelproperty+position+not+working&oq=%40apimodelproperty+position+not+working&aqs=chrome..69i57.160j0j7&sourceid=chrome&ie=UTF-8)
+   - [Swagger @ApiImplicitParams](https://www.google.com/search?q=%40ApiImplicitParams+%EC%B0%A8%EC%9D%B4%EC%A0%90&oq=%40ApiImplicitParams+%EC%B0%A8%EC%9D%B4%EC%A0%90&aqs=chrome..69i57j0i333.2039j0j7&sourceid=chrome&ie=UTF-8)
+   - [Swagger @ApiParam vs @ApiModelProperty](https://www.baeldung.com/swagger-apiparam-vs-apimodelproperty)
+   - [Swagger](https://www.baeldung.com/tag/swagger/)
+   - [[Spring&Angular] Spring 게시판 만들기 - CRUD 게시판 API](https://walkerlab.tistory.com/10)
+   - [[Spring&Angular] Spring 게시판 만들기 - CRUD 게시판 API](https://walkerlab.tistory.com/10)
+   - 
+
+---
+
 [2021-05-10]
 
 ### TIL

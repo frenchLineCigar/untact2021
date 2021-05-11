@@ -27,6 +27,8 @@ public class AdminArticleController extends BaseController {
 	private final FileService fileService;
 
 	/* 게시물 상세 조회 */
+	@GetMapping("/admin/article/detail")
+	@ResponseBody
 	@ApiOperation(value = "게시물 상세", notes = "성공시 게시물에 대한 상세정보를 반환합니다.")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value ="게시물 번호", example = "1", required = true)
@@ -36,8 +38,6 @@ public class AdminArticleController extends BaseController {
 			@ApiResponse(code = 400, message = "잘못된 접근"),
 			@ApiResponse(code = 500, message = "서버 에러")
 	})
-	@GetMapping("/admin/article/detail")
-	@ResponseBody
 	public ResultData showDetail(Integer id) {
 		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
 

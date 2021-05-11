@@ -6,6 +6,9 @@ import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.service.MemberService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -105,6 +108,11 @@ public class AdminMemberController extends BaseController {
     /* 관리자 로그인 */
     @RequestMapping("/admin/member/doLogin")
     @ResponseBody
+    @ApiOperation(value = "관리자 로그인", notes = "성공시 로그인 상태가 됩니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "loginId", value ="로그인 아이디", required = true),
+            @ApiImplicitParam(name = "loginPw", value ="로그인 비밀번호", required = true)
+    })
     public String doLogin(String loginId, String loginPw, String redirectUrl) {
         if (loginId == null) return msgAndBack("loginId를 입력해주세요.");
         if (loginPw == null) return msgAndBack("비밀번호를 입력해주세요.");
