@@ -5,6 +5,14 @@ server:
 #  servlet:
 #    context-path: /untact # ContextPath must start with '/' and not end with '/'
 
+
+# 문서 기본 경로(v2/api-docs) 변경 시: v1, v3 도 같은 패턴으로 변경 가능, 프로퍼티명은 InMemorySwaggerResourcesProvider 소스코드 참조
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /my/api-docs
+
 spring:
   servlet:
     multipart:

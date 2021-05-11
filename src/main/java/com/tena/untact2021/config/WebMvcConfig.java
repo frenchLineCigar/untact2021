@@ -75,6 +75,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .excludePathPatterns("/swagger-ui/**") // swagger v3 사용시
             //.excludePathPatterns("/swagger-ui.html") // swagger v2 사용시
             .excludePathPatterns("/v2/api-docs")
+            .excludePathPatterns("/my/api-docs") // custom api-docs path
             .excludePathPatterns("/webjars/**");
 
         // 로그인 상태에서 접속할 수 없는 URI를 추가

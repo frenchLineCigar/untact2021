@@ -8,7 +8,23 @@ for my good memory
 
 ### TIL
 
+ - OpenAPI 3.0 사용할 경우 : 13. OpenAPI 3.0를 이용한 REST API 문서 만들기만 다뤄봄 (쩌는 링크 있어서 관련 시리즈 복붙)
+   - OAS(OpenAPI Specification)는 RESTful 웹서비스를 약속된 규칙에 따라 약속된 규칙에 맞게 API 스펙을 json과 yaml 형식으로 표현
+   - Spring Boot에서는 springdoc-openapi 라이브러리를 추가하는 것으로 OAS 3를 사용할 수 있는데, 생성한 api에 별도의 설정을 추가할 경우 웹 애플리케이션의 시작과 동시에 자동으로 문서화 한다.
+   - springfox 라이브러리는 OpenAPI 3.0을 지원하고 있지 않습니다.
+   - [[Spring Boot Tutorial] 17. Bearer JWT를 이용한 api 인증 (Swagger v3)](https://blog.jiniworld.me/113?category=850715)
+   - [[Spring Boot Tutorial] 16. Swagger v3에 HTTP 기본인증(Basic Authentication) 설정하기](https://blog.jiniworld.me/105)
+   - [[Spring Boot Tutorial] 15. Open API 3.0 + Swagger v3 상세설정](https://blog.jiniworld.me/91)
+   - [[Spring Boot Tutorial] 14. build 환경별 profile 적용하기](https://blog.jiniworld.me/85?category=850715)
+   - **[[Spring Boot Tutorial] 13. OpenAPI 3.0를 이용한 REST API 문서 만들기 (Swagger v3)](https://blog.jiniworld.me/83)**
+   - [[Spring Boot Tutorial] 12. Spring Boot REST Api에 ResponseEntity 적용하기](https://blog.jiniworld.me/71?category=850715)
+   - [[Spring Boot Tutorial] 11. REST API Versioning](https://blog.jiniworld.me/67?category=850715)
+   - ['Spring/Spring Boot Tutorial' 카테고리의 글 목록](https://blog.jiniworld.me/category/Spring/Spring%20Boot%20Tutorial?page=1)
+
+
  - Springfox / Swagger API Docs
+   -  swagger docs path 변경 : InMemorySwaggerResourcesProvider 소스코드 까보면 프로퍼티명 확인 가능 (SwaggerResourcesProvider 을 구현해 Bean으로 등록한 클래스)
+     - [springfox.documentation.swagger.v2.path=/whatever/v2/api-docs not working with 3.0.0-SNAPSHOT · Issue #2886 · springfox/springfox · GitHub](https://github.com/springfox/springfox/issues/2886#issuecomment-516543691)
    - 버전 3 이슈 : @ApiModelProperty 의 position 속성은 작동하지 않음
      - 해결 방법 : 없음, 다음 버전 업데이트의 fix를 기다리거나 다운 그레이드 해야 함
      - [Model properties are alphabetically sorted (without order attribute) · Issue #3391 · springfox/springfox · GitHub](https://github.com/springfox/springfox/issues/3391)
