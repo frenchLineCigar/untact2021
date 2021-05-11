@@ -1,10 +1,12 @@
 package com.tena.untact2021.config;
 
-import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -13,17 +15,68 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
+	private String version;
+	private String title;
+
 	@Bean
-	public Docket api() {
+	public Docket apiV1() {
+		version = "1.0";
+		title = "Untact 2021 API";
+
 		return new Docket(DocumentationType.SWAGGER_2)
+				//.useDefaultResponseMessages(false)
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.tena.untact2021.controller"))
 				//.paths(PathSelectors.any())
 				//.paths(PathSelectors.ant("/admin/**").or(PathSelectors.ant("/user/**")).or(PathSelectors.ant("/common/**")))
 				.paths(PathSelectors.ant("/demo/**").negate())
 				.paths(PathSelectors.ant("/test/**").negate())
+				.build()
+				.apiInfo(apiInfo(title, version));
+	}
+
+	@Bean
+	public Docket apiV2() {
+		version = "2.0";
+		title = "Untact 2021 API";
+
+		return new Docket(DocumentationType.SWAGGER_2)
+				.useDefaultResponseMessages(false)
+				.groupName(version)
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("com.tena.untact2021.controller"))
+				//.paths(PathSelectors.any())
+				//.paths(PathSelectors.ant("/admin/**").or(PathSelectors.ant("/user/**")).or(PathSelectors.ant("/common/**")))
+				.paths(PathSelectors.ant("/demo/**").negate())
+				.paths(PathSelectors.ant("/test/**").negate())
+				.build()
+				.apiInfo(apiInfo(title, version));
+	}
+
+	private ApiInfo apiInfo(String title, String version) {
+		return new ApiInfoBuilder()
+				.title(title)
+				.version(version)
+				.description("Swagger로 생성한 API Docs")
+				.termsOfServiceUrl("https://www.example.com")
+				.contact(new Contact("Contact Me", "https://www.example.com", "admin@email.com"))
+				.license("API Licence")
+				.licenseUrl("http://www.example.com")
 				.build();
 	}
+
+//	private ApiInfo apiInfo() {
+//		return new ApiInfo(
+//				"title",
+//				"description",
+//				"version",
+//				"https://www.example.com/",
+//				new Contact("Contact Me", "https://www.example.com", "admin@email.com"),
+//				"Licenses",
+//				"https://",
+//				new ArrayList<>()
+//		);
+//	}
 
 
 	/* 3.0.0 이상 사용시 */

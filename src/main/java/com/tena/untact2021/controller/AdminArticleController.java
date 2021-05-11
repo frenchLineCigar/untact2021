@@ -4,14 +4,12 @@ import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.*;
 import com.tena.untact2021.service.ArticleService;
 import com.tena.untact2021.service.FileService;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,16 @@ public class AdminArticleController extends BaseController {
 	private final FileService fileService;
 
 	/* 게시물 상세 조회 */
-	@RequestMapping("/admin/article/detail")
+	@ApiOperation(value = "게시물 상세", notes = "성공시 게시물에 대한 상세정보를 반환합니다.")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "id", value ="게시물 번호", example = "1", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 400, message = "잘못된 접근"),
+			@ApiResponse(code = 500, message = "서버 에러")
+	})
+	@GetMapping("/admin/article/detail")
 	@ResponseBody
 	public ResultData showDetail(Integer id) {
 		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
