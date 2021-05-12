@@ -18,7 +18,7 @@ import static com.tena.untact2021.dto.Search.SearchKeywordType;
 public class ArticleService {
 
 	private final ArticleDao articleDao;
-	private final FileService fileService;
+	private final AttachFileService fileService;
 
 	/* 전체 게시물 조회 */
 	public List<Article> getArticles(SearchKeywordType searchKeywordType, String searchKeyword) {

@@ -3,7 +3,7 @@ package com.tena.untact2021.controller;
 import com.google.common.io.ByteStreams;
 import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.ResultData;
-import com.tena.untact2021.service.FileService;
+import com.tena.untact2021.service.AttachFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +34,9 @@ import java.util.Map;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class CommonFileController extends BaseController {
+public class CommonAttachFileController extends BaseController {
 
-	private final FileService fileService;
+	private final AttachFileService fileService;
 
 	@Value("${custom.fileDirPath}")
 	private String fileDirPath;

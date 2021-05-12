@@ -1,7 +1,7 @@
 package com.tena.untact2021.service;
 
 import com.google.common.base.Joiner;
-import com.tena.untact2021.dao.FileDao;
+import com.tena.untact2021.dao.AttachFileDao;
 import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.ResultData;
 import com.tena.untact2021.util.Util;
@@ -22,9 +22,9 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class) // 모든 예외에 대해서 트랜잭션 롤백, 파일 저장 시 IOException(Checked Exception) 터지면 롤백 처리
 @RequiredArgsConstructor
-public class FileService {
+public class AttachFileService {
 
-	private final FileDao fileDao;
+	private final AttachFileDao fileDao;
 
 	@Value("${custom.fileDirPath}")
 	private String fileDirPath;
@@ -40,8 +40,8 @@ public class FileService {
 	}
 
 	/* 단일 파일 1개 (FileNo 로 특정) */
-	public AttachFile getOneByFileNo(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
-		return fileDao.findOneByFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
+	public AttachFile getFile(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+		return fileDao.findFile(relTypeCode, relId, typeCode, type2Code, fileNo);
 	}
 
 	/* 파일 조회 */
@@ -208,7 +208,7 @@ public class FileService {
 				String type2Code = paramNameBits[4];
 				int fileNo = Integer.parseInt(paramNameBits[5]);
 
-				AttachFile oldFile = getOneByFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
+				AttachFile oldFile = getFile(relTypeCode, relId, typeCode, type2Code, fileNo);
 
 				if (oldFile != null) {
 					deleteFile(oldFile);
@@ -220,7 +220,7 @@ public class FileService {
 	}
 
 	private void checkAndDeleteOldFileIfExists(AttachFile file) {
-		AttachFile oldFile = getOneByFileNo(file.getRelTypeCode(), file.getRelId(), file.getTypeCode(), file.getType2Code(), file.getFileNo());
+		AttachFile oldFile = getFile(file.getRelTypeCode(), file.getRelId(), file.getTypeCode(), file.getType2Code(), file.getFileNo());
 
 		if (oldFile != null) {
 			deleteFile(oldFile);

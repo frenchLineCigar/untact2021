@@ -3,7 +3,7 @@ package com.tena.untact2021.controller;
 import com.tena.untact2021.custom.CurrentMember;
 import com.tena.untact2021.dto.*;
 import com.tena.untact2021.service.ArticleService;
-import com.tena.untact2021.service.FileService;
+import com.tena.untact2021.service.AttachFileService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import static com.tena.untact2021.dto.Search.SearchKeywordType;
 public class AdminArticleController extends BaseController {
 
 	private final ArticleService articleService;
-	private final FileService fileService;
+	private final AttachFileService fileService;
 
 	/* 게시물 상세 조회 */
 	@GetMapping("/admin/article/detail")

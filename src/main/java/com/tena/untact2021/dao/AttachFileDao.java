@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface FileDao {
+public interface AttachFileDao {
 
 	/* 파일 정보 저장 */
 	void save(AttachFile attachFile);
@@ -18,8 +18,8 @@ public interface FileDao {
 	AttachFile findThumbnail(String relTypeCode, int relId, String typeCode, String type2Code);
 
 	/* 특정 파일 1개 (FileNo 로 특정) */
-	AttachFile findOneByFileNo(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId, @Param("typeCode") String typeCode, @Param("type2Code") String type2Code,
-	                           @Param("fileNo") int fileNo);
+	AttachFile findFile(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId, @Param("typeCode") String typeCode, @Param("type2Code") String type2Code,
+						@Param("fileNo") int fileNo);
 
 	/* 파일이 첨부된 게시물 번호(relId) 수정 */
 	void updateRelId(@Param("id") int id, @Param("relId") int relId);
