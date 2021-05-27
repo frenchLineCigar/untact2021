@@ -1,22 +1,13 @@
 package com.tena.untact2021.controller;
 
 import com.tena.untact2021.custom.CurrentMember;
-import com.tena.untact2021.dto.Article;
-import com.tena.untact2021.dto.Board;
-import com.tena.untact2021.dto.Member;
-import com.tena.untact2021.dto.ResultData;
-import com.tena.untact2021.dto.Search;
+import com.tena.untact2021.dto.*;
 import com.tena.untact2021.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +25,7 @@ public class UserArticleController {
 	private final ArticleService articleService;
 
     /* 게시물 조회 */
-	@RequestMapping("/user/article/detail")
+	@GetMapping("/user/article/detail")
 	@ResponseBody
 	public ResultData showDetail(Integer id) {
         if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
@@ -47,7 +38,7 @@ public class UserArticleController {
 	}
 
 	/* 전체 게시물 조회 */
-	@RequestMapping("/user/article/list")
+	@GetMapping("/user/article/list")
 	@ResponseBody
 	public ResultData showList(@RequestParam(defaultValue = "1") int boardId,
                                @RequestParam(defaultValue = "1") int page,
@@ -94,7 +85,7 @@ public class UserArticleController {
 	}
 
 	/* 게시물 추가 */
-	@RequestMapping("/user/article/doAdd")
+	@PostMapping("/user/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(Article article, @CurrentMember Member currentMember) {
 		if (article.getBoardId() == null) return new ResultData("F-1", "boardId를 입력해주세요.");
@@ -108,7 +99,7 @@ public class UserArticleController {
 	}
 
 	/* 게시물 삭제 */
-	@RequestMapping("/user/article/doDelete")
+	@GetMapping("/user/article/doDelete")
 	@ResponseBody
 	public ResultData doDelete(Integer id) {
 		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
@@ -123,7 +114,7 @@ public class UserArticleController {
 	}
 
 	/* 게시물 수정 */
-	@RequestMapping("/user/article/doModify")
+	@PostMapping("/user/article/doModify")
 	@ResponseBody
 	public ResultData doModify(Article article) {
 		if (article.getId() == null) return new ResultData("F-1", "id를 입력해주세요.");

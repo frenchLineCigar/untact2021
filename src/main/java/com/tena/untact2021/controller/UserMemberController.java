@@ -7,7 +7,8 @@ import com.tena.untact2021.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -26,7 +27,7 @@ public class UserMemberController {
     private final MemberService memberService;
 
     /* 회원 가입 */
-    @RequestMapping("/user/member/doJoin")
+    @PostMapping("/user/member/doJoin")
     @ResponseBody
     public ResultData doJoin(Member member) {
         if (member.getLoginId() == null) return new ResultData("F-1", "loginId를 입력해주세요.");
@@ -48,7 +49,7 @@ public class UserMemberController {
     }
 
     /* 인증키(authKey)로 회원 조회  */
-    @RequestMapping("/user/member/memberByAuthKey")
+    @GetMapping("/user/member/memberByAuthKey")
     @ResponseBody
     public ResultData showMemberByAuthKey(String authKey) {
         if (authKey == null) return new ResultData("F-1", "authKey를 입력해주세요.");
@@ -62,7 +63,7 @@ public class UserMemberController {
     }
 
     /* 인증키(authKey) 조회 */
-    @RequestMapping("/user/member/authKey")
+    @PostMapping("/user/member/authKey")
     @ResponseBody
     public ResultData showAuthKey(String loginId, String loginPw) {
         if (loginId == null) return new ResultData("F-1", "loginId를 입력해주세요.");
@@ -86,7 +87,7 @@ public class UserMemberController {
 
 
     /* 회원 로그인 */
-    @RequestMapping("/user/member/doLogin")
+    @PostMapping("/user/member/doLogin")
     @ResponseBody
     public ResultData doLogin(String loginId, String loginPw) {
         if (loginId == null) return new ResultData("F-1", "loginId를 입력해주세요.");
@@ -106,7 +107,7 @@ public class UserMemberController {
     }
 
     /* 회원 로그아웃 */
-    @RequestMapping("/user/member/doLogout")
+    @GetMapping("/user/member/doLogout")
     @ResponseBody
     public ResultData doLogout(HttpSession session) {
         // 세션 무효화
@@ -116,7 +117,7 @@ public class UserMemberController {
     }
 
     /* 회원 정보 수정 */
-    @RequestMapping("/user/member/doModify")
+    @PostMapping("/user/member/doModify")
     @ResponseBody
     public ResultData doModify(Member member, @CurrentMember Member currentMember) {
         if (! member.isValidInput()) {

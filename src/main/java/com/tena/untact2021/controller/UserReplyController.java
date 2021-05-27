@@ -10,7 +10,8 @@ import com.tena.untact2021.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class UserReplyController {
     private final ArticleService articleService;
 
     /* 댓글 추가 */
-    @RequestMapping("/user/reply/doAdd")
+    @PostMapping("/user/reply/doAdd")
     @ResponseBody
     public ResultData doAdd(Reply reply, @CurrentMember Member currentMember) {
         if (reply.getBody() == null) return new ResultData("F-1", "내용을 입력해주세요.");
@@ -43,7 +44,7 @@ public class UserReplyController {
     }
 
 	/* 댓글 조회 */
-	@RequestMapping("/user/reply/list")
+	@GetMapping("/user/reply/list")
 	@ResponseBody
 	public ResultData showList(String relTypeCode, Integer relId) {
         if (relTypeCode == null) return new ResultData("F-1", "게시판을 지정해주세요.");
@@ -59,7 +60,7 @@ public class UserReplyController {
 	}
 
     /* 댓글 삭제 */
-    @RequestMapping("/user/reply/doDelete")
+    @GetMapping("/user/reply/doDelete")
     @ResponseBody
     public ResultData doDelete(Integer id) {
         if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
@@ -74,7 +75,7 @@ public class UserReplyController {
     }
 
     /* 댓글 수정 */
-    @RequestMapping("/user/reply/doModify")
+    @PostMapping("/user/reply/doModify")
     @ResponseBody
     public ResultData doModify(Reply reply) {
         if (reply.getId() == null) return new ResultData("F-1", "id를 입력해주세요.");
