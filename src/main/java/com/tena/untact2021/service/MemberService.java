@@ -1,6 +1,7 @@
 package com.tena.untact2021.service;
 
 import com.tena.untact2021.dao.MemberDao;
+import com.tena.untact2021.dto.AttachFile;
 import com.tena.untact2021.dto.Member;
 import com.tena.untact2021.dto.ResultData;
 import lombok.RequiredArgsConstructor;
@@ -78,6 +79,31 @@ public class MemberService {
 
     public Member getForPrintMember(Integer id) {
         return memberDao.findForPrintById(id);
+    }
+
+    public Member getForPrintMemberByAuthKey(String authKey) {
+        Member member = memberDao.findByAuthKey(authKey);
+
+        addThumbUrlForPrint(member);
+
+        return member;
+    }
+
+    public Member getForPrintMemberByLoginId(String loginId) {
+        Member member = memberDao.findByLoginId(loginId);
+
+        addThumbUrlForPrint(member);
+
+        return member;
+    }
+
+    private void addThumbUrlForPrint(Member member) {
+        AttachFile file = fileService.getFile("member", member.getId(), "common", "attachment", 1);
+
+        if (file != null) {
+            String extra__thumbUrl = file.getForPrintUrl();
+            member.setExtra__thumbUrl(extra__thumbUrl);
+        }
     }
 
 //    public ResultData joinAdmin(Member newAdmin) {

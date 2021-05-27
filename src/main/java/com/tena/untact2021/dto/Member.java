@@ -38,6 +38,8 @@ public class Member {
 
     private String email;
 
+    private String extra__thumbUrl; //썸네일 링크
+
     @JsonIgnore
     private boolean loginStatus;
 

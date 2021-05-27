@@ -55,7 +55,8 @@ public class UserMemberController {
         if (authKey == null) return new ResultData("F-1", "authKey를 입력해주세요.");
 
         // 해당 회원 조회
-        Member existingMember = memberService.getMemberByAuthKey(authKey);
+        Member existingMember = memberService.getForPrintMemberByAuthKey(authKey);
+
         if (existingMember == null) return new ResultData("F-2", "유효하지 않은 authKey 입니다.", "authKey", authKey);
 
         return new ResultData("S-1", "유효한 회원입니다.", "member", existingMember);
@@ -70,7 +71,8 @@ public class UserMemberController {
         if (loginPw == null) return new ResultData("F-1", "loginPw를 입력해주세요.");
 
         // 해당 회원 조회
-        Member existingMember = memberService.getMemberByLoginId(loginId);
+        Member existingMember = memberService.getForPrintMemberByLoginId(loginId);
+
         if (existingMember == null) return new ResultData("F-2", "존재하지 않는 로그인 아이디 입니다.", "loginId", loginId);
 
         // 비밀번호 일치 여부 체크
@@ -78,9 +80,7 @@ public class UserMemberController {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("authKey", existingMember.getAuthKey());
-        body.put("id", existingMember.getId());
-        body.put("name", existingMember.getName());
-        body.put("nickname", existingMember.getNickname());
+        body.put("member", existingMember);
 
         return new ResultData("S-1", String.format("%s님 환영합니다.", existingMember.getNickname()), body);
     }
