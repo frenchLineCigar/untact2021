@@ -72,8 +72,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .excludePathPatterns("/test/**")
             .excludePathPatterns("/error")
             .excludePathPatterns("/swagger-resources/**")
-            .excludePathPatterns("/swagger-ui/**") // swagger v3 사용시
-            //.excludePathPatterns("/swagger-ui.html") // swagger v2 사용시
+            .excludePathPatterns("/swagger-ui/**") // springfox v3 사용시
+            .excludePathPatterns("/swagger-ui.html") // springfox v2 사용시
+            .excludePathPatterns("/api-ui")
             .excludePathPatterns("/v2/api-docs")
             .excludePathPatterns("/my/api-docs") // custom api-docs path
             .excludePathPatterns("/webjars/**");

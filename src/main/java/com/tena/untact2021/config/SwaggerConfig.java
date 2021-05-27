@@ -9,7 +9,6 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.SwaggerResource;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
@@ -24,11 +23,12 @@ public class SwaggerConfig {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.tena.untact2021.controller"))
-					.paths(PathSelectors.ant("/user/**")).build().apiInfo(apiInfo());
+				.paths(PathSelectors.ant("/user/**")).build()
+				.apiInfo(apiInfo());
 		}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Untact 2021 API").description("회원가입, 게시물 작성")
+		return new ApiInfoBuilder().title("Spring Community 2021 API").description("회원가입, 게시물 작성 등의 기능을 제공합니다.")
 				.contact(new Contact("제작자", "https://github.com/frenchLineCigar/untact2021", "admin@untact21.com"))
 				.version("0.1").build();
 	}
@@ -36,7 +36,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket apiV1() {
 		version = "1.0";
-		title = "Untact 2021 API";
+		title = "Spring Community 2021 API";
 
 		return new Docket(DocumentationType.SWAGGER_2)
 				//.useDefaultResponseMessages(false)
@@ -54,7 +54,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket apiV2() {
 		version = "2.0";
-		title = "Untact 2021 API";
+		title = "Spring Community 2021 API";
 
 		return new Docket(DocumentationType.SWAGGER_2)
 				.useDefaultResponseMessages(false)
@@ -73,7 +73,7 @@ public class SwaggerConfig {
 		return new ApiInfoBuilder()
 				.title(title)
 				.version(version)
-				.description("Swagger로 생성한 API Docs")
+				.description("회원가입, 게시물 작성 등의 기능을 제공합니다.")
 				.termsOfServiceUrl("https://www.example.com")
 				.contact(new Contact("Contact Me", "https://www.example.com", "admin@email.com"))
 				.license("API Licence")
