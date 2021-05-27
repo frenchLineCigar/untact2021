@@ -17,6 +17,7 @@ import java.util.Map;
 public class MemberService {
 
     private final MemberDao memberDao;
+    private final AttachFileService fileService;
 
     @Resource(name = "loginMemberBean")
     private Member loginMemberBean; //로그인 사용자 정보를 담을 세션 스코프 빈
@@ -24,7 +25,18 @@ public class MemberService {
     /* 회원 가입 */
     public ResultData joinMember(Member newMember) {
         memberDao.save(newMember);
+
+        changeInputFilesRelId(newMember);
+
         return new ResultData("S-1", String.format("%s님 환영합니다.", newMember.getNickname()), "id", newMember.getId());
+    }
+
+    private void changeInputFilesRelId(Member member) {
+        if (member.hasInputFiles()) {
+            String fileIdsStr = member.getFileIdsStr(); // Ajax로 업로드한 파일 번호가 담긴 문자열
+            Integer articleId = member.getId();
+            fileService.changeRelIds(fileIdsStr, articleId);
+        }
     }
 
     /* 회원 조회 (PK) */

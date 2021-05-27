@@ -69,6 +69,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .excludePathPatterns("/user/article/list")
             .excludePathPatterns("/user/article/detail")
             .excludePathPatterns("/user/reply/list")
+            .excludePathPatterns("/common/**")
             .excludePathPatterns("/test/**")
             .excludePathPatterns("/error")
             .excludePathPatterns("/swagger-resources/**")

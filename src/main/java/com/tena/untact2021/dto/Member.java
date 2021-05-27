@@ -89,4 +89,11 @@ public class Member {
                 || (this.cellphoneNo != null && !this.cellphoneNo.isBlank())
                 || (this.email != null && !this.email.isBlank());
     }
+
+    @JsonIgnore
+    private String fileIdsStr;
+
+    public boolean hasInputFiles() {
+        return fileIdsStr != null && ! fileIdsStr.isBlank();
+    }
 }
