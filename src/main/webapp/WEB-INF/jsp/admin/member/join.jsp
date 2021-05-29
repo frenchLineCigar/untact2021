@@ -2,21 +2,21 @@
 
 <%@ include file="../layout/head.jspf" %>
 
+<%-- Lodash --%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
 
     // 중복 체크 유효성 검사를 통과한 아이디를 담을 변수
     let JoinForm__validLoginId = '';
 
     // 로그인 아이디 중복 체크 함수
-    function JoinForm__checkLoginIdDuplicate(obj) {
-        const form = $(obj).closest('form').get(0);
+    function JoinForm__checkLoginIdDuplicate() {
+        const form = $('.join-form').get(0);
 
         form.loginId.value = form.loginId.value.trim();
 
-        if (form.loginId.value.length == 0) {
-            alert('로그인 아이디를 입력해주세요.');
-            form.loginId.focus();
-
+        if (form.loginId.value.length == 0) { // 입력한 것이 없으면 ajax 전송 X
             return;
         }
 
@@ -31,10 +31,7 @@
 			    if (data.fail) {
 				    colorClass = 'text-red-500';
 				    form.loginId.focus();
-			    } else {
-				    JoinForm__validLoginId = data.body.loginId; // 서버 검증 후 유효한 아이디
-				    form.loginPw.focus();
-                }
+			    }
 
 			    $('.login-id-check-msg').html("<span class='" + colorClass + "'>" + data.msg + "</span>");
 			    //$('.login-id-check-msg').empty().append("<span class='" + colorClass + "'>" + data.msg + "</span>");
@@ -67,10 +64,11 @@
             return;
         }
 
-        // 중복 체크 여부 검사
-        if (form.loginId.value != JoinForm__validLoginId) { // 중복 체크 완료된 로그인 아이디와 다를 경우 (값을 다시 변경할 경우)
+        // 중복 체크 여부 검사 : 중복 체크 완료된 로그인 아이디와 다를 경우 (값을 다시 변경할 경우)
+        if (form.loginId.value != JoinForm__validLoginId) {
 	        alert('로그인 아이디를 중복체크를 해주세요.');
-            $(form).find('.btn-check-login-id-duplicate').focus();
+	        form.loginId.focus();
+            //$(form).find('.btn-check-login-id-duplicate').focus();
 	        //$(form).find('.btn-check-login-id-duplicate').focus().addClass('border').addClass('border-red-500');
 	        //$(form).find('.btn-check-login-id-duplicate').focus().css('border', '2px solid red');
 	        //$(form).find('.btn-check-login-id-duplicate').focus().attr('style', 'border:2px solid red;');
@@ -130,6 +128,18 @@
         // 폼 전송후 값 변경
         JoinForm__checkAndSubmitDone = true;
     }
+
+    $(function() {
+	    $('.input-login-id').change(function () {
+		    JoinForm__checkLoginIdDuplicate();
+	    });
+
+	    // 타이핑 시
+	    $('.input-login-id').keyup(_.debounce(JoinForm__checkLoginIdDuplicate, 500));
+
+	    // 붙여넣기 시
+	    $('.input-login-id').on("paste", _.debounce(JoinForm__checkLoginIdDuplicate, 500));
+    });
 </script>
 <section class="section-login">
     <div class="container mx-auto min-h-screen flex items-center justify-center">
@@ -144,7 +154,7 @@
                 </a>
             </div>
             <%-- / 로고 삽입 --%>
-            <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mt-4" action="doJoin" method="POST"
+            <form class="join-form bg-white shadow-md rounded px-8 pt-6 pb-8 mt-4" action="doJoin" method="POST"
                   onsubmit="JoinForm__checkAndSubmit(this); return false;">
                 <input type="hidden" name="redirectUrl" value="${param.redirectUrl}" />
                 <div class="flex flex-col mb-4 mt-4 md:flex-row">
@@ -152,13 +162,10 @@
                         <span>로그인 아이디</span>
                     </div>
                     <div class="p-1 md:flex-grow">
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
+                        <input class="input-login-id shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
                                autofocus="autofocus" type="text"
                                placeholder="로그인 아이디를 입력해주세요." name="loginId" maxlength="20"/>
                         <div class="login-id-check-msg"></div>
-                        <input onclick="JoinForm__checkLoginIdDuplicate(this);"
-                               class="btn-check-login-id-duplicate btn-primary mt-2 bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
-                               type="button" value="중복 체크"/>
                     </div>
                 </div>
                 <div class="flex flex-col mb-4 md:flex-row">

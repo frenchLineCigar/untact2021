@@ -10,6 +10,42 @@ for my good memory
 
 <br>
 
+[FE Library] lodash
+  - [lodash.js - A utility library delivering consistency, customization, performance, & extras.](https://cdnjs.com/libraries/lodash.js) 
+
+
+[JS/jQuery/Lodash] Throttle 와 Debounce / keyup & lodash debounce
+  - debounce란?
+    > - 특정 이벤트가 발생할때 작동하는 비즈니스 로직이 과도하게 발생하는 것을 방지하기위해 사용되는 함수이다.  
+    > - input box에서 검색어를 입력할때마다 서버에서 연관된 검색어 정보를 가져와 보여주는 기능을 구현할때 주로 사용한다.  
+    > - 마지막 이벤트가 호출된 이후에 일정시간이 지난 후에 함수를 지연호출 시키는 역할을 한다.
+  - lodash debounce 실전 활용
+    - **[자바스크립트 lodash: debounce와 throttle을 이용하여 함수의 실행 횟수 제한 - BGSMM](http://yoonbumtae.com/?p=2102)**
+    - **[Lodash _.debounce() Method - GeeksforGeeks](https://www.geeksforgeeks.org/lodash-_-debounce-method/)**
+    - [lodash debounce() 정보 및 예제](https://webisfree.com/2018-07-26/lodash-debounce()-%EC%A0%95%EB%B3%B4-%EB%B0%8F-%EC%98%88%EC%A0%9C)
+    - [lodash로 간단하게 debounce 사용하기 - Mr. Latte](https://www.mrlatte.net/code/2020/12/15/lodash-debounce.html)
+    - [JavaScript로 Debounce 함수 구현하기](https://chaewonkong.github.io/posts/debounce-js.html)
+    - [[React/lodash] React에서 debounce 간단 사용방법 - Fall in IT.](https://ithub.tistory.com/319)
+  - Throttle 와 Debounce 개념
+    - [Debounce란 뭘까요?. 안녕하세요 코드스쿼드 프론트엔드 과정을 공부 중인 리오입니다…](https://medium.com/@feanar/debounce%EB%9E%80-%EB%AD%98%EA%B9%8C%EC%9A%94-82204c8b953f)
+    - [Throttle 와 Debounce 개념 정리하기](https://pks2974.medium.com/throttle-%EC%99%80-debounce-%EA%B0%9C%EB%85%90-%EC%A0%95%EB%A6%AC%ED%95%98%EA%B8%B0-2335a9c426ff)
+  - key 입력 이벤트
+    - [[jQuery] keyup vs. keydown vs. keypress](https://zinee-world.tistory.com/452)
+    - [keydown과 keypress 차이](https://velog.io/@towozy/keydown%EA%B3%BC-keypress-%EC%B0%A8%EC%9D%B4)
+    - [야동우`s Story :: KeyDown(KeyUP)과 KeyPress의 차이점](https://yadw.tistory.com/161)
+  - jquery mouse paste event
+    - [jquery - 마우스를 통한 붙여넣기 이벤트 트리거](https://www.python2.net/questions-397811.htm)
+    - [JQuery로 ctrl+v 이벤트 잡아내기 – Haandol](https://haandol.wordpress.com/2013/08/23/jquery%EB%A1%9C-ctrlv-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9E%A1%EC%95%84%EB%82%B4%EA%B8%B0/)
+    - [paste 이벤트를 이용한 타 사이트의 컨텐츠를 입력하기 :: 쓸데없는 코딩하기](https://sub0709.tistory.com/209)
+    - [javascript paste 값 얻기. :: 새로운 도전을 위한 한걸음](https://qmffjem09.tistory.com/entry/javascript-paste-%EA%B0%92-%EC%96%BB%EA%B8%B0)
+---
+
+[2021-05-29]
+
+### TIL
+
+<br>
+
 [JAVA] 자바 정규식 패턴
 - regex
 - **[[Java] 자바 정규 표현식 (Pattern, Matcher) 사용법 & 예제](https://coding-factory.tistory.com/529)**
@@ -34,7 +70,7 @@ for my good memory
 [HTTP/WEB]
 - referrerpolicy="no-referrer"
 - [Referer-Policy이란?](https://scshim.tistory.com/entry/Referer-Policy%EC%9D%B4%EB%9E%80)
-
+- [Referer와 Referer-Policy를 위한 가이드 – yceffort](https://yceffort.kr/2020/09/referer-and-referrer-policy)
 
 ---
 
