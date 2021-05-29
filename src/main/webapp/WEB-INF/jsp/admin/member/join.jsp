@@ -3,6 +3,42 @@
 <%@ include file="../layout/head.jspf" %>
 
 <script>
+    // 로그인 아이디 중복 체크
+    function JoinForm__checkLoginIdDuplicate(obj) {
+        const form = $(obj).closest('form').get(0);
+
+        form.loginId.value = form.loginId.value.trim();
+
+        if (form.loginId.value.length == 0) {
+            alert('로그인 아이디를 입력해주세요.');
+            form.loginId.focus();
+
+            return;
+        }
+
+        // let url = 'checkLoginIdDuplicate?loginId=' + form.loginId.value;
+        // window.open(url); // 새창으로 열기
+        // location.href = url; // 현재창 이동
+
+        $.get(
+            'checkLoginIdDuplicate',
+            {
+                loginId: form.loginId.value
+            },
+            function(data) {
+                $('.login-id-check-msg').text(data.msg);
+
+                if (data.fail) {
+                    form.loginId.focus();
+                } else {
+                    form.loginPw.focus();
+                }
+            },
+            'json'
+        );
+
+    }
+
     // 중복 submit 막기위해서 폼전송이 수행됐는지 여부를 담기위한 변수
     let JoinForm__checkAndSubmitDone = false;
 
@@ -104,6 +140,10 @@
                         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
                                autofocus="autofocus" type="text"
                                placeholder="로그인 아이디를 입력해주세요." name="loginId" maxlength="20"/>
+                        <div class="login-id-check-msg"></div>
+                        <input onclick="JoinForm__checkLoginIdDuplicate(this);"
+                               class="btn-info mt-2 bg-green-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
+                               type="button" value="중복 체크"/>
                     </div>
                 </div>
                 <div class="flex flex-col mb-4 md:flex-row">
