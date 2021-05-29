@@ -124,18 +124,6 @@
 	</dependencies>
 
 	<build>
-		<!-- Mapper XML 이 Mapper Interface 와 동일한 곳에 위치시키는 경우 빌드시 포함시키기 위한 설정 -->
-		<resources>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-            </resource>
-			<resource>
-				<directory>${basedir}/src/main/java</directory>
-				<includes>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -150,6 +138,18 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<!-- Mapper XML 이 Mapper Interface 와 동일한 곳에 위치시키는 경우 빌드시 포함시키기 위한 설정 -->
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<!-- 인텔리제이 모듈 셋팅 걸어놔도 ㅄ같이 빌드되서, 명시적으로 잡아놓음 -->
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+			</resource>
+		</resources>
 	</build>
-
 </project>

@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 //유틸리티성 공용 함수
@@ -390,6 +391,57 @@ public class Util {
 
 	public static String formatNumberWithComma(String numStr) {
 		return formatNumberWithComma(Double.parseDouble(numStr));
+	}
+
+	// 문자열이 모두 숫자로 구성됐는지 여부
+	public static boolean allNumberString(String str) {
+		if (str == null) {
+			return false;
+		}
+
+		if (str.length() == 0) {
+			return true;
+		}
+
+		for (int i = 0; i < str.length(); i++) {
+			if (! Character.isDigit(str.charAt(i))) { //문자열을 구성하는 문자가 하나라도 숫자가 아닐 경우
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// 문자열이 숫자로 시작하는지 여부
+	public static boolean startsWithNumber(String str) {
+		if (str == null) {
+			return false;
+		}
+
+		if (str.length() == 0) {
+			return false;
+		}
+
+		return Character.isDigit(str.charAt(0)); // 문자열의 시작 문자가 숫자인지
+	}
+
+	// 로그인 아이디 유효성 체크
+	public static boolean isStandardLoginIdString(String str) {
+		if (str == null) {
+			return false;
+		}
+
+		if (str.length() == 0) {
+			return false;
+		}
+
+		// 조건
+		// 5자 이상, 20자 이하로 구성
+		// 숫자로 시작 금지
+		// _, 알파벳, 숫자로만 구성
+		String regex = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,19}$"; // 문자열의 시작은 영문자 1자로 출발해야 하고, 그 다음부터는 '_'를 제외한 특수문자 안되며 영문, 숫자, '_'으로만 이루어진 4 ~ 19자 이하 (총 5~20자)
+
+		return Pattern.matches(regex, str);
 	}
 
 }

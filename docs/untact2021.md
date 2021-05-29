@@ -4,6 +4,40 @@ for my good memory
 
 ---
 
+[2021-05-29]
+
+### TIL
+
+<br>
+
+[JAVA] 자바 정규식 패턴
+- regex
+- **[[Java] 자바 정규 표현식 (Pattern, Matcher) 사용법 & 예제](https://coding-factory.tistory.com/529)**
+- **[정규식 포기자를 위한 가장 쉬운 정규식 — 상편](https://to2.kr/cBh)**
+- **[정규식 포기자를 위한 가장 쉬운 정규식 — 하](https://to2.kr/cBg)**
+- [막상 쓰려면 헷갈리는 정규표현식 모음 - Mk’s Blog](https://moons08.github.io/programming/Regex/)
+- [자바 정규식(Regular Expression) 사용하기](https://offbyone.tistory.com/400)
+- java only numbers regex
+- [너머 :: JAVA 정규표현식 (이메일, 숫자, 아이디)](https://darkhorizon.tistory.com/259)
+- [How to check if a string contains only digits in Java - Stack Overflow](https://stackoverflow.com/questions/15111420/how-to-check-if-a-string-contains-only-digits-in-java/15111450)
+- [[Java] 문자열이 숫자인지 판별 (isDigit()) :: pridiot](https://pridiot.tistory.com/34)
+- [자바(Java) 숫자, 영문, 한글 여부를 체크하는 방법](https://needjarvis.tistory.com/227)
+
+---
+
+[2021-05-28]
+
+### TIL
+
+<br>
+
+[HTTP/WEB]
+- referrerpolicy="no-referrer"
+- [Referer-Policy이란?](https://scshim.tistory.com/entry/Referer-Policy%EC%9D%B4%EB%9E%80)
+
+
+---
+
 [2021-05-11]
 
 ### TIL
