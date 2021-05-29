@@ -3,7 +3,11 @@
 <%@ include file="../layout/head.jspf" %>
 
 <script>
-    // 로그인 아이디 중복 체크
+
+    // 중복 체크 유효성 검사를 통과한 아이디를 담을 변수
+    let JoinForm__validLoginId = '';
+
+    // 로그인 아이디 중복 체크 함수
     function JoinForm__checkLoginIdDuplicate(obj) {
         const form = $(obj).closest('form').get(0);
 
@@ -16,26 +20,27 @@
             return;
         }
 
-        // let url = 'checkLoginIdDuplicate?loginId=' + form.loginId.value;
-        // window.open(url); // 새창으로 열기
-        // location.href = url; // 현재창 이동
+	    $.get(
+		    'checkLoginIdDuplicate',
+		    {
+			    loginId: form.loginId.value
+		    },
+		    function (data) {
+			    let colorClass = 'text-green-500';
 
-        $.get(
-            'checkLoginIdDuplicate',
-            {
-                loginId: form.loginId.value
-            },
-            function(data) {
-                $('.login-id-check-msg').text(data.msg);
-
-                if (data.fail) {
-                    form.loginId.focus();
-                } else {
-                    form.loginPw.focus();
+			    if (data.fail) {
+				    colorClass = 'text-red-500';
+				    form.loginId.focus();
+			    } else {
+				    JoinForm__validLoginId = data.body.loginId; // 서버 검증 후 유효한 아이디
+				    form.loginPw.focus();
                 }
-            },
-            'json'
-        );
+
+			    $('.login-id-check-msg').html("<span class='" + colorClass + "'>" + data.msg + "</span>");
+			    //$('.login-id-check-msg').empty().append("<span class='" + colorClass + "'>" + data.msg + "</span>");
+		    },
+		    'json'
+	    );
 
     }
 
@@ -62,6 +67,16 @@
             return;
         }
 
+        // 중복 체크 여부 검사
+        if (form.loginId.value != JoinForm__validLoginId) { // 중복 체크 완료된 로그인 아이디와 다를 경우 (값을 다시 변경할 경우)
+	        alert('로그인 아이디를 중복체크를 해주세요.');
+            $(form).find('.btn-check-login-id-duplicate').focus();
+	        //$(form).find('.btn-check-login-id-duplicate').focus().addClass('border').addClass('border-red-500');
+	        //$(form).find('.btn-check-login-id-duplicate').focus().css('border', '2px solid red');
+	        //$(form).find('.btn-check-login-id-duplicate').focus().attr('style', 'border:2px solid red;');
+	        return;
+        }
+
         if (form.loginPw.value.length == 0) {
             alert('로그인 비밀번호를 입력해주세요.');
             form.loginPw.focus();
@@ -83,16 +98,16 @@
             return;
         }
 
-        if (form.nickname.value.length == 0) {
-            alert('별명을 입력해주세요.');
-            form.nickname.focus();
+        if (form.name.value.length == 0) {
+	        alert('이름을 입력해주세요.');
+            form.name.focus();
 
             return;
         }
 
-        if (form.name.value.length == 0) {
-            alert('이름을 입력해주세요.');
-            form.name.focus();
+        if (form.nickname.value.length == 0) {
+	        alert('별명을 입력해주세요.');
+            form.nickname.focus();
 
             return;
         }
@@ -142,7 +157,7 @@
                                placeholder="로그인 아이디를 입력해주세요." name="loginId" maxlength="20"/>
                         <div class="login-id-check-msg"></div>
                         <input onclick="JoinForm__checkLoginIdDuplicate(this);"
-                               class="btn-info mt-2 bg-green-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
+                               class="btn-check-login-id-duplicate btn-primary mt-2 bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
                                type="button" value="중복 체크"/>
                     </div>
                 </div>
