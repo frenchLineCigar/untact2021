@@ -15,10 +15,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +37,47 @@ public class CommonAttachFileController extends BaseController {
 
 	@Value("${custom.fileDirPath}")
 	private String fileDirPath;
+
+	@GetMapping("/common/file/{relTypeCode}/{relId}/{typeCode}/{type2Code}/{fileNo}")
+	public ResponseEntity<Object> showFile(HttpServletRequest request,
+	                                         @PathVariable String relTypeCode, @PathVariable int relId,
+	                                         @PathVariable String typeCode, @PathVariable String type2Code,
+	                                         @PathVariable int fileNo) throws FileNotFoundException {
+
+		AttachFile attachFile = fileService.getFile(relTypeCode, relId, typeCode, type2Code, fileNo);
+
+		if (attachFile == null) {
+			// Ex 1) Using DefaultBuilder with 404 Status
+			// return ResponseEntity.notFound().build();
+
+			// Ex 2) Using Constructor
+			// return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+			// return new ResponseEntity<>(new ResultData(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), "reason", "File not found."), HttpStatus.NOT_FOUND);
+
+			// Ex 3) Gson 활용
+			// HttpHeaders headers = new HttpHeaders();
+			// headers.add("Content-Type", "application/json; charset=utf-8");
+			// Map<String, Object> jsonMap = new HashMap<>();
+			// jsonMap.put("reason", "File not found.");
+			// return new ResponseEntity<>(new Gson().toJson(jsonMap), headers, HttpStatus.NOT_FOUND);
+
+			// Ex 4) ErrorResponse 응답 객체 구현해서 body 로 넘겨줄 객체로 사용
+		}
+
+		String filePath = attachFile.getFilePath(fileDirPath);
+		Resource resource = new InputStreamResource(new FileInputStream(filePath));
+
+		String contentType = request.getServletContext().getMimeType(new File(filePath).getAbsolutePath());
+
+		if (contentType == null) {
+			contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+		}
+
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.body(resource);
+	}
 
 	/* Ajax 파일 업로드  */
 	@RequestMapping("/common/file/doUpload")

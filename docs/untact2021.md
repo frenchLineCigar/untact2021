@@ -38,6 +38,22 @@ for my good memory
     - [JQuery로 ctrl+v 이벤트 잡아내기 – Haandol](https://haandol.wordpress.com/2013/08/23/jquery%EB%A1%9C-ctrlv-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9E%A1%EC%95%84%EB%82%B4%EA%B8%B0/)
     - [paste 이벤트를 이용한 타 사이트의 컨텐츠를 입력하기 :: 쓸데없는 코딩하기](https://sub0709.tistory.com/209)
     - [javascript paste 값 얻기. :: 새로운 도전을 위한 한걸음](https://qmffjem09.tistory.com/entry/javascript-paste-%EA%B0%92-%EC%96%BB%EA%B8%B0)
+
+
+[Spring/Java] spring boot path variable 
+  - [Spring @PathVariable Annotation](https://www.baeldung.com/spring-pathvariable)
+  - [Spring에서 @RequestParam과 @PathVariable](https://elfinlas.github.io/2018/02/18/spring-parameter/)
+  
+
+[Spring/Java] ResponseEntity 404 (Not Found) / ResponseEntity.notFound().build() 
+  - [ResponseEntity](https://hothoony.tistory.com/994)
+  - [[Spring] ResponseEntity는 왜 쓰는 것이며 어떻게 쓰는걸까?](https://a1010100z.tistory.com/106)
+  - [5. springboot ResponseEntity 적용 · linked2ev](https://linked2ev.github.io/gitlog/2019/12/29/springboot-5-ResponseEntity/)
+  - [[Spring Boot Tutorial] 12. Spring Boot REST Api에 ResponseEntity 적용하기](https://blog.jiniworld.me/71)
+  - ResponseEntity 404 / ResponseEntity.notFound with reason
+    - [Not able to return ResponseEntity with Exception Details in spring - Stack Overflow](https://stackoverflow.com/questions/52183546/not-able-to-return-responseentity-with-exception-details-in-spring)
+    - [(Spring Boot)오류 처리에 대해](https://supawer0728.github.io/2019/04/04/spring-error-handling/)
+
 ---
 
 [2021-05-29]

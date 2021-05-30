@@ -3,10 +3,12 @@ package com.tena.untact2021.dto;
 import com.tena.untact2021.util.Util;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class ResultData {
 
 	@ApiModelProperty(position = 1, example = "S-1")
@@ -20,6 +22,12 @@ public class ResultData {
 
 	public ResultData(String resultCode, String msg, Object... args) {
 		this.resultCode = resultCode;
+		this.msg = msg;
+		this.body = Util.mapOf(args);
+	}
+
+	public ResultData(int resultCode, String msg, Object... args) {
+		this.resultCode = resultCode + ""; // String.valueOf(resultCode);
 		this.msg = msg;
 		this.body = Util.mapOf(args);
 	}
