@@ -26,12 +26,6 @@ public class ResultData {
 		this.body = Util.mapOf(args);
 	}
 
-	public ResultData(int resultCode, String msg, Object... args) {
-		this.resultCode = resultCode + ""; // String.valueOf(resultCode);
-		this.msg = msg;
-		this.body = Util.mapOf(args);
-	}
-
     public ResultData(String resultCode, String msg, Map<String, Object> args) {
         this.resultCode = resultCode;
         this.msg = msg;

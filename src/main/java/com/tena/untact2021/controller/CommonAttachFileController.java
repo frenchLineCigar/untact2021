@@ -17,6 +17,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,22 +48,11 @@ public class CommonAttachFileController extends BaseController {
 		AttachFile attachFile = fileService.getFile(relTypeCode, relId, typeCode, type2Code, fileNo);
 
 		if (attachFile == null) {
-			// Ex 1) Using DefaultBuilder with 404 Status
 			// return ResponseEntity.notFound().build();
-
-			// Ex 2) Using Constructor
 			// return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
-			// return new ResponseEntity<>(new ResultData(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), "reason", "File not found."), HttpStatus.NOT_FOUND);
-
-			// Ex 3) Gson 활용
-			// HttpHeaders headers = new HttpHeaders();
-			// headers.add("Content-Type", "application/json; charset=utf-8");
-			// Map<String, Object> jsonMap = new HashMap<>();
-			// jsonMap.put("reason", "File not found.");
-			// return new ResponseEntity<>(new Gson().toJson(jsonMap), headers, HttpStatus.NOT_FOUND);
-
-			// Ex 4) ErrorResponse 응답 객체 구현해서 body 로 넘겨줄 객체로 사용
+			// return new ResponseEntity<>("attachFile not found", HttpStatus.NOT_FOUND);
+			// return new ResponseEntity<>(new ResultData("F-1", "attachFile not found."), HttpStatus.NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "attachFile not found");
 		}
 
 		String filePath = attachFile.getFilePath(fileDirPath);

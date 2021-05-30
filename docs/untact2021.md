@@ -50,7 +50,9 @@ for my good memory
   - [[Spring] ResponseEntity는 왜 쓰는 것이며 어떻게 쓰는걸까?](https://a1010100z.tistory.com/106)
   - [5. springboot ResponseEntity 적용 · linked2ev](https://linked2ev.github.io/gitlog/2019/12/29/springboot-5-ResponseEntity/)
   - [[Spring Boot Tutorial] 12. Spring Boot REST Api에 ResponseEntity 적용하기](https://blog.jiniworld.me/71)
-  - ResponseEntity 404 / ResponseEntity.notFound with reason
+  - ResponseEntity 404 / ResponseEntity.notFound with reason / 정의한 Exception 으로 처리
+    - [How to return 404 response status in Spring Boot @ResponseBody - method return type is Response? - Stack Overflow](https://stackoverflow.com/a/54539641)
+    - [Add a body to a 404 Not Found Exception - Stack Overflow](https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception)
     - [Not able to return ResponseEntity with Exception Details in spring - Stack Overflow](https://stackoverflow.com/questions/52183546/not-able-to-return-responseentity-with-exception-details-in-spring)
     - [(Spring Boot)오류 처리에 대해](https://supawer0728.github.io/2019/04/04/spring-error-handling/)
 
