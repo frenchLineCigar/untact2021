@@ -54,7 +54,7 @@ public class AdminMemberController extends BaseController {
         }
 
         if (! Util.isStandardLoginIdString(loginId)) {
-            return new ResultData("F-6", "로그인 아이디는 영문자와 숫자로 구성되어야 합니다.");
+            return new ResultData("F-6", "로그인 아이디는 영문자와 숫자만으로 구성되어야 합니다.");
         }
 
         Member existingMember = memberService.getMemberByLoginId(loginId);

@@ -31,10 +31,11 @@
 			    if (data.fail) {
 				    colorClass = 'text-red-500';
 				    form.loginId.focus();
+			    } else {
+				    JoinForm__validLoginId = data.body.loginId; // 서버 검증 후 유효한 아이디
 			    }
 
 			    $('.login-id-check-msg').html("<span class='" + colorClass + "'>" + data.msg + "</span>");
-			    //$('.login-id-check-msg').empty().append("<span class='" + colorClass + "'>" + data.msg + "</span>");
 		    },
 		    'json'
 	    );
@@ -68,10 +69,7 @@
         if (form.loginId.value != JoinForm__validLoginId) {
 	        alert('로그인 아이디를 중복체크를 해주세요.');
 	        form.loginId.focus();
-            //$(form).find('.btn-check-login-id-duplicate').focus();
-	        //$(form).find('.btn-check-login-id-duplicate').focus().addClass('border').addClass('border-red-500');
-	        //$(form).find('.btn-check-login-id-duplicate').focus().css('border', '2px solid red');
-	        //$(form).find('.btn-check-login-id-duplicate').focus().attr('style', 'border:2px solid red;');
+
 	        return;
         }
 
@@ -124,9 +122,59 @@
             return;
         }
 
-        form.submit();
-        // 폼 전송후 값 변경
-        JoinForm__checkAndSubmitDone = true;
+	    // 폼 전송 함수 - 업로드 성공 시 콜백
+	    const submitForm = function (data) {
+
+		    if (data) {
+			    form.fileIdsStr.value = data.body.fileIdsStr;
+		    }
+
+		    form.submit();
+
+		    JoinForm__checkAndSubmitDone = true;
+	    };
+
+	    // 에러 메시지 출력 함수 - 업로드 실패 시 콜백
+	    const printFallBackMsg = function (jqXHR, textStatus, errorThrown) {
+		    alert(jqXHR.responseText);
+		    console.log(jqXHR);
+		    console.log(jqXHR.responseText);
+		    console.log(jqXHR.status);
+
+		    ArticleAdd__isSubmitted = false;
+	    };
+
+	    // 파일 업로드 함수 - 가장 먼저 파일 업로드 이후 성공 또는 실패 콜백 실행
+	    function startUpload(onSuccess, onFailure) {
+
+		    if (! form.file__member__0__common__attachment__1.value) { // 첨부파일이 없으면 즉시 폼전송 후 종료
+			    onSuccess();
+			    return;
+		    }
+
+		    // const formData = new FormData();
+		    // formData.append("file__member__0__common__attachment__1", form.file__member__0__common__attachment__1.value.files[0]);
+		    const fileUploadFormData = new FormData(form);
+
+		    $.ajax({
+			    url: '/common/file/doUpload',
+			    data: fileUploadFormData,
+			    processData: false, // multipart/form-data 전송 시
+			    contentType: false, // multipart/form-data 전송 시
+			    dataType: 'JSON',
+			    type: 'POST',
+			    success: onSuccess, // 업로드 성공시 콜백 -> startSubmitForm
+			    error: onFailure // 실패시 메시지 -> printFallBackMsg
+		    });
+
+		    // 파일을 업로드 한 후
+		    // 기다린다.
+		    // 응답을 받는다.
+		    // onSuccess를 실행한다.
+	    }
+
+	    // 파일 업로드 시작
+	    startUpload(submitForm, printFallBackMsg);
     }
 
     $(function() {
@@ -156,6 +204,7 @@
             <%-- / 로고 삽입 --%>
             <form class="join-form bg-white shadow-md rounded px-8 pt-6 pb-8 mt-4" action="doJoin" method="POST"
                   onsubmit="JoinForm__checkAndSubmit(this); return false;">
+                <input type="hidden" name="fileIdsStr"/>
                 <input type="hidden" name="redirectUrl" value="${param.redirectUrl}" />
                 <div class="flex flex-col mb-4 mt-4 md:flex-row">
                     <div class="p-1 md:w-36 md:flex md:items-center">
@@ -186,6 +235,17 @@
                         <input class="shadow appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3"
                                autofocus="autofocus" type="password"
                                placeholder="로그인 비밀번호를 입력해주세요." name="loginPwConfirm" maxlength="20"/>
+                    </div>
+                </div>
+                <div class="flex flex-col mb-4 mt-4 md:flex-row">
+                    <div class="p-1 md:w-36 md:flex md:items-center">
+                        <span>프로필 이미지</span>
+                    </div>
+                    <div class="p-1 md:flex-grow">
+                        <input accept="image/gif, image/jpeg, image/png"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
+                               autofocus="autofocus" type="file" placeholder="프로필 이미지를 선택해주세요." maxlength="20"
+                               name="file__member__0__common__attachment__1"/>
                     </div>
                 </div>
                 <div class="flex flex-col mb-4 mt-4 md:flex-row">

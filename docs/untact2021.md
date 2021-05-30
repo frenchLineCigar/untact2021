@@ -56,6 +56,14 @@ for my good memory
     - [Not able to return ResponseEntity with Exception Details in spring - Stack Overflow](https://stackoverflow.com/questions/52183546/not-able-to-return-responseentity-with-exception-details-in-spring)
     - [(Spring Boot)오류 처리에 대해](https://supawer0728.github.io/2019/04/04/spring-error-handling/)
 
+
+[HTML5/WEB]  프로필 이미지
+  - input file validation / file accept jpg png gif
+    - [How to validade in HTML5 to only allow in 'input type="file"' JPG, GIF or PNG? - Stack Overflow](https://stackoverflow.com/questions/11097272/how-to-validade-in-html5-to-only-allow-in-input-type-file-jpg-gif-or-png/11098598)
+  - placeholder img / lorem img
+    - [Placeholder.com: Placeholder.com – The Free Image Placeholder Service Favoured By Designers](https://placeholder.com/)
+    - [Lorem Picsum](https://picsum.photos/)
+    
 ---
 
 [2021-05-29]

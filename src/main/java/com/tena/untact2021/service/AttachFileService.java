@@ -173,9 +173,9 @@ public class AttachFileService {
 
 		for (String paramName : fileMap.keySet()) {
 			MultipartFile multipartFile = fileMap.get(paramName);
-			System.out.println("paramName = " + paramName);
-			System.out.println("multipartFile = " + multipartFile);
 
+			log.debug("paramName = " + paramName);
+			log.debug("multipartFile = " + multipartFile);
 
 			if (! multipartFile.isEmpty()) {
 				ResultData saveFileResult = saveFile(multipartFile);
