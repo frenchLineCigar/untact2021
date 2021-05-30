@@ -325,3 +325,17 @@ SELECT * FROM `member`;
 UPDATE `member`
 SET authLevel = 7
 WHERE id = 1;
+
+# 페이징을 위한 예제 게시물 추가
+/*
+INSERT INTO article
+(regDate, updateDate, memberId, title, `body`, boardId)
+SELECT
+	NOW(),
+	NOW(),
+	FLOOR(RAND() * 2) + 1,
+	CONCAT('제목_', FLOOR(RAND() * 1000) + 1),
+	CONCAT('내용_', FLOOR(RAND() * 1000) + 1),
+	FLOOR(RAND() * 2) + 1
+FROM article;
+*/

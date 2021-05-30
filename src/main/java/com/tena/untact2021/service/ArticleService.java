@@ -178,4 +178,8 @@ public class ArticleService {
         return articleDao.findBoard(boardId);
     }
 
+    /* 전체 게시물 개수 조회 */
+	public int getTotalCount(int boardId, SearchKeywordType searchKeywordType, String searchKeyword) {
+		return articleDao.getTotalCount(boardId, searchKeywordType, searchKeyword);
+	}
 }

@@ -4,6 +4,24 @@ for my good memory
 
 ---
 
+[2021-05-30]
+게시물 리스트에서 총 게시물 수 노출
+
+### TIL
+
+<br>
+
+[JSP/JSTL] jsp number format / formatNumber parttern example
+  - [JSTL <fmt:formatNumber> 금액 표시(세자리마다 쉼표)](https://treasurebear.tistory.com/43)
+  - [JSTL fmt:formatnumber Tag - javatpoint](https://www.javatpoint.com/jstl-fmt-formatnumber-tag)
+  - According to TLD or attribute directive in tag file, attribute [value\] does not accept any expressions
+    - [JSP 페이지에서 JSTL 에러 : According to TLD or attribute directive in tag file,](https://mainia.tistory.com/520)
+ - [과일가게 개발자 :: JSTL 변수 선언, 삭제, 출력](https://fruitdev.tistory.com/130)
+ - [[Java] 데이터 타입과 자동 타입 변환 : VIOLET QUARTZ](https://roseee.tistory.com/entry/Java-%EB%B3%80%EC%88%98-%EC%84%A0%EC%96%B8%ED%95%98%EA%B8%B0-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%83%80%EC%9E%85%EA%B3%BC-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98)
+
+
+---
+
 [2021-05-29]
 
 ### TIL

@@ -120,6 +120,30 @@
 		ORDER BY id DESC
 	</select>
 
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*)
+		FROM article AS A
+		WHERE 1
+		<if test="boardId != null">
+			AND A.boardId = #{boardId}
+		</if>
+		<if test='searchKeyword != null and !"".equals(searchKeyword)'>
+			<if test="searchKeywordType == @com.tena.untact2021.dto.Search$SearchKeywordType@TITLE">
+				AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+			<if test="searchKeywordType == @com.tena.untact2021.dto.Search$SearchKeywordType@BODY">
+				AND A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+			<if test="searchKeywordType == @com.tena.untact2021.dto.Search$SearchKeywordType@TITLEANDBODY">
+				AND (
+					A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+					OR
+					A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+				)
+			</if>
+		</if>
+	</select>
+
     <!-- 전체 게시물 조회 (작성자 정보 포함) -->
     <select id="findAllForPrint" resultType="Article">
         SELECT A.*,

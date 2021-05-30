@@ -1,7 +1,13 @@
+<%@ page import="com.tena.untact2021.util.Util" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="../layout/main_layout_head.jspf" %>
+
+<script>
+	//param.boardId = parseInt("$(board.id}");
+</script>
 
 <section class="section-1">
 	<div class="bg-white shadow-md rounded container mx-auto p-8 mt-8">
@@ -13,8 +19,8 @@
 			</select>
 			<script>
 				let boardId = ${board.id};
-
 				$('.section-1 .select-board-id').val(boardId);
+				//$('.section-1 .select-board-id').val(param.boardId);
 
 				$('.section-1 .select-board-id').change(function () {
 					location.href = '?boardId=' + this.value;
@@ -25,6 +31,16 @@
 			<%-- 글쓰기 버튼 --%>
 			<a href="add?boardId=${board.id}" class="btn-primary add-article bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full">글쓰기</a>
 		</div>
+
+		<%--
+		<div>
+			총 게시물 수 : <fmt:formatNumber type="number" pattern="###,###" maxFractionDigits="2" value="${totalItemCount}" />
+		</div>
+		--%>
+		<div>
+			총 게시물 수 : <c:out value="${Util.formatNumberWithComma(totalItemCount)} 건" />
+		</div>
+
 		<div class="mb-10">
 			<%-- 게시물 리스트 --%>
 			<c:forEach items="${articles}" var="article">

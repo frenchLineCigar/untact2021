@@ -43,4 +43,8 @@ public interface ArticleDao {
 
     Board findBoard(@Param("boardId") int boardId);
 
+    /* 총 게시물 개수 조회 */
+	int getTotalCount(@Param("boardId") int boardId,
+	                  @Param("searchKeywordType") SearchKeywordType searchKeywordType,
+	                  @Param("searchKeyword") String searchKeyword);
 }

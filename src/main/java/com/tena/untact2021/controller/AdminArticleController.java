@@ -62,12 +62,16 @@ public class AdminArticleController extends BaseController {
 		SearchKeywordType searchKeywordType = search.getSearchKeywordType();
 		String searchKeyword = search.getSearchKeyword();
 
+		// 총 게시물 개수
+		int totalItemCount = articleService.getTotalCount(boardId, searchKeywordType, searchKeyword);
+
 		// 한 페이지에 보여줄 게시물 개수
 		int itemsInAPage = 20;
 
 		// List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
 		List<Article> articles = articleService.getForPrintArticlesV2(boardId, searchKeywordType, searchKeyword, page, itemsInAPage); // Beta
 
+		model.addAttribute("totalItemCount", totalItemCount);
 		model.addAttribute("articles", articles);
 		model.addAttribute("board", board);
 
