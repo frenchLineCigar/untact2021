@@ -4,12 +4,17 @@ for my good memory
 
 ---
 
-[2021-05-30]
-게시물 리스트에서 총 게시물 수 노출
+[2021-05-30]  
+게시물 리스트에서 총 게시물 수 노출  
+페이지네이션
+
 
 ### TIL
 
 <br>
+
+[Tailwind/CSS] tailwind pagination
+  - [Pagination - Official Tailwind CSS UI Components](https://tailwindui.com/components/application-ui/navigation/pagination)
 
 [JSP/JSTL] jsp number format / formatNumber parttern example
   - [JSTL <fmt:formatNumber> 금액 표시(세자리마다 쉼표)](https://treasurebear.tistory.com/43)
