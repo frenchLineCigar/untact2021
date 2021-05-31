@@ -13,6 +13,76 @@ for my good memory
 
 <br>
 
+[MyBatis]
+  - select if test 'and' operator (must use 'lower case')
+    - if test 내에서 and 연산자 반드시 소문자(lower case) 로 사용 (쿼리에서 AND 처럼 대문자로 사용하면 에러 발생함) 
+    ```xml
+    <select id="findFilesByRelIds" resultType="AttachFile">
+        SELECT *
+        FROM attach_file
+        WHERE 1
+        <if test="relIds != null and !relIds.isEmpty()">
+            AND relId IN
+            <foreach item="relId" index="index" collection="relIds" open="(" separator="," close=")">
+                #{relId}
+            </foreach>
+        </if>
+        AND relTypeCode = #{relTypeCode}
+        AND typeCode = #{typeCode}
+        AND type2Code = #{type2Code}
+        ORDER BY relId, fileNo
+    </select>
+    ```
+    ```xml
+        <select id="findFilesByRelIds" resultType="AttachFile">
+            SELECT *
+            FROM attach_file
+            WHERE 1
+            <if test="relIds != null and !relIds.size > 0">
+                AND relId IN
+                <foreach item="relId" index="index" collection="relIds" open="(" separator="," close=")">
+                    #{relId}
+                </foreach>
+            </if>
+            AND relTypeCode = #{relTypeCode}
+            AND typeCode = #{typeCode}
+            AND type2Code = #{type2Code}
+            ORDER BY relId, fileNo
+        </select>
+        ```
+  - How can I skip query and return empty list if ids is empty?
+    - [How can I skip query if where_in clause is empty in MyBatis 3? - Stack Overflow](https://stackoverflow.com/questions/42995592/how-can-i-skip-query-if-where-in-clause-is-empty-in-mybatis-3)
+    ```xml
+    <select id="findFilesByRelIds" resultType="AttachFile">
+        SELECT *
+        FROM attach_file
+        WHERE
+        <choose>
+            <when test="relIds == null || relIds.isEmpty()">
+                1 = 0 <!-- a test returning false, to adapt depending on you DB vendor -->
+            </when>
+            <otherwise>
+                relId IN
+                <foreach item="relId" index="index" collection="relIds" open="(" separator="," close=")">
+                    #{relId}
+                </foreach>
+            </otherwise>
+        </choose>
+        AND relTypeCode = #{relTypeCode}
+        AND typeCode = #{typeCode}
+        AND type2Code = #{type2Code}
+        ORDER BY relId, fileNo
+    </select>
+    ```
+  - mybatis if test list null check / mybatis if test collection null check / mybatis if test empty collection / mybatis if test collection size 
+    - [[Mybatis] Array 변수(파라미터)의 null 체크하는 2가지 방법](https://kmhan.tistory.com/388)
+    - [Mybatis에서 if ~ else처럼 사용하기(choose)구문 :: 몬드하임의 세상사는 이야기](https://mondhaim.tistory.com/4)
+    - [MyBatis isNull isEmpty 사용하기](https://cofs.tistory.com/309) : isEmpty() 활용
+    - [[Mybatis] parameter NULL check](https://superdev.tistory.com/16) : 직접 구현해 import 시켜 활용
+    - [건강한 코딩 :: mybatis null 체크](https://bulkywebdeveloper.tistory.com/116)
+    - [Mybatis Mapper(매퍼)에서 foreach 삽질하기](https://jjjayyy.tistory.com/45)
+  
+
 [Tailwind/CSS] tailwind pagination
   - [Pagination - Official Tailwind CSS UI Components](https://tailwindui.com/components/application-ui/navigation/pagination)
 
@@ -61,6 +131,7 @@ for my good memory
     - [JQuery로 ctrl+v 이벤트 잡아내기 – Haandol](https://haandol.wordpress.com/2013/08/23/jquery%EB%A1%9C-ctrlv-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9E%A1%EC%95%84%EB%82%B4%EA%B8%B0/)
     - [paste 이벤트를 이용한 타 사이트의 컨텐츠를 입력하기 :: 쓸데없는 코딩하기](https://sub0709.tistory.com/209)
     - [javascript paste 값 얻기. :: 새로운 도전을 위한 한걸음](https://qmffjem09.tistory.com/entry/javascript-paste-%EA%B0%92-%EC%96%BB%EA%B8%B0)
+    - [[javascript] 이벤트(Event) : 네이버 블로그](https://m.blog.naver.com/javaking75/140161334481)
 
 
 [Spring/Java] spring boot path variable 

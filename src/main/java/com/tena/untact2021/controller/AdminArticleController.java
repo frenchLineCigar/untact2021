@@ -65,7 +65,7 @@ public class AdminArticleController extends BaseController {
 		int totalItemCount = articleService.getTotalCount(boardId, searchKeywordType, searchKeyword); // 총 게시물 개수
 		int itemsInAPage = 10; // 한 페이지에 보여줄 게시물 개수
 		int totalPage = (int) Math.ceil(totalItemCount / (double) itemsInAPage); // 전체 페이지 계산
-		int pageMenuArmSize = 2; // 현재 페이지 중심으로 좌, 우에 각각 표시할 페이지 수
+		int pageMenuArmSize = 10; // 현재 페이지 중심으로 좌, 우에 각각 표시할 페이지 수
 
 		int pageMenuStart = page - pageMenuArmSize;
 		if (pageMenuStart < 1) {

@@ -24,9 +24,23 @@
     <link rel="stylesheet" href="${root}/resource/common.css">
     <link rel="stylesheet" href="${root}/resource/admin/common.css">
 
-	<script src="${root}/resource/util.js"></script>
-	<script>
-		const param = ${paramJson};
-	</script>
+	<c:if test="${paramJson != null}">
+		<script>
+			const param = ${paramJson};
+		</script>
+	</c:if>
+
+<%--
+	<%
+		String paramJson = (String) request.getAttribute("paramJson");
+		if(paramJson != null) {
+	%>
+			<%= "<script>" %>
+				const param = <%= paramJson %>
+			<%= "</script>" %>
+	<%
+		}
+	%>
+--%>
 </head>
 <body class="bg-gray-200">

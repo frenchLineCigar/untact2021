@@ -6,21 +6,22 @@
 <%@ include file="../layout/main_layout_head.jspf" %>
 
 <script>
-	//param.boardId = parseInt("$(board.id}");
+	const boardId = parseInt("${board.id}");
+	const searchKeywordType = "${search.searchKeywordType.value}";
+	const searchKeyword = "${search.searchKeyword}";
 </script>
 
 <section class="section-1">
 	<div class="bg-white shadow-md rounded container mx-auto p-8 mt-8">
-		<div class="flex items-center mt-10 mx-5">
-			<%-- 게시판 변경 드롭다운 메뉴--%>
+		<!-- 게시판 선택 및 글쓰기 버튼 -->
+		<div class="flex items-center mt-10">
+			<%-- 게시판 변경 드롭다운 --%>
 			<select class="select-board-id py-2 px-2 rounded-full border border-gray-300 text-gray-600 bg-white hover:border-gray-400 focus:outline-none">
 				<option value="1">공지사항</option>
 				<option value="2">자유게시판</option>
 			</select>
 			<script>
-				let boardId = ${board.id};
 				$('.section-1 .select-board-id').val(boardId);
-				//$('.section-1 .select-board-id').val(param.boardId);
 
 				$('.section-1 .select-board-id').change(function () {
 					location.href = '?boardId=' + this.value;
@@ -31,11 +32,26 @@
 			<%-- 글쓰기 버튼 --%>
 			<a href="add?boardId=${board.id}" class="btn-primary add-article bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-full">글쓰기</a>
 		</div>
+		<!-- /게시판 선택 및 글쓰기 버튼 -->
 
-		<div>총 게시물 수 : <c:out value="${Util.formatNumberWithComma(totalItemCount)} 건" /></div>
+		<!-- 게시물 검색 박스 -->
+		<div class="p-1 mt-5">총 게시물 수 : <c:out value="${Util.formatNumberWithComma(totalItemCount)} 건" /></div>
+		<form class="flex mt-3">
+			<select class="select-search-keyword-type" name="searchKeywordType">
+				<option value="titleAndBody">전체</option>
+				<option value="title">제목</option>
+				<option value="body">본문</option>
+			</select>
+			<script>
+				$('.section-1 .select-search-keyword-type').val(searchKeywordType);
+			</script>
+			<input class="ml-3 shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" name="searchKeyword" type="text" placeholder="검색어를 입력해주세요." value="${param.searchKeyword}" />
+			<input class="ml-3 btn-primary bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded" type="submit" value="검색"/>
+		</form>
+		<!-- /게시물 검색 박스 -->
 
+		<!-- 게시물 리스트 -->
 		<div class="mb-10">
-			<%-- 게시물 리스트 --%>
 			<c:forEach items="${articles}" var="article">
 				<c:set var="detailUrl" value="detail?id=${article.id}" />
 				<c:set var="thumbUrl" value="${article.extra__thumbUrl}" />
@@ -96,66 +112,68 @@
 				</div>
 			</c:forEach>
 		</div>
-	</div>
-
-	<!-- This example requires Tailwind CSS v2.0+ -->
-	<nav class="flex justify-center rounded-md shadow-sm" aria-label="Pagination">
-
-		<!-- The First -->
-		<a href="?page=1" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-			<span class="sr-only">First</span>
-			<!-- Heroicon name: solid/chevron-double-left -->
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-			</svg>
-		</a>
-
-		<!-- Previous -->
-		<c:set var="prev" value="${(pageMenuStart - 1) - pageMenuArmSize}" />
-		<a href="?page=${prev}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-			<span class="sr-only">Previous</span>
-			<!-- Heroicon name: solid/chevron-left -->
-			<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-				<path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-			</svg>
-		</a>
+		<!-- /게시물 리스트 -->
 
 		<!-- Pagination -->
-		<c:forEach var="i" begin="${pageMenuStart}" end="${pageMenuEnd}">
-			<%--<c:set var="aClassStr" value="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium" />--%>
-			<c:set var="aClassStr" value="relative inline-flex items-center px-4 py-2 border text-sm font-medium" />
-			<c:if test="${i == page}">
-				<%--<c:set var="aClassStr" value="${aClassStr} text-red-500 hover:bg-red-50" />--%>
-				<c:set var="aClassStr" value="${aClassStr} z-10 text-indigo-600 bg-indigo-50 border-indigo-500" />
-			</c:if>
-			<c:if test="${i != page}">
-				<%--<c:set var="aClassStr" value="${aClassStr} text-gray-500 hover:bg-gray-50" />--%>
-				<c:set var="aClassStr" value="${aClassStr} text-gray-500 bg-white border-gray-300 hover:bg-gray-50" />
-			</c:if>
-			<a href="?page=${i}" class="${aClassStr}">${i}</a>
-		</c:forEach>
+		<nav class="flex justify-center rounded-md" aria-label="Pagination">
 
-		<!-- Next -->
-		<c:set var="next" value="${(pageMenuEnd + 1) + pageMenuArmSize}" />
-		<a href="?page=${next}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-			<span class="sr-only">Next</span>
-			<!-- Heroicon name: solid/chevron-right -->
-			<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-				<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-			</svg>
-		</a>
+			<!-- The First -->
+			<a href="?page=1" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+				<span class="sr-only">First</span>
+				<!-- Heroicon name: solid/chevron-double-left -->
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+					<path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+				</svg>
+			</a>
 
-		<!-- The Last -->
-		<a href="?page=${totalPage}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-			<span class="sr-only">Last</span>
-			<!-- Heroicon name: solid/chevron-double-right -->
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-				<path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-			</svg>
-		</a>
-	</nav>
+			<!-- Previous -->
+			<c:set var="prev" value="${(pageMenuStart - 1) - pageMenuArmSize}" />
+			<a href="?page=${prev}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+				<span class="sr-only">Previous</span>
+				<!-- Heroicon name: solid/chevron-left -->
+				<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+					<path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+				</svg>
+			</a>
 
+			<!-- Page List -->
+			<c:forEach var="i" begin="${pageMenuStart}" end="${pageMenuEnd}">
+				<%--<c:set var="aClassStr" value="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium" />--%>
+				<c:set var="aClassStr" value="relative inline-flex items-center px-4 py-2 border text-sm font-medium" />
+				<c:if test="${i == page}">
+					<%--<c:set var="aClassStr" value="${aClassStr} text-red-500 hover:bg-red-50" />--%>
+					<c:set var="aClassStr" value="${aClassStr} z-10 text-indigo-600 bg-indigo-50 border-indigo-500" />
+				</c:if>
+				<c:if test="${i != page}">
+					<%--<c:set var="aClassStr" value="${aClassStr} text-gray-500 hover:bg-gray-50" />--%>
+					<c:set var="aClassStr" value="${aClassStr} text-gray-500 bg-white border-gray-300 hover:bg-gray-50" />
+				</c:if>
+				<a href="?page=${i}" class="${aClassStr}">${i}</a>
+			</c:forEach>
+
+			<!-- Next -->
+			<c:set var="next" value="${(pageMenuEnd + 1) + pageMenuArmSize}" />
+			<a href="?page=${next}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+				<span class="sr-only">Next</span>
+				<!-- Heroicon name: solid/chevron-right -->
+				<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+					<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+				</svg>
+			</a>
+
+			<!-- The Last -->
+			<a href="?page=${totalPage}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+				<span class="sr-only">Last</span>
+				<!-- Heroicon name: solid/chevron-double-right -->
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+					<path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+					<path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+				</svg>
+			</a>
+		</nav>
+		<!-- /Pagination -->
+
+	</div>
 </section>
 <script>
 $(document).ready(function () {

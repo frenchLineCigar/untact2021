@@ -74,11 +74,18 @@
 	<select id="findFilesByRelIds" resultType="AttachFile">
 		SELECT *
 		FROM attach_file
-		WHERE 1
-		AND relId IN
-		<foreach item="relId" index="index" collection="relIds" open="(" separator="," close=")">
-			#{relId}
-		</foreach>
+		WHERE
+		<choose>
+			<when test="relIds == null || relIds.isEmpty()">
+				1 = 0 <!-- a test returning false, to adapt depending on you DB vendor -->
+			</when>
+			<otherwise>
+				relId IN
+				<foreach item="relId" index="index" collection="relIds" open="(" separator="," close=")">
+					#{relId}
+				</foreach>
+			</otherwise>
+		</choose>
 		AND relTypeCode = #{relTypeCode}
 		AND typeCode = #{typeCode}
 		AND type2Code = #{type2Code}
