@@ -62,14 +62,20 @@ public class AdminArticleController extends BaseController {
 		SearchKeywordType searchKeywordType = search.getSearchKeywordType();
 		String searchKeyword = search.getSearchKeyword();
 
-		// 총 게시물 개수
-		int totalItemCount = articleService.getTotalCount(boardId, searchKeywordType, searchKeyword);
+		int totalItemCount = articleService.getTotalCount(boardId, searchKeywordType, searchKeyword); // 총 게시물 개수
+		int itemsInAPage = 10; // 한 페이지에 보여줄 게시물 개수
+		int totalPage = (int) Math.ceil(totalItemCount / (double) itemsInAPage); // 전체 페이지 계산
+		int pageMenuArmSize = 2; // 현재 페이지 중심으로 좌, 우에 각각 표시할 페이지 수
 
-		// 한 페이지에 보여줄 게시물 개수
-		int itemsInAPage = 20;
+		int pageMenuStart = page - pageMenuArmSize;
+		if (pageMenuStart < 1) {
+			pageMenuStart = 1;
+		}
 
-		// 전체 페이지 계산
-		int totalPage = (int) Math.ceil(totalItemCount / (double) itemsInAPage);
+		int pageMenuEnd = page + pageMenuArmSize;
+		if (pageMenuEnd > totalPage) {
+			pageMenuEnd = totalPage;
+		}
 
 		// List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
 		List<Article> articles = articleService.getForPrintArticlesV2(boardId, searchKeywordType, searchKeyword, page, itemsInAPage); // Beta
@@ -77,6 +83,9 @@ public class AdminArticleController extends BaseController {
 		model.addAttribute("totalItemCount", totalItemCount);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", page);
+		model.addAttribute("pageMenuArmSize", pageMenuArmSize);
+		model.addAttribute("pageMenuStart", pageMenuStart);
+		model.addAttribute("pageMenuEnd", pageMenuEnd);
 		model.addAttribute("articles", articles);
 		model.addAttribute("board", board);
 

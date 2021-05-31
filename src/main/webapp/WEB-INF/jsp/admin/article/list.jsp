@@ -100,7 +100,19 @@
 
 	<!-- This example requires Tailwind CSS v2.0+ -->
 	<nav class="flex justify-center rounded-md shadow-sm" aria-label="Pagination">
-		<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+
+		<!-- The First -->
+		<a href="?page=1" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+			<span class="sr-only">First</span>
+			<!-- Heroicon name: solid/chevron-double-left -->
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+				<path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+			</svg>
+		</a>
+
+		<!-- Previous -->
+		<c:set var="prev" value="${(pageMenuStart - 1) - pageMenuArmSize}" />
+		<a href="?page=${prev}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
 			<span class="sr-only">Previous</span>
 			<!-- Heroicon name: solid/chevron-left -->
 			<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -108,7 +120,8 @@
 			</svg>
 		</a>
 
-		<c:forEach var="i" begin="1" end="${totalPage}">
+		<!-- Pagination -->
+		<c:forEach var="i" begin="${pageMenuStart}" end="${pageMenuEnd}">
 			<%--<c:set var="aClassStr" value="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium" />--%>
 			<c:set var="aClassStr" value="relative inline-flex items-center px-4 py-2 border text-sm font-medium" />
 			<c:if test="${i == page}">
@@ -121,11 +134,24 @@
 			</c:if>
 			<a href="?page=${i}" class="${aClassStr}">${i}</a>
 		</c:forEach>
-		<a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+
+		<!-- Next -->
+		<c:set var="next" value="${(pageMenuEnd + 1) + pageMenuArmSize}" />
+		<a href="?page=${next}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
 			<span class="sr-only">Next</span>
 			<!-- Heroicon name: solid/chevron-right -->
 			<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 				<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+			</svg>
+		</a>
+
+		<!-- The Last -->
+		<a href="?page=${totalPage}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+			<span class="sr-only">Last</span>
+			<!-- Heroicon name: solid/chevron-double-right -->
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+				<path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+				<path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 			</svg>
 		</a>
 	</nav>
