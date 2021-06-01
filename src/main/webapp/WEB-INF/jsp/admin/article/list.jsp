@@ -6,9 +6,7 @@
 <%@ include file="../layout/main_layout_head.jspf" %>
 
 <script>
-	const boardId = parseInt("${board.id}");
-	const searchKeywordType = "${search.searchKeywordType.value}";
-	const searchKeyword = "${search.searchKeyword}";
+	param.boardId = parseInt("${board.id}");
 </script>
 
 <section class="section-1">
@@ -21,7 +19,7 @@
 				<option value="2">자유게시판</option>
 			</select>
 			<script>
-				$('.section-1 .select-board-id').val(boardId);
+				$('.section-1 .select-board-id').val(param.boardId);
 
 				$('.section-1 .select-board-id').change(function () {
 					location.href = '?boardId=' + this.value;
@@ -37,13 +35,16 @@
 		<!-- 게시물 검색 박스 -->
 		<div class="p-1 mt-5">총 게시물 수 : <c:out value="${Util.formatNumberWithComma(totalItemCount)} 건" /></div>
 		<form class="flex mt-3">
-			<select class="select-search-keyword-type" name="searchKeywordType">
+			<input name="boardId" type="hidden" value="${board.id}" />
+			<select name="searchKeywordType">
 				<option value="titleAndBody">전체</option>
 				<option value="title">제목</option>
 				<option value="body">본문</option>
 			</select>
 			<script>
-				$('.section-1 .select-search-keyword-type').val(searchKeywordType);
+				if (param.searchKeywordType) {
+					$('.section-1 select[name="searchKeywordType"]').val(param.searchKeywordType);
+				}
 			</script>
 			<input class="ml-3 shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" name="searchKeyword" type="text" placeholder="검색어를 입력해주세요." value="${param.searchKeyword}" />
 			<input class="ml-3 btn-primary bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded" type="submit" value="검색"/>
@@ -117,24 +118,32 @@
 		<!-- Pagination -->
 		<nav class="flex justify-center rounded-md" aria-label="Pagination">
 
+            <%-- 검색 조건 쿼리 스트링 --%>
+            <c:set var="searchQueryStr"
+                   value="&boardId=${board.id}&searchKeywordType=${param.searchKeywordType}&searchKeyword=${param.searchKeyword}" />
+
 			<!-- The First -->
-			<a href="?page=1" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-				<span class="sr-only">First</span>
-				<!-- Heroicon name: solid/chevron-double-left -->
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-					<path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-				</svg>
-			</a>
+			<c:if test="${pageMenuStart != 1}">
+				<a href="?page=1${searchQueryStr}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+					<span class="sr-only">First</span>
+					<!-- Heroicon name: solid/chevron-double-left -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+					</svg>
+				</a>
+			</c:if>
 
 			<!-- Previous -->
 			<c:set var="prev" value="${(pageMenuStart - 1) - pageMenuArmSize}" />
-			<a href="?page=${prev}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-				<span class="sr-only">Previous</span>
-				<!-- Heroicon name: solid/chevron-left -->
-				<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-					<path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-				</svg>
-			</a>
+			<c:if test="${prev > 0}">
+				<a href="?page=${prev}${searchQueryStr}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+					<span class="sr-only">Previous</span>
+					<!-- Heroicon name: solid/chevron-left -->
+					<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+						<path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+					</svg>
+				</a>
+			</c:if>
 
 			<!-- Page List -->
 			<c:forEach var="i" begin="${pageMenuStart}" end="${pageMenuEnd}">
@@ -148,28 +157,32 @@
 					<%--<c:set var="aClassStr" value="${aClassStr} text-gray-500 hover:bg-gray-50" />--%>
 					<c:set var="aClassStr" value="${aClassStr} text-gray-500 bg-white border-gray-300 hover:bg-gray-50" />
 				</c:if>
-				<a href="?page=${i}" class="${aClassStr}">${i}</a>
+				<a href="?page=${i}${searchQueryStr}" class="${aClassStr}">${i}</a>
 			</c:forEach>
 
 			<!-- Next -->
 			<c:set var="next" value="${(pageMenuEnd + 1) + pageMenuArmSize}" />
-			<a href="?page=${next}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-				<span class="sr-only">Next</span>
-				<!-- Heroicon name: solid/chevron-right -->
-				<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-					<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-				</svg>
-			</a>
+			<c:if test="${next <= totalPage}">
+				<a href="?page=${next}${searchQueryStr}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+					<span class="sr-only">Next</span>
+					<!-- Heroicon name: solid/chevron-right -->
+					<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+						<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+					</svg>
+				</a>
+			</c:if>
 
 			<!-- The Last -->
-			<a href="?page=${totalPage}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-				<span class="sr-only">Last</span>
-				<!-- Heroicon name: solid/chevron-double-right -->
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-					<path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-					<path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-				</svg>
-			</a>
+			<c:if test="${pageMenuEnd != totalPage}">
+				<a href="?page=${totalPage}${searchQueryStr}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+					<span class="sr-only">Last</span>
+					<!-- Heroicon name: solid/chevron-double-right -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+						<path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+					</svg>
+				</a>
+			</c:if>
 		</nav>
 		<!-- /Pagination -->
 

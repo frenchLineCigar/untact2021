@@ -24,9 +24,10 @@
     <link rel="stylesheet" href="${root}/resource/common.css">
     <link rel="stylesheet" href="${root}/resource/admin/common.css">
 
-	<c:if test="${paramJson != null}">
+	<c:if test="${requestScope.paramJson != null}">
 		<script>
-			const param = ${paramJson};
+			const param = ${requestScope.paramJson};
+			console.log(param);
 		</script>
 	</c:if>
 

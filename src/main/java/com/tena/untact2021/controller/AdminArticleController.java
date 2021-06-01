@@ -80,14 +80,14 @@ public class AdminArticleController extends BaseController {
 		// List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page, itemsInAPage);
 		List<Article> articles = articleService.getForPrintArticlesV2(boardId, searchKeywordType, searchKeyword, page, itemsInAPage); // Beta
 
+		model.addAttribute("board", board);
+		model.addAttribute("articles", articles);
 		model.addAttribute("totalItemCount", totalItemCount);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", page);
 		model.addAttribute("pageMenuArmSize", pageMenuArmSize);
 		model.addAttribute("pageMenuStart", pageMenuStart);
 		model.addAttribute("pageMenuEnd", pageMenuEnd);
-		model.addAttribute("articles", articles);
-		model.addAttribute("board", board);
 
 		return "admin/article/list";
 	}
