@@ -2,6 +2,19 @@
 
 for my good memory
 
+[2021-06-02]
+기존 URL 쿼리스트링에서 추가 파라미터 작업을 할 수 있는 유틸을 페이지네이션에 적용
+
+### TIL
+
+<br>
+
+[CSS/Icon] Heroicons vs. Fontawesome
+ - [Font Awesome](https://fontawesome.com/)
+   - 
+ - [Heroicons](https://heroicons.com/)
+ - [Heroicons Dev](https://heroicons.dev/)
+
 ---
 
 [2021-05-30]  

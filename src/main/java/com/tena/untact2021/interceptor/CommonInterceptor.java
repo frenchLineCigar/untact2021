@@ -54,9 +54,9 @@ public class CommonInterceptor implements HandlerInterceptor {
         String encodedRequestUri = Util.getUriEncodedAsUTF8(requestUri);
 
         // 처리한 값들을 request 객체에 담는다
-        request.setAttribute("paramMap", paramMap);
-        request.setAttribute("paramJson", paramJson); // head.jspf
-        request.setAttribute("requestUri", requestUri);
+        request.setAttribute("paramMap", paramMap); // 현재 요청 파라미터(Map)
+        request.setAttribute("paramJson", paramJson); // 현재 요청 파라미터(JSON)
+        request.setAttribute("requestUri", requestUri); // 현재 요청 URL(URI + Query String)
         request.setAttribute("encodedRequestUri", encodedRequestUri);
 
 

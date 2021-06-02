@@ -444,4 +444,61 @@ public class Util {
 		return Pattern.matches(regex, str);
 	}
 
+	/*
+		URI의 쿼리 스트링에서 입력한 이름의 파라미터를 제거한다
+		Ex) Util.getNewUrlRemoved("http://www.naver.com/?search=123&type=abc", "search");
+		-> http://www.naver.com/?type=abc
+	 */
+	public static String getNewUriRemoved(String uri, String paramName) {
+		String deleteStrStarts = paramName + "=";
+		int delStartPos = uri.indexOf(deleteStrStarts);
+
+		if (delStartPos != -1) {
+			int delEndPos = uri.indexOf("&", delStartPos);
+
+			if (delEndPos != -1) {
+				delEndPos++;
+				uri = uri.substring(0, delStartPos) + uri.substring(delEndPos, uri.length());
+			} else {
+				uri = uri.substring(0, delStartPos);
+			}
+		}
+
+		if (uri.charAt(uri.length() - 1) == '?') {
+			uri = uri.substring(0, uri.length() - 1);
+		}
+
+		if (uri.charAt(uri.length() - 1) == '&') {
+			uri = uri.substring(0, uri.length() - 1);
+		}
+
+		return uri;
+	}
+
+	/*
+		URI의 쿼리 스트링에서 해당 파라미터의 값을 변경한다
+		Ex) Util.getNewUri("http://www.naver.com/?search=123&type=abc&page=4", "page", 3);
+		-> http://www.naver.com/?search=123&type=abc&page=3
+	 */
+	public static String getNewUri(String uri, String paramName, String paramValue) {
+		uri = getNewUriRemoved(uri, paramName);
+
+		if (uri.contains("?")) {
+			uri += "&" + paramName + "=" + paramValue;
+		} else {
+			uri += "?" + paramName + "=" + paramValue;
+		}
+
+		uri = uri.replace("?&", "?");
+
+		return uri;
+	}
+
+	/*
+		URI의 쿼리 스트링에서 해당 파라미터의 값을 변경후 인코딩까지
+	 */
+	public static String getNewUriEncoded(String uri, String paramName, String pramValue) {
+		return getUriEncodedAsUTF8(getNewUri(uri, paramName, pramValue));
+	}
+
 }
