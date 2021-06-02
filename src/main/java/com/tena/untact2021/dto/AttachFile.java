@@ -60,6 +60,10 @@ public class AttachFile {
 		return "/common/file/doDownload?id=" + id;
 	}
 
+	public String getMediaHtml() {
+		return "<img src=\""+ getForPrintUrl() + "\">";
+	}
+
 	/* Map MultipartFile To AttachFile */
 	public static AttachFile from(MultipartFile multipartFile) {
 		String paramName = multipartFile.getName(); // file__article__5__common__attachment__1

@@ -49,4 +49,8 @@ public class Article {
 		return fileIdsStr != null && ! fileIdsStr.isBlank();
 	}
 
+	// 작성자 프로필 이미지
+	public String getWriterThumbImgUrl() {
+		return "/common/file/member/" + memberId + "/common/attachment/1";
+	}
 }

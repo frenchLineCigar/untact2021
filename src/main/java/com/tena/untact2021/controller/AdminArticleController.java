@@ -28,7 +28,6 @@ public class AdminArticleController extends BaseController {
 
 	/* 게시물 상세 조회 */
 	@GetMapping("/admin/article/detail")
-	@ResponseBody
 	@ApiOperation(value = "게시물 상세", notes = "성공시 게시물에 대한 상세정보를 반환합니다.")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value ="게시물 번호", example = "1", required = true)
@@ -38,15 +37,26 @@ public class AdminArticleController extends BaseController {
 			@ApiResponse(code = 400, message = "잘못된 접근"),
 			@ApiResponse(code = 500, message = "서버 에러")
 	})
-	public ResultData showDetail(Integer id) {
-		if (id == null) return new ResultData("F-1", "id를 입력해주세요.");
+	public String showDetail(Integer id, Model model) {
+		if (id == null) return msgAndBack("id를 입력해주세요.");
 
 		//Article article = articleService.getForPrintArticle(id);
 		Article article = articleService.getForDetailPrintById(id);
 
-		if (article == null) return new ResultData("F-2", "존재하지 않는 게시물입니다.");
+		if (article == null) return msgAndBack(model, "존재하지 않는 게시물번호 입니다.");
 
-		return new ResultData("S-1", "조회 결과", "article", article);
+		// 해당 게시물의 첨부파일 리스트 가져오기
+		List<AttachFile> files = fileService.getFiles("article", article.getId(), "common", "attachment");
+
+		// 파일 리스트를 fileNo 를 키로 갖는 맵으로 가공
+		Map<Integer, AttachFile> fileMap = files.stream().collect(Collectors.toMap(AttachFile::getFileNo, Function.identity()));
+
+		// 게시물에 첨부파일 정보 담기
+		article.addToExtra("fileMap", fileMap);
+
+		model.addAttribute("article", article);
+
+		return "admin/article/detail";
 	}
 
 	/* 전체 게시물 조회 */
@@ -128,7 +138,7 @@ public class AdminArticleController extends BaseController {
 		}
 
 		return articleService.deleteArticle(id);
-	}
+	}   
 
 	/* 게시물 수정 폼 */
 	@RequestMapping("/admin/article/modify")

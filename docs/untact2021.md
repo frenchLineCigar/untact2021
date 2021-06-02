@@ -2,6 +2,17 @@
 
 for my good memory
 
+---
+
+[2021-06-02]
+게시물 상세페이지 구현 및 회원정보 수정 시 프로필이미지 변경
+
+[Tailwind/Component] 상세페이지 UI
+  - [Blog Post by MatheusGongo | Pages](https://tailwindcomponents.com/component/blog-post-2)
+  - [Tailwind Play](https://play.tailwindcss.com/z35Zi8w5u2)
+
+---
+
 [2021-06-02]
 기존 URL 쿼리스트링에서 추가 파라미터 작업을 할 수 있는 유틸을 페이지네이션에 적용
 
